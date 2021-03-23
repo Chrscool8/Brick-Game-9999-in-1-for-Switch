@@ -43,7 +43,7 @@ extern "C" void userAppExit(void)
     romfsExit();
 }
 
-void OutputDkDebug(void* userData, const char* context, DkResult result, const char* message) 
+void OutputDkDebug(void* userData, const char* context, DkResult result, const char* message)
 {
     printf("Context: %s\nResult: %d\nMessage: %s\n", context, result, message);
 }
@@ -246,7 +246,7 @@ public:
         {
             // Render stuff!
             renderDemo(vg, 0, 0, FramebufferWidth, FramebufferHeight, time, blowup, &this->data);
-            renderGraph(vg, 5,5, &fps);
+            //renderGraph(vg, 5,5, &fps);
         }
         nvgEndFrame(vg);
 
@@ -269,7 +269,7 @@ public:
 };
 
 // Main entrypoint
-int main(int argc, char* argv[])
+int dk_main(int argc, char* argv[])
 {
     DkTest app;
     app.run();

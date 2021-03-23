@@ -55,7 +55,7 @@ ARCH	:=	-march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS	:=	-g -Wall -Wno-unused-function -Wno-misleading-indentation -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES)
 
-CFLAGS	+=	$(INCLUDE) -D__SWITCH__
+CFLAGS	+=	$(INCLUDE) -D__SWITCH__ -DDEBUG_NXLINK
 
 CXXFLAGS	:= $(CFLAGS) -std=gnu++17 -fno-exceptions -fno-rtti
 
@@ -63,14 +63,14 @@ ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
 # LIBS	:= -lnanovg -ldeko3dd -lglad -lEGL -lglapi -ldrm_nouveau -lnx
-LIBS	:= -lnanovg -ldeko3d -lnx
+ LIBS	:= -lnanovg -ldeko3d -lnx
 
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:= $(PORTLIBS) $(LIBNX) $(CURDIR)/nanovg/ $(CURDIR)/deku3d/
+LIBDIRS	:= $(PORTLIBS) $(LIBNX) $(CURDIR)/nanovg/
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional

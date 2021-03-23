@@ -1,4 +1,3 @@
-// #define USE_OPENGL
 #ifdef USE_OPENGL
 
 #include <stdarg.h>
@@ -255,7 +254,7 @@ static void sceneExit()
     glDeleteProgram(s_program);
 }
 
-int main(int argc, char* argv[])
+int gl_main(int argc, char* argv[])
 {
     // Initialize EGL on the default window
     if (!initEgl(nwindowGetDefault()))
