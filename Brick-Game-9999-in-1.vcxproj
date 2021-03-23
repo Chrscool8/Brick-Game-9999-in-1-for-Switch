@@ -18,15 +18,27 @@
     <None Include="build_and_run.sh" />
     <None Include="LICENSE" />
     <None Include="Makefile" />
+    <None Include="nanovg\.gitignore" />
+    <None Include="nanovg\.gitrepo" />
+    <None Include="nanovg\LICENSE" />
+    <None Include="nanovg\Makefile" />
+    <None Include="nanovg\README.md" />
+    <None Include="nanovg\release\CApplication.d" />
+    <None Include="nanovg\release\CExternalImage.d" />
+    <None Include="nanovg\release\CIntrusiveTree.d" />
+    <None Include="nanovg\release\CMemPool.d" />
+    <None Include="nanovg\release\CShader.d" />
+    <None Include="nanovg\release\dk_renderer.d" />
+    <None Include="nanovg\release\FileLoader.d" />
+    <None Include="nanovg\shaders\fill_aa_fsh.glsl" />
+    <None Include="nanovg\shaders\fill_fsh.glsl" />
+    <None Include="nanovg\shaders\fill_vsh.glsl" />
+    <None Include="nanovg\source\framework\LICENSE" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\demo.c" />
-    <ClCompile Include="source\perf.c" />
-    <ClCompile Include="source\test_dk.cpp" />
-    <ClCompile Include="source\test_gl.cpp" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="include\test_gl.h" />
+    <ClInclude Include="include\test_dk.h" />
     <ClInclude Include="nanovg\include\nanovg.h" />
     <ClInclude Include="nanovg\include\nanovg\dk_renderer.hpp" />
     <ClInclude Include="nanovg\include\nanovg\fontstash.h" />
@@ -47,6 +59,34 @@
     <ClInclude Include="nanovg\include\nanovg_gl.h" />
     <ClInclude Include="source\demo.h" />
     <ClInclude Include="source\perf.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="nanovg\source\dk_renderer.cpp" />
+    <ClCompile Include="nanovg\source\framework\CApplication.cpp" />
+    <ClCompile Include="nanovg\source\framework\CExternalImage.cpp" />
+    <ClCompile Include="nanovg\source\framework\CIntrusiveTree.cpp" />
+    <ClCompile Include="nanovg\source\framework\CMemPool.cpp" />
+    <ClCompile Include="nanovg\source\framework\CShader.cpp" />
+    <ClCompile Include="nanovg\source\framework\FileLoader.cpp" />
+    <ClCompile Include="nanovg\source\nanovg.c" />
+    <ClCompile Include="source\demo.c" />
+    <ClCompile Include="source\perf.c" />
+    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\test_dk.cpp" />
+    <ClCompile Include="source\test_gl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="nanovg\lib\libnanovg.a" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="nanovg\release\CApplication.o" />
+    <Object Include="nanovg\release\CExternalImage.o" />
+    <Object Include="nanovg\release\CIntrusiveTree.o" />
+    <Object Include="nanovg\release\CMemPool.o" />
+    <Object Include="nanovg\release\CShader.o" />
+    <Object Include="nanovg\release\dk_renderer.o" />
+    <Object Include="nanovg\release\FileLoader.o" />
+    <Object Include="nanovg\release\nanovg.o" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -84,13 +124,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>include;nanovg;nanovg\include;C:\devkitPro\libnx\include;C:\devkitPro\msys2\usr\include;C:\devkitPro\devkitA64\lib\gcc\aarch64-none-elf\10.2.0\include\;C:\devkitPro\portlibs\switch\include\;$(IncludePath)</IncludePath>
-    <SourcePath>source;$(SourcePath)</SourcePath>
+    <IncludePath>include;nanovg;nanovg\include;nanovg\include\nanovg\framework;C:\devkitPro\libnx\include;C:\devkitPro\msys2\usr\include;C:\devkitPro\devkitA64\lib\gcc\aarch64-none-elf\10.2.0\include\;C:\devkitPro\portlibs\switch\include\;$(IncludePath)</IncludePath>
+    <SourcePath>nanovg\source;source;$(SourcePath)</SourcePath>
     <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
     <NMakeBuildCommandLine>bash build_and_run.sh</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>make clean all</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
-    <NMakePreprocessorDefinitions>USE_OPENGL</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>
+    </NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
