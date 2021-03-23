@@ -27,6 +27,24 @@
     <ClCompile Include="source\test_gl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="nanovg\include\nanovg.h" />
+    <ClInclude Include="nanovg\include\nanovg\dk_renderer.hpp" />
+    <ClInclude Include="nanovg\include\nanovg\fontstash.h" />
+    <ClInclude Include="nanovg\include\nanovg\framework\CApplication.h" />
+    <ClInclude Include="nanovg\include\nanovg\framework\CCmdMemRing.h" />
+    <ClInclude Include="nanovg\include\nanovg\framework\CDescriptorSet.h" />
+    <ClInclude Include="nanovg\include\nanovg\framework\CExternalImage.h" />
+    <ClInclude Include="nanovg\include\nanovg\framework\CIntrusiveList.h" />
+    <ClInclude Include="nanovg\include\nanovg\framework\CIntrusiveTree.h" />
+    <ClInclude Include="nanovg\include\nanovg\framework\CMemPool.h" />
+    <ClInclude Include="nanovg\include\nanovg\framework\common.h" />
+    <ClInclude Include="nanovg\include\nanovg\framework\CShader.h" />
+    <ClInclude Include="nanovg\include\nanovg\framework\FileLoader.h" />
+    <ClInclude Include="nanovg\include\nanovg\nanovg_gl_utils.h" />
+    <ClInclude Include="nanovg\include\nanovg\stb_image.h" />
+    <ClInclude Include="nanovg\include\nanovg\stb_truetype.h" />
+    <ClInclude Include="nanovg\include\nanovg_dk.h" />
+    <ClInclude Include="nanovg\include\nanovg_gl.h" />
     <ClInclude Include="source\demo.h" />
     <ClInclude Include="source\perf.h" />
   </ItemGroup>
@@ -66,14 +84,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>nanovg;nanovg\include;C:/devkitPro/libnx/include;C:\devkitPro\msys2\usr\include;C:\devkitPro\devkitA64\lib\gcc\aarch64-none-elf\10.2.0\include\;$(IncludePath)</IncludePath>
-    <SourcePath>G:\Documents\GitHub\Chrscool8\Brick-Game-9999-in-1\source;$(SourcePath)</SourcePath>
+    <IncludePath>include;nanovg;nanovg\include;C:\devkitPro\libnx\include;C:\devkitPro\msys2\usr\include;C:\devkitPro\devkitA64\lib\gcc\aarch64-none-elf\10.2.0\include\;C:\devkitPro\portlibs\switch\include\;$(IncludePath)</IncludePath>
+    <SourcePath>source;$(SourcePath)</SourcePath>
     <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
     <NMakeBuildCommandLine>bash build_and_run.sh</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>make clean all</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>make clean</NMakeCleanCommandLine>
-    <NMakePreprocessorDefinitions>
-    </NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>USE_OPENGL</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
