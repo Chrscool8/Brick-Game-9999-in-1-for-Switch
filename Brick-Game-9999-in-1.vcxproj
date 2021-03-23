@@ -124,7 +124,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>include;nanovg;nanovg\include;nanovg\include\nanovg\framework;C:\devkitPro\libnx\include;C:\devkitPro\msys2\usr\include;C:\devkitPro\devkitA64\lib\gcc\aarch64-none-elf\10.2.0\include\;C:\devkitPro\portlibs\switch\include\;$(IncludePath)</IncludePath>
+    <IncludePath>include;nanovg;nanovg\include;nanovg\include\nanovg\framework;C:\devkitPro\libnx\include;C:\devkitPro\msys2\usr\include;C:\devkitPro\devkitA64\lib\gcc\aarch64-none-elf\10.2.0\include\;C:\devkitPro\portlibs\switch\include\;C:\devkitPro\libnx\include\switch\runtime\;$(IncludePath)</IncludePath>
     <SourcePath>nanovg\source;source;$(SourcePath)</SourcePath>
     <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
     <NMakeBuildCommandLine>bash build_and_run.sh</NMakeBuildCommandLine>
