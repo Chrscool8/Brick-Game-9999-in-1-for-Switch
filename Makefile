@@ -37,9 +37,9 @@ include $(DEVKITPRO)/libnx/switch_rules
 #   of a homebrew executable (.nro). This is intended to be used for sysmodules.
 #   NACP building is skipped as well.
 #---------------------------------------------------------------------------------
-TARGET		:=	nanovg-example
+TARGET		:=	Brick-Game-9999-in-1
 BUILD		:=	build
-SOURCES     :=	source nanovg/shaders 
+SOURCES     :=	source nanovg/shaders
 DATA		:=	data
 INCLUDES	:=	include nanovg/include deku3d/include
 ROMFS		:=	romfs
@@ -60,7 +60,7 @@ CFLAGS	+=	$(INCLUDE) -D__SWITCH__
 CXXFLAGS	:= $(CFLAGS) -std=gnu++17 -fno-exceptions -fno-rtti
 
 ASFLAGS	:=	-g $(ARCH)
-LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wmisleading-indentation -Wl,-Map,$(notdir $*.map)
+LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wmisleading-indentation -Wunused-function -Wl,-Map,$(notdir $*.map)
 
 # LIBS	:= -lnanovg -ldeko3dd -lglad -lEGL -lglapi -ldrm_nouveau -lnx
 LIBS	:= -lnanovg -ldeko3d -lnx
