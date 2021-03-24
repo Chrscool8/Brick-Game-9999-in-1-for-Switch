@@ -22,14 +22,31 @@ std::vector<std::vector<bool>> grid_create(int width, int height)
 
 bool grid_get(std::vector<std::vector<bool>>& grid, int x, int y)
 {
-	std::vector<bool> sub = grid.at(x);
-	return sub.at(y);
+	if (x >= 0 && x < (int)grid.size())
+	{
+		std::vector<bool> sub = grid.at(x);
+		if (y >= 0 && y < (int)sub.size())
+		{
+			return sub.at(y);
+		}
+	}
+
+	return false;
 }
 
-void grid_set(std::vector<std::vector<bool>>& grid, int x, int y, bool val)
+bool grid_set(std::vector<std::vector<bool>>& grid, int x, int y, bool val)
 {
-	std::vector<bool>& sub = grid.at(x);
-	sub.at(y) = val;
+	if (x >= 0 && x < (int)grid.size())
+	{
+		std::vector<bool>& sub = grid.at(x);
+		if (y >= 0 && y < (int)sub.size())
+		{
+			sub.at(y) = val;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 int grid_width(std::vector<std::vector<bool>>& grid)

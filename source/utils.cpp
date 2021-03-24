@@ -2,8 +2,7 @@
 #include "nanovg.h"
 #include <string>
 #include <map>
-#include "demo.h"
-#include "grid.h"
+#include "grid.hpp"
 
 std::map<std::string, int> sprite_indicies;
 
@@ -42,11 +41,6 @@ bool draw_sprite(NVGcontext* vg, float x, float y, float width, float height, st
 
 void renderTester(NVGcontext* vg, std::vector<std::vector<bool>>& game_grid, float mx, float my, float width, float height, float t)
 {
-	//nvgBeginPath(vg);
-	//nvgRect(vg, 0, 0, 1280, 720);
-	//nvgFillColor(vg, nvgRGB(109, 120, 92));
-	//nvgFill(vg);
-
 	const int cell_width = 31;
 	const int cell_height = 31;
 
