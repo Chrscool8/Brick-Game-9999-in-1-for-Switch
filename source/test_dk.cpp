@@ -10,6 +10,9 @@
 #include "nanovg_dk.h"
 #include "demo.h"
 #include "perf.h"
+#include <utils.h>
+
+#include <pad.h>
 
 // #define USE_OPENGL
 #ifndef USE_OPENGL
