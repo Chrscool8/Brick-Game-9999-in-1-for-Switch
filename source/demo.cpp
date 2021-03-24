@@ -792,22 +792,19 @@ void drawLines(NVGcontext* vg, float x, float y, float w, float h, float t)
 
 int loadDemoData(NVGcontext* vg, DemoData* data)
 {
-	int i;
-
 	if (vg == NULL)
 		return -1;
 
 	load_sprite(vg, "spr_cell_selected", "romfs:/images/cell_selected.png");
 	load_sprite(vg, "spr_cell_unselected", "romfs:/images/cell_unselected.png");
 
-	for (i = 0; i < 14; i++) {
+	for (int i = 0; i < 14; i++) {
 		char file[128];
 		snprintf(file, 128, "romfs:/images/image%d.jpg", i + 1);
 		data->images[i] = nvgCreateImage(vg, file, NVG_IMAGE_NEAREST);
 		printf("IMG: %i\n", data->images[i]);
 		if (data->images[i] == 0) {
 			printf("Could not load %s.\n", file);
-			//return -1;
 		}
 	}
 
@@ -833,6 +830,8 @@ int loadDemoData(NVGcontext* vg, DemoData* data)
 	}
 	nvgAddFallbackFontId(vg, data->fontNormal, data->fontEmoji);
 	nvgAddFallbackFontId(vg, data->fontBold, data->fontEmoji);
+
+	printf("Done loading\n");
 
 	return 0;
 }
@@ -1053,8 +1052,6 @@ void drawScissor(NVGcontext* vg, float x, float y, float t)
 
 	nvgRestore(vg);
 }
-
-
 
 void renderDemo(NVGcontext* vg, float mx, float my, float width, float height, float t, int blowup, DemoData* data)
 {

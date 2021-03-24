@@ -34,6 +34,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\grid.h" />
     <ClInclude Include="include\test_gl.h" />
     <ClInclude Include="include\test_dk.h" />
     <ClInclude Include="include\utils.hpp" />
@@ -68,6 +69,7 @@
     <ClCompile Include="nanovg\source\framework\FileLoader.cpp" />
     <ClCompile Include="nanovg\source\nanovg.c" />
     <ClCompile Include="source\demo.cpp" />
+    <ClCompile Include="source\grid.cpp" />
     <ClCompile Include="source\perf.c" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\test_dk.cpp" />

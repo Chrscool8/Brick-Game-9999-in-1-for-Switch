@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include "demo.h"
+#include "grid.h"
 
 std::map<std::string, int> sprite_indicies;
 
@@ -39,25 +40,30 @@ bool draw_sprite(NVGcontext* vg, float x, float y, float width, float height, st
 	}
 }
 
-void renderTester(NVGcontext* vg, float mx, float my, float width, float height, float t, int blowup, DemoData* data)
+void renderTester(NVGcontext* vg, std::vector<std::vector<bool>>& game_grid, float mx, float my, float width, float height, float t)
 {
+	//nvgBeginPath(vg);
+	//nvgRect(vg, 0, 0, 1280, 720);
+	//nvgFillColor(vg, nvgRGB(109, 120, 92));
+	//nvgFill(vg);
+
 	const int cell_width = 31;
 	const int cell_height = 31;
 
-	const int grid_x = 260;
-	const int grid_y = 60;
+	const int grid_offset_x = 260;
+	const int grid_offset_y = 60;
 
-	const int grid_width = 10;
-	const int grid_height = 20;
+	const int draw_grid_width = grid_width(game_grid);
+	const int draw_grid_height = grid_height(game_grid);
 
-	for (int i = 0; i < grid_width; i++)
+	for (int i = 0; i < draw_grid_width; i++)
 	{
-		for (int j = 0; j < grid_height; j++)
+		for (int j = 0; j < draw_grid_height; j++)
 		{
-			float x = grid_x + (i)*cell_width;
-			float y = grid_y + (j)*cell_height;
+			float x = grid_offset_x + (i)*cell_width;
+			float y = grid_offset_y + (j)*cell_height;
 
-			if (i == 0 || j == 0 || i == grid_width - 1 || j == grid_height - 1)
+			if (grid_get(game_grid, i, j))
 				draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected");
 			else
 				draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");

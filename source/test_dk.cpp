@@ -11,6 +11,8 @@
 #include "demo.h"
 #include "perf.h"
 #include <utils.hpp>
+#include <grid.h>
+#include <vector>
 
 #ifndef USE_OPENGL
 
@@ -73,6 +75,8 @@ class DkTest final : public CApplication
 	float prevTime;
 	PadState pad;
 
+	std::vector<std::vector<bool>> game_grid;
+
 public:
 	DkTest()
 	{
@@ -96,7 +100,7 @@ public:
 		createFramebufferResources();
 
 		this->renderer.emplace(FramebufferWidth, FramebufferHeight, this->device, this->queue, *this->pool_images, *this->pool_code, *this->pool_data);
-		this->vg = nvgCreateDk(&*this->renderer, NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+		this->vg = nvgCreateDk(&*this->renderer, 0);
 
 		initGraph(&fps, GRAPH_RENDER_FPS, "Frame Time");
 
@@ -106,6 +110,8 @@ public:
 
 		padConfigureInput(1, HidNpadStyleSet_NpadStandard);
 		padInitializeDefault(&pad);
+
+		game_grid = grid_create(11, 20);
 	}
 
 	~DkTest()
@@ -205,7 +211,7 @@ public:
 		cmdbuf.setScissors(0, { { 0, 0, FramebufferWidth, FramebufferHeight } });
 
 		// Clear the color and depth buffers
-		cmdbuf.clearColor(0, DkColorMask_RGBA, 0.2f, 0.3f, 0.3f, 1.0f);
+		cmdbuf.clearColor(0, DkColorMask_RGBA, 109.f / 255.f, 120.f / 255.f, 92.f / 255.f, 1.0f);
 		cmdbuf.clearDepthStencil(true, 1.0f, 0xFF, 0);
 
 		// Bind required state
@@ -236,12 +242,13 @@ public:
 		nvgBeginFrame(vg, FramebufferWidth, FramebufferHeight, 1.0f);
 		{
 			// Render stuff!
-			padUpdate(&pad);
+			//padUpdate(&pad);
 			u64 kDown = padGetButtons(&pad);
 			if (!(kDown & HidNpadButton_Up))
-				renderTester(vg, 0, 0, FramebufferWidth, FramebufferHeight, time, blowup, &this->data);
+				renderTester(vg, this->game_grid, 0, 0, FramebufferWidth, FramebufferHeight, time);
 			else
 				renderDemo(vg, 0, 0, FramebufferWidth, FramebufferHeight, time, blowup, &this->data);
+
 			renderGraph(vg, 5, 5, &fps);
 		}
 		nvgEndFrame(vg);
@@ -253,9 +260,20 @@ public:
 	bool onFrame(u64 ns) override
 	{
 		padUpdate(&pad);
-		u64 kDown = padGetButtons(&pad);
+		u64 kDown = padGetButtonsDown(&pad);
 		if (kDown & HidNpadButton_Plus)
 			return false;
+
+		if (kDown & HidNpadButton_A)
+		{
+			for (int i = 0; i < grid_width(this->game_grid); i++)
+			{
+				for (int j = 0; j < grid_height(this->game_grid); j++)
+				{
+					grid_set(this->game_grid, i, j, 0 == (rand() % 2));
+				}
+			}
+		}
 
 		// hidKeysHeld alternate not provided with libnx v4.0.0 +
 		// using kDown instead. Renders for a single frame when pressed
