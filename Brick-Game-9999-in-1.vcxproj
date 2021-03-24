@@ -73,7 +73,6 @@
     <ClCompile Include="source\perf.c" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\test_dk.cpp" />
-    <ClCompile Include="source\test_gl.cpp" />
     <ClCompile Include="source\utils.cpp" />
   </ItemGroup>
   <ItemGroup>

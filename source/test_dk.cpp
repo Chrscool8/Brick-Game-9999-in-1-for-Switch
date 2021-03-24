@@ -14,7 +14,6 @@
 #include <grid.h>
 #include <vector>
 
-#ifndef USE_OPENGL
 
 static int nxlink_sock = -1;
 
@@ -289,4 +288,3 @@ int dk_main(int argc, char* argv[])
 	app.run();
 	return 0;
 }
-#endif
