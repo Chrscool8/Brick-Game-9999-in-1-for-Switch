@@ -41,8 +41,8 @@ bool draw_sprite(NVGcontext* vg, float x, float y, float width, float height, st
 
 void renderTester(NVGcontext* vg, float mx, float my, float width, float height, float t, int blowup, DemoData* data)
 {
-	const int cell_width = 30;
-	const int cell_height = 30;
+	const int cell_width = 31;
+	const int cell_height = 31;
 
 	const int grid_x = 260;
 	const int grid_y = 60;
