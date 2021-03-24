@@ -797,6 +797,9 @@ int loadDemoData(NVGcontext* vg, DemoData* data)
 	if (vg == NULL)
 		return -1;
 
+	load_sprite(vg, "spr_cell_selected", "romfs:/images/cell_selected.png");
+	load_sprite(vg, "spr_cell_unselected", "romfs:/images/cell_unselected.png");
+
 	for (i = 0; i < 14; i++) {
 		char file[128];
 		snprintf(file, 128, "romfs:/images/image%d.jpg", i + 1);
@@ -804,12 +807,9 @@ int loadDemoData(NVGcontext* vg, DemoData* data)
 		printf("IMG: %i\n", data->images[i]);
 		if (data->images[i] == 0) {
 			printf("Could not load %s.\n", file);
-			return -1;
+			//return -1;
 		}
 	}
-
-	load_sprite(vg, "spr_cell_selected", "romfs:/images/cell_selected.png");
-	load_sprite(vg, "spr_cell_unselected", "romfs:/images/cell_unselected.png");
 
 	data->fontIcons = nvgCreateFont(vg, "icons", "romfs:/fonts/entypo.ttf");
 	if (data->fontIcons == -1) {
