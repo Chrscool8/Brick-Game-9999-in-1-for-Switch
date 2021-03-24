@@ -10,18 +10,11 @@
 #include "nanovg_dk.h"
 #include "demo.h"
 #include "perf.h"
-#include <utils.h>
+#include <utils.hpp>
 
-#include <pad.h>
-
-// #define USE_OPENGL
 #ifndef USE_OPENGL
 
-//#define DEBUG_NXLINK
-
-#ifdef DEBUG_NXLINK
 static int nxlink_sock = -1;
-#endif
 
 extern "C" void userAppInit(void)
 {
@@ -29,20 +22,15 @@ extern "C" void userAppInit(void)
 	if (R_FAILED(res))
 		fatalThrow(res);
 
-#ifdef DEBUG_NXLINK
 	socketInitializeDefault();
-	nxlink_sock = nxlinkStdioForDebug();
-#endif
+	nxlink_sock = nxlinkStdio();
 }
 
 extern "C" void userAppExit(void)
 {
-#ifdef DEBUG_NXLINK
 	if (nxlink_sock != -1)
 		close(nxlink_sock);
 	socketExit();
-#endif
-
 	romfsExit();
 }
 
