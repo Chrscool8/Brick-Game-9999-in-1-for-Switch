@@ -1,4 +1,4 @@
-# Brick Game - 9999-in-1
+# Brick Game - 9999-in-1 - for Switch
 
 Just for fun
 
