@@ -14,6 +14,14 @@
 #include <switch/runtime/devices/socket.h>
 #define NumFramebuffers 2
 
+struct game_item {
+	std::string name;
+	void (*init_function)(vector<vector<bool>>& game_grid);
+	void (*run_function)(vector<vector<bool>>& game_grid);
+	void (*exit_function)(vector<vector<bool>>& game_grid);
+};
+
+
 class BrickGame : public CApplication
 {
 private:
@@ -48,6 +56,7 @@ private:
 	PadState pad;
 
 	bool portrait_mode;
+	vector<game_item> game_list;
 
 public:
 	BrickGame();

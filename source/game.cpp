@@ -12,6 +12,8 @@
 #include <nanovg/framework/CApplication.h>
 #include <switch/runtime/devices/socket.h>
 #include <grid_sprites.h>
+#include <game_snake.h>
+#include <game_menu.h>
 
 static int nxlink_sock = -1;
 
@@ -102,6 +104,22 @@ BrickGame::BrickGame()
 	game_grid = grid_create(11, 20);
 
 	portrait_mode = false;
+
+	//
+	game_item game_snake;
+	game_snake.name = "Snake";
+	game_snake.init_function = &game_snake_init;
+	game_snake.run_function = &game_snake_run;
+	game_snake.exit_function = &game_snake_exit;
+	game_list.push_back(game_snake);
+
+	game_item game_menu;
+	game_menu.name = "Menu";
+	game_menu.init_function = &game_menu_init;
+	game_menu.run_function = &game_menu_run;
+	game_menu.exit_function = &game_menu_exit;
+	game_list.push_back(game_menu);
+
 }
 
 BrickGame::~BrickGame()
@@ -243,23 +261,39 @@ void BrickGame::render(u64 ns)
 bool BrickGame::onFrame(u64 ns)
 {
 	padUpdate(&pad);
-	u64 kDown = padGetButtonsDown(&pad);
+	u64 keyboard_check_pressed = padGetButtonsDown(&pad);
+	u64 keyboard_check = padGetButtons(&pad);
 
-	if (kDown & HidNpadButton_Plus)
+	if (keyboard_check_pressed & HidNpadButton_Plus)
 	{
 		return false;
 	}
 
-	if (kDown & HidNpadButton_A)
+	if (keyboard_check_pressed & HidNpadButton_A)
 	{
-		grid_clear(game_grid);
 		place_grid_sprite(game_grid, grid_sprite_three_x_three_square, rand() % 10, rand() % 20, false);
 	}
 
-	if (kDown & HidNpadButton_Minus)
+	if (keyboard_check_pressed & HidNpadButton_Minus)
 	{
 		portrait_mode = !portrait_mode;
 	}
+
+	if (keyboard_check_pressed & HidNpadButton_Left)
+	{
+		game_list.at(0).init_function(game_grid);
+	}
+
+	if (keyboard_check & HidNpadButton_Up)
+	{
+		game_list.at(0).run_function(game_grid);
+	}
+
+	if (keyboard_check_pressed & HidNpadButton_Right)
+	{
+		game_list.at(0).exit_function(game_grid);
+	}
+
 
 	render(ns);
 	return true;

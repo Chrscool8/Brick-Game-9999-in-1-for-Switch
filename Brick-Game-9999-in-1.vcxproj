@@ -38,6 +38,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\game.hpp" />
+    <ClInclude Include="include\game_menu.h" />
+    <ClInclude Include="include\game_race.h" />
+    <ClInclude Include="include\game_snake.h" />
     <ClInclude Include="include\grid.hpp" />
     <ClInclude Include="include\grid_sprites.h" />
     <ClInclude Include="include\utils.hpp" />
@@ -71,6 +74,9 @@
     <ClCompile Include="nanovg\source\framework\FileLoader.cpp" />
     <ClCompile Include="nanovg\source\nanovg.c" />
     <ClCompile Include="source\game.cpp" />
+    <ClCompile Include="source\game_menu.cpp" />
+    <ClCompile Include="source\game_race.cpp" />
+    <ClCompile Include="source\game_snake.cpp" />
     <ClCompile Include="source\grid.cpp" />
     <ClCompile Include="source\grid_sprites.cpp" />
     <ClCompile Include="source\perf.cpp" />
