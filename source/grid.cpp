@@ -58,3 +58,14 @@ int grid_height(std::vector<std::vector<bool>>& grid)
 {
 	return grid.at(0).size();
 }
+
+void grid_clear(std::vector<std::vector<bool>>& grid)
+{
+	for (int i = 0; i < grid_width(grid); i++)
+	{
+		for (int j = 0; j < grid_height(grid); j++)
+		{
+			grid_set(grid, i, j, false);
+		}
+	}
+}

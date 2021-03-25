@@ -11,6 +11,7 @@
 #include <nanovg/framework/CMemPool.h>
 #include <nanovg/framework/CApplication.h>
 #include <switch/runtime/devices/socket.h>
+#include <grid_sprites.h>
 
 static int nxlink_sock = -1;
 
@@ -207,7 +208,7 @@ void BrickGame::recordStaticCommands()
 	render_cmdlist = cmdbuf.finishList();
 }
 
-void BrickGame::render(u64 ns, int blowup)
+void BrickGame::render(u64 ns)
 {
 	float time = ns / 1000000000.0;
 	float dt = time - prevTime;
@@ -227,7 +228,7 @@ void BrickGame::render(u64 ns, int blowup)
 	nvgBeginFrame(vg, FramebufferWidth, FramebufferHeight, 1.0f);
 	{
 		// Render stuff!
-		renderTester(vg, this->game_grid, 0, 0, FramebufferWidth, FramebufferHeight, time);
+		renderGame(vg, this->game_grid, 0, 0, FramebufferWidth, FramebufferHeight, time);
 
 		renderGraph(vg, 5, 5, &fps);
 	}
@@ -246,16 +247,11 @@ bool BrickGame::onFrame(u64 ns)
 
 	if (kDown & HidNpadButton_A)
 	{
-		for (int i = 0; i < grid_width(this->game_grid); i++)
-		{
-			for (int j = 0; j < grid_height(this->game_grid); j++)
-			{
-				grid_set(this->game_grid, i, j, 0 == (rand() % 2));
-			}
-		}
+		grid_clear(game_grid);
+		place_grid_sprite(game_grid, grid_sprite_three_x_three_square, rand() % 10, rand() % 20, false);
 	}
 
-	render(ns, kDown & HidNpadButton_Minus);
+	render(ns);
 	return true;
 }
 

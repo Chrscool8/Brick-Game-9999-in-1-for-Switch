@@ -53,7 +53,7 @@ public:
 	void createFramebufferResources();
 	void destroyFramebufferResources();
 	void recordStaticCommands();
-	void render(u64 ns, int blowup);
+	void render(u64 ns);
 	bool onFrame(u64 ns) override;
 
 	vector<vector<bool>> game_grid;

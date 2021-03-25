@@ -8,3 +8,4 @@ bool grid_set(vector<vector<bool>>& grid, int x, int y, bool val);
 bool grid_get(vector<vector<bool>>& grid, int x, int y);
 int grid_width(vector<vector<bool>>& grid);
 int grid_height(vector<vector<bool>>& grid);
+void grid_clear(vector<vector<bool>>& grid);

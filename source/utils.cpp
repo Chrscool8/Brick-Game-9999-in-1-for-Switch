@@ -39,7 +39,7 @@ bool draw_sprite(NVGcontext* vg, float x, float y, float width, float height, st
 	}
 }
 
-void renderTester(NVGcontext* vg, std::vector<std::vector<bool>>& game_grid, float mx, float my, float width, float height, float t)
+void renderGame(NVGcontext* vg, std::vector<std::vector<bool>>& game_grid, float mx, float my, float width, float height, float t)
 {
 	const int cell_width = 31;
 	const int cell_height = 31;
@@ -49,6 +49,13 @@ void renderTester(NVGcontext* vg, std::vector<std::vector<bool>>& game_grid, flo
 
 	const int draw_grid_width = grid_width(game_grid);
 	const int draw_grid_height = grid_height(game_grid);
+
+	const int border_size = 5;
+
+	nvgBeginPath(vg);
+	nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_width + border_size * 2, cell_height * draw_grid_height + border_size * 2, 5);
+	nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+	nvgFill(vg);
 
 	for (int i = 0; i < draw_grid_width; i++)
 	{

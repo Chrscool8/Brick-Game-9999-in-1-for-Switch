@@ -12,6 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="Brick-Game-9999-in-1.elf" />
+    <None Include="Brick-Game-9999-in-1.nacp" />
+    <None Include="Brick-Game-9999-in-1.nro" />
     <None Include="build_and_run.sh" />
     <None Include="LICENSE" />
     <None Include="Makefile" />
@@ -36,6 +39,7 @@
   <ItemGroup>
     <ClInclude Include="include\game.hpp" />
     <ClInclude Include="include\grid.hpp" />
+    <ClInclude Include="include\grid_sprites.h" />
     <ClInclude Include="include\utils.hpp" />
     <ClInclude Include="nanovg\include\nanovg.h" />
     <ClInclude Include="nanovg\include\nanovg\dk_renderer.hpp" />
@@ -68,6 +72,7 @@
     <ClCompile Include="nanovg\source\nanovg.c" />
     <ClCompile Include="source\game.cpp" />
     <ClCompile Include="source\grid.cpp" />
+    <ClCompile Include="source\grid_sprites.cpp" />
     <ClCompile Include="source\perf.cpp" />
     <ClCompile Include="source\utils.cpp" />
   </ItemGroup>
