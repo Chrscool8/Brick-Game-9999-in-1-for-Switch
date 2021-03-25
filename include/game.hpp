@@ -47,6 +47,8 @@ private:
 	float prevTime;
 	PadState pad;
 
+	bool portrait_mode;
+
 public:
 	BrickGame();
 	~BrickGame();

@@ -70,6 +70,8 @@ BrickGame::BrickGame()
 	// Load Resources
 	load_sprite(vg, "spr_cell_selected", "romfs:/images/cell_selected.png");
 	load_sprite(vg, "spr_cell_unselected", "romfs:/images/cell_unselected.png");
+	load_sprite(vg, "spr_cell_selected_rot", "romfs:/images/cell_selected_rot.png");
+	load_sprite(vg, "spr_cell_unselected_rot", "romfs:/images/cell_unselected_rot.png");
 
 	int fontIcons = nvgCreateFont(vg, "icons", "romfs:/fonts/entypo.ttf");
 	if (fontIcons == -1) {
@@ -98,6 +100,8 @@ BrickGame::BrickGame()
 	padInitializeDefault(&pad);
 
 	game_grid = grid_create(11, 20);
+
+	portrait_mode = false;
 }
 
 BrickGame::~BrickGame()
@@ -227,9 +231,7 @@ void BrickGame::render(u64 ns)
 
 	nvgBeginFrame(vg, FramebufferWidth, FramebufferHeight, 1.0f);
 	{
-		// Render stuff!
-		renderGame(vg, this->game_grid, 0, 0, FramebufferWidth, FramebufferHeight, time);
-
+		renderGame(vg, game_grid, 0, 0, FramebufferWidth, FramebufferHeight, time, portrait_mode);
 		renderGraph(vg, 5, 5, &fps);
 	}
 	nvgEndFrame(vg);
@@ -242,13 +244,21 @@ bool BrickGame::onFrame(u64 ns)
 {
 	padUpdate(&pad);
 	u64 kDown = padGetButtonsDown(&pad);
+
 	if (kDown & HidNpadButton_Plus)
+	{
 		return false;
+	}
 
 	if (kDown & HidNpadButton_A)
 	{
 		grid_clear(game_grid);
 		place_grid_sprite(game_grid, grid_sprite_three_x_three_square, rand() % 10, rand() % 20, false);
+	}
+
+	if (kDown & HidNpadButton_Minus)
+	{
+		portrait_mode = !portrait_mode;
 	}
 
 	render(ns);

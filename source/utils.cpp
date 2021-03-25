@@ -39,35 +39,72 @@ bool draw_sprite(NVGcontext* vg, float x, float y, float width, float height, st
 	}
 }
 
-void renderGame(NVGcontext* vg, std::vector<std::vector<bool>>& game_grid, float mx, float my, float width, float height, float t)
+void renderGame(NVGcontext* vg, std::vector<std::vector<bool>>& game_grid, float mx, float my, float width, float height, float t, bool portrait)
 {
-	const int cell_width = 31;
-	const int cell_height = 31;
-
-	const int grid_offset_x = 260;
-	const int grid_offset_y = 60;
-
-	const int draw_grid_width = grid_width(game_grid);
-	const int draw_grid_height = grid_height(game_grid);
-
-	const int border_size = 5;
-
-	nvgBeginPath(vg);
-	nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_width + border_size * 2, cell_height * draw_grid_height + border_size * 2, 5);
-	nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-	nvgFill(vg);
-
-	for (int i = 0; i < draw_grid_width; i++)
+	if (!portrait)
 	{
-		for (int j = 0; j < draw_grid_height; j++)
-		{
-			float x = grid_offset_x + (i)*cell_width;
-			float y = grid_offset_y + (j)*cell_height;
+		int cell_width = 31;
+		int cell_height = 31;
 
-			if (grid_get(game_grid, i, j))
-				draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected");
-			else
-				draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");
+		int draw_grid_width = grid_width(game_grid);
+		int draw_grid_height = grid_height(game_grid);
+
+		int grid_offset_x = (1280 - (draw_grid_width * cell_width)) / 2.;
+		int grid_offset_y = (720 - (draw_grid_height * cell_height)) / 2.;
+
+		int border_size = 5;
+
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_width + border_size * 2, cell_height * draw_grid_height + border_size * 2, border_size);
+		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+		nvgFill(vg);
+
+		for (int i = 0; i < draw_grid_width; i++)
+		{
+			for (int j = 0; j < draw_grid_height; j++)
+			{
+				float x = grid_offset_x + (i)*cell_width;
+				float y = grid_offset_y + (j)*cell_height;
+
+				if (grid_get(game_grid, i, j))
+					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected");
+				else
+					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");
+			}
+		}
+	}
+	else
+	{
+		double scale = 1.5;
+
+		int cell_width = 31 * scale;
+		int cell_height = 31 * scale;
+
+		int draw_grid_width = grid_width(game_grid);
+		int draw_grid_height = grid_height(game_grid);
+
+		int grid_offset_x = (1280 - (draw_grid_height * cell_height)) / 2.;
+		int grid_offset_y = (720 - (draw_grid_width * cell_width)) / 2.;
+
+		int border_size = 5 * scale;
+
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_height + border_size * 2, cell_height * draw_grid_width + border_size * 2, border_size);
+		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+		nvgFill(vg);
+
+		for (int i = 0; i < draw_grid_width; i++)
+		{
+			for (int j = 0; j < draw_grid_height; j++)
+			{
+				float x = grid_offset_x + (j)*cell_height;
+				float y = grid_offset_y + (i)*cell_width;
+
+				if (grid_get(game_grid, draw_grid_width - i - 1, j))
+					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected_rot");
+				else
+					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected_rot");
+			}
 		}
 	}
 }
