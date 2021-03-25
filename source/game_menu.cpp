@@ -11,7 +11,7 @@ void game_menu_init(vector<vector<bool>>& game_grid)
 
 void game_menu_run(vector<vector<bool>>& game_grid)
 {
-	printf("Running Menu!!\n");
+	//printf("Running Menu!!\n");
 
 	grid_clear(game_grid);
 

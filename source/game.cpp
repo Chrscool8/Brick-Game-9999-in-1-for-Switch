@@ -98,6 +98,9 @@ BrickGame::BrickGame()
 
 	//
 
+	current_game = -1;
+	next_game = -1;
+
 	padConfigureInput(1, HidNpadStyleSet_NpadStandard);
 	padInitializeDefault(&pad);
 
@@ -106,19 +109,19 @@ BrickGame::BrickGame()
 	portrait_mode = false;
 
 	//
-	game_item game_snake;
-	game_snake.name = "Snake";
-	game_snake.init_function = &game_snake_init;
-	game_snake.run_function = &game_snake_run;
-	game_snake.exit_function = &game_snake_exit;
-	game_list.push_back(game_snake);
-
 	game_item game_menu;
 	game_menu.name = "Menu";
 	game_menu.init_function = &game_menu_init;
 	game_menu.run_function = &game_menu_run;
 	game_menu.exit_function = &game_menu_exit;
 	game_list.push_back(game_menu);
+
+	game_item game_snake;
+	game_snake.name = "Snake";
+	game_snake.init_function = &game_snake_init;
+	game_snake.run_function = &game_snake_run;
+	game_snake.exit_function = &game_snake_exit;
+	game_list.push_back(game_snake);
 
 }
 
@@ -269,31 +272,38 @@ bool BrickGame::onFrame(u64 ns)
 		return false;
 	}
 
-	if (keyboard_check_pressed & HidNpadButton_A)
+	if (keyboard_check_pressed & HidNpadButton_Y)
 	{
-		place_grid_sprite(game_grid, grid_sprite_three_x_three_square, rand() % 10, rand() % 20, false);
+		next_game = 0;
+	}
+
+	if (keyboard_check_pressed & HidNpadButton_X)
+	{
+		next_game = 1;
+	}
+
+	if (next_game != -1 && next_game != current_game)
+	{
+		if (current_game != -1)
+		{
+			game_list.at(current_game).exit_function(game_grid);
+		}
+
+		current_game = next_game;
+		next_game = -1;
+
+		game_list.at(current_game).init_function(game_grid);
+	}
+
+	if (current_game != -1)
+	{
+		game_list.at(current_game).run_function(game_grid);
 	}
 
 	if (keyboard_check_pressed & HidNpadButton_Minus)
 	{
 		portrait_mode = !portrait_mode;
 	}
-
-	if (keyboard_check_pressed & HidNpadButton_Left)
-	{
-		game_list.at(0).init_function(game_grid);
-	}
-
-	if (keyboard_check & HidNpadButton_Up)
-	{
-		game_list.at(0).run_function(game_grid);
-	}
-
-	if (keyboard_check_pressed & HidNpadButton_Right)
-	{
-		game_list.at(0).exit_function(game_grid);
-	}
-
 
 	render(ns);
 	return true;

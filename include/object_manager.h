@@ -12,6 +12,18 @@ enum enum_directions {
 struct point {
 	int x;
 	int y;
+
+	point()
+	{
+		x = 0;
+		y = 0;
+	}
+
+	point(int _x, int _y)
+	{
+		x = _x;
+		y = _y;
+	}
 };
 
 class game_object
@@ -25,6 +37,7 @@ public:
 	int direction;
 
 	vector<vector<bool>>& gg;
+	vector<point> tail;
 
 	game_object(vector<vector<bool>>& arr, int _x, int _y);
 	vector<vector<bool>> sprite;
@@ -35,8 +48,5 @@ public:
 };
 
 extern vector<std::unique_ptr<game_object>> objects;
-
-//int instance_create(std::unique_ptr<game_object> &object);
-
 
 #endif

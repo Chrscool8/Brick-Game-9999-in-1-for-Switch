@@ -25,6 +25,9 @@ struct game_item {
 class BrickGame : public CApplication
 {
 private:
+	int current_game;
+	int next_game;
+
 	uint32_t FramebufferWidth;
 	uint32_t FramebufferHeight;
 	unsigned StaticCmdSize;

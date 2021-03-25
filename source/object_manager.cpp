@@ -22,16 +22,19 @@ void game_object::create_function()
 	printf("ID: %u\n", id);
 	printf("Obj create\n");
 };
+
 void game_object::step_function()
 {
 	printf("ID: %u\n", id);
 	printf("Obj step\n");
 };
+
 void game_object::draw_function()
 {
 	printf("ID: %u\n", id);
 	printf("Obj draw\n");
 };
+
 void game_object::destroy_function()
 {
 	printf("ID: %u\n", id);
@@ -41,9 +44,3 @@ void game_object::destroy_function()
 unsigned int game_object::object_index = 0;
 
 vector<std::unique_ptr<game_object>> objects;
-
-//int instance_create(std::unique_ptr<game_object> &object)
-//{
-//	objects.push_back(object);
-//	return 0;
-//}
