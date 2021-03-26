@@ -16,7 +16,6 @@
     <None Include="Brick-Game-9999-in-1.nacp" />
     <None Include="Brick-Game-9999-in-1.nro" />
     <None Include="build_and_run.sh" />
-    <None Include="LICENSE" />
     <None Include="Makefile" />
     <None Include="nanovg\.gitignore" />
     <None Include="nanovg\.gitrepo" />
@@ -34,6 +33,7 @@
     <None Include="nanovg\shaders\fill_fsh.glsl" />
     <None Include="nanovg\shaders\fill_vsh.glsl" />
     <None Include="nanovg\source\framework\LICENSE" />
+    <None Include="nvg-LICENSE" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

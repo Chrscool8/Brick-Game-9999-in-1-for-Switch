@@ -9,12 +9,9 @@
 #include <utils.hpp>
 #include <grid.hpp>
 #include <vector>
-//#include "nanovg.h"
-//#include "nanovg_dk.h"
 #include <nanovg/framework/CMemPool.h>
 #include <nanovg/framework/CApplication.h>
 #include <nanovg/dk_renderer.hpp>
-//#include <switch/runtime/devices/socket.h>
 #define NumFramebuffers 2
 
 class BrickGame;
@@ -60,7 +57,6 @@ private:
 
 	PerfGraph fps;
 	float prevTime;
-	PadState pad;
 
 	bool portrait_mode;
 	vector<game_item> game_list;
@@ -75,6 +71,7 @@ public:
 	bool onFrame(u64 ns) override;
 
 	vector<vector<bool>> game_grid;
+	PadState pad;
 };
 
 #endif // !GAME_H

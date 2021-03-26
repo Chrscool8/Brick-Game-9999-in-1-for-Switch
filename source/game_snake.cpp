@@ -27,10 +27,17 @@ void obj_snake::step_function()
 	printf("Snake step\n");
 
 
-	//u64 keyboard_check_pressed = padGetButtonsDown();
-	//u64 keyboard_check = padGetButtons(&pad);
+	u64 keyboard_check_pressed = padGetButtonsDown(&game.pad);
+	u64 keyboard_check = padGetButtons(&game.pad);
 
-
+	if (keyboard_check & HidNpadButton_Right)
+		direction = direction_right;
+	if (keyboard_check & HidNpadButton_Up)
+		direction = direction_up;
+	if (keyboard_check & HidNpadButton_Left)
+		direction = direction_left;
+	if (keyboard_check & HidNpadButton_Down)
+		direction = direction_down;
 
 
 
