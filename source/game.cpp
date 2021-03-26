@@ -5,7 +5,7 @@
 #include <utils.hpp>
 #include <grid.hpp>
 #include <vector>
-#include <game.hpp>
+#include <game.h>
 #include "nanovg.h"
 #include "nanovg_dk.h"
 #include <nanovg/framework/CMemPool.h>
@@ -18,6 +18,7 @@
 static int nxlink_sock = -1;
 
 using namespace std;
+
 
 extern "C" void userAppInit(void)
 {
@@ -33,6 +34,8 @@ extern "C" void userAppExit(void)
 	socketExit();
 	romfsExit();
 }
+
+
 
 void OutputDkDebug(void* userData, const char* context, DkResult result, const char* message)
 {
@@ -286,18 +289,18 @@ bool BrickGame::onFrame(u64 ns)
 	{
 		if (current_game != -1)
 		{
-			game_list.at(current_game).exit_function(game_grid);
+			game_list.at(current_game).exit_function(*this);
 		}
 
 		current_game = next_game;
 		next_game = -1;
 
-		game_list.at(current_game).init_function(game_grid);
+		game_list.at(current_game).init_function(*this);
 	}
 
 	if (current_game != -1)
 	{
-		game_list.at(current_game).run_function(game_grid);
+		game_list.at(current_game).run_function(*this);
 	}
 
 	if (keyboard_check_pressed & HidNpadButton_Minus)

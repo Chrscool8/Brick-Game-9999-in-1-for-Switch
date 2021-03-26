@@ -37,13 +37,14 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\game.hpp" />
+    <ClInclude Include="include\game.h" />
     <ClInclude Include="include\game_menu.h" />
     <ClInclude Include="include\game_race.h" />
     <ClInclude Include="include\game_snake.h" />
     <ClInclude Include="include\grid.hpp" />
     <ClInclude Include="include\grid_sprites.h" />
     <ClInclude Include="include\object_manager.h" />
+    <ClInclude Include="include\other.h" />
     <ClInclude Include="include\utils.hpp" />
     <ClInclude Include="nanovg\include\nanovg.h" />
     <ClInclude Include="nanovg\include\nanovg\dk_renderer.hpp" />

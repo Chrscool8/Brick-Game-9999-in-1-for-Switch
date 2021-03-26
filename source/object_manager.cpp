@@ -4,12 +4,13 @@
 #include <functional>
 #include <memory>
 #include <object_manager.h>
+#include <game.h>
 using namespace std;
 
 
 
 
-game_object::game_object(vector<vector<bool>>& arr, int _x, int _y) : gg(arr), x(_x), y(_y)
+game_object::game_object(BrickGame& _game, int _x, int _y) : game(_game), x(_x), y(_y)
 {
 	id = object_index;
 	object_index += 1;

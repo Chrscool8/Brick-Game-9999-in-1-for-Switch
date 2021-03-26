@@ -2,6 +2,8 @@
 #ifndef OBJ_H
 #define OBJ_H
 
+#include <game.h>
+
 enum enum_directions {
 	direction_right,
 	direction_up,
@@ -36,10 +38,10 @@ public:
 
 	int direction;
 
-	vector<vector<bool>>& gg;
+	BrickGame& game;
 	vector<point> tail;
 
-	game_object(vector<vector<bool>>& arr, int _x, int _y);
+	game_object(BrickGame& game_, int _x, int _y);
 	vector<vector<bool>> sprite;
 	virtual void create_function();
 	virtual void step_function();

@@ -7,7 +7,7 @@
 #include <game_snake.h>
 using namespace std;
 
-obj_snake::obj_snake(vector<vector<bool>>& arr, int _x, int _y) :game_object(arr, _x, _y)
+obj_snake::obj_snake(BrickGame& game, int _x, int _y) :game_object(game, _x, _y)
 {
 	create_function();
 };
@@ -25,6 +25,25 @@ void obj_snake::step_function()
 {
 	printf("ID: %u\n", id);
 	printf("Snake step\n");
+
+
+	//u64 keyboard_check_pressed = padGetButtonsDown();
+	//u64 keyboard_check = padGetButtons(&pad);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	if (move_counter < 25)
 	{
@@ -63,10 +82,10 @@ void obj_snake::draw_function()
 	printf("ID: %u\n", id);
 	printf("Snake draw\n");
 	printf("%i, %i\n", x, y);
-	grid_set(gg, x, y, true);
+	grid_set(game.game_grid, x, y, true);
 
 	for (int i = 0; i < tail.size(); i++)
-		grid_set(gg, tail.at(i).x, tail.at(i).y, true);
+		grid_set(game.game_grid, tail.at(i).x, tail.at(i).y, true);
 };
 
 void obj_snake::destroy_function()
@@ -75,17 +94,17 @@ void obj_snake::destroy_function()
 	printf("Snake destroy\n");
 };
 
-void game_snake_init(vector<vector<bool>>& game_grid)
+void game_snake_init(BrickGame& game)
 {
 	printf("Initting Snake!!\n");
-	objects.push_back(std::make_unique<obj_snake>(game_grid, 5, 5));
+	objects.push_back(std::make_unique<obj_snake>(game, 5, 5));
 }
 
-void game_snake_run(vector<vector<bool>>& game_grid)
+void game_snake_run(BrickGame& game)
 {
 	printf("Running Snake!!\n");
 
-	grid_clear(game_grid);
+	grid_clear(game.game_grid);
 
 	for (unsigned int i = 0; i < objects.size(); i++)
 	{
@@ -98,7 +117,7 @@ void game_snake_run(vector<vector<bool>>& game_grid)
 	}
 }
 
-void game_snake_exit(vector<vector<bool>>& game_grid)
+void game_snake_exit(BrickGame& game)
 {
 	printf("Exiting Snake!!\n");
 

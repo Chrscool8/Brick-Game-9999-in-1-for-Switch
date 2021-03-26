@@ -1,4 +1,7 @@
 #pragma once
+#ifndef GAME_H
+#define GAME_H
+
 #include <array>
 #include <optional>
 #include <unistd.h>
@@ -6,21 +9,22 @@
 #include <utils.hpp>
 #include <grid.hpp>
 #include <vector>
-#include <game.hpp>
-#include "nanovg.h"
-#include "nanovg_dk.h"
+//#include "nanovg.h"
+//#include "nanovg_dk.h"
 #include <nanovg/framework/CMemPool.h>
 #include <nanovg/framework/CApplication.h>
-#include <switch/runtime/devices/socket.h>
+#include <nanovg/dk_renderer.hpp>
+//#include <switch/runtime/devices/socket.h>
 #define NumFramebuffers 2
+
+class BrickGame;
 
 struct game_item {
 	std::string name;
-	void (*init_function)(vector<vector<bool>>& game_grid);
-	void (*run_function)(vector<vector<bool>>& game_grid);
-	void (*exit_function)(vector<vector<bool>>& game_grid);
+	void (*init_function)(BrickGame& game);
+	void (*run_function)(BrickGame& game);
+	void (*exit_function)(BrickGame& game);
 };
-
 
 class BrickGame : public CApplication
 {
@@ -72,3 +76,5 @@ public:
 
 	vector<vector<bool>> game_grid;
 };
+
+#endif // !GAME_H
