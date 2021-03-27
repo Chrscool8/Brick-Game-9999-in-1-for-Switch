@@ -69,3 +69,8 @@ void grid_clear(std::vector<std::vector<bool>>& grid)
 		}
 	}
 }
+
+bool point_in_grid(std::vector<std::vector<bool>>& grid, int x, int y)
+{
+	return (x >= 0 && y >= 0 && x < grid_width(grid) && y < grid_height(grid));
+}

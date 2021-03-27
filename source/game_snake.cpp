@@ -127,7 +127,7 @@ void obj_snake::step_function()
 			{
 			case direction_right:
 			{
-				if (!snake_is_at(x + 1, y))
+				if (!snake_is_at(x + 1, y) && point_in_grid(game.game_grid, x + 1, y))
 				{
 					x += 1;
 				}
@@ -137,7 +137,7 @@ void obj_snake::step_function()
 			break;
 			case direction_up:
 			{
-				if (!snake_is_at(x, y - 1))
+				if (!snake_is_at(x, y - 1) && point_in_grid(game.game_grid, x, y - 1))
 					y -= 1;
 				else
 					die();
@@ -145,7 +145,7 @@ void obj_snake::step_function()
 			break;
 			case direction_left:
 			{
-				if (!snake_is_at(x - 1, y))
+				if (!snake_is_at(x - 1, y) && point_in_grid(game.game_grid, x - 1, y))
 					x -= 1;
 				else
 					die();
@@ -153,7 +153,7 @@ void obj_snake::step_function()
 			break;
 			case direction_down:
 			{
-				if (!snake_is_at(x, y + 1))
+				if (!snake_is_at(x, y + 1) && point_in_grid(game.game_grid, x, y + 1))
 					y += 1;
 				else
 					die();
