@@ -444,6 +444,19 @@ void BrickGame::render(u64 ns)
 	{
 		renderGame(vg, *this, 0, 0, FramebufferWidth, FramebufferHeight, time);
 		renderGraph(vg, 5, 5, &fps);
+
+		{
+			nvgFontFace(vg, "sans");
+			nvgFontSize(vg, 20.0f);
+			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+			nvgFillColor(vg, nvgRGBA(30, 30, 30, 255));
+			nvgText(vg, 20, 100-30, "Welcome to this", NULL);
+			nvgText(vg, 20, 120 - 30, "extremely early", NULL);
+			nvgText(vg, 20, 140 - 30, "version!", NULL);
+			nvgText(vg, 20, 180 - 30, "Minus: Rotate", NULL);
+			nvgText(vg, 20, 200 - 30, "Y : Menu", NULL);
+			nvgText(vg, 20, 220 - 30, "X : Snake", NULL);
+		}
 	}
 	nvgEndFrame(vg);
 
