@@ -35,6 +35,42 @@ extern "C" void userAppExit(void)
 	romfsExit();
 }
 
+std::map<std::string, int> sprite_indicies;
+
+void load_sprite(NVGcontext* vg, std::string sprite_name, std::string sprite_path)
+{
+	sprite_indicies[sprite_name] = nvgCreateImage(vg, sprite_path.c_str(), NVG_IMAGE_NEAREST);
+	if (sprite_indicies[sprite_name] == 0)
+		printf(("Problem loading " + sprite_name + "\n").c_str());
+	else
+		printf(("Loaded " + sprite_name + " to index " + std::to_string(sprite_indicies[sprite_name]) + "\n").c_str());
+}
+
+bool draw_sprite(NVGcontext* vg, float x, float y, float width, float height, std::string sprite_name)
+{
+	if (sprite_indicies.count(sprite_name) == 0)
+	{
+		printf(("Trying to draw unloaded sprite, " + sprite_name + "\n").c_str());
+		return false;
+	}
+	else
+	{
+		//printf(("Trying to draw loaded sprite, " + sprite_name + "\n").c_str());
+		nvgSave(vg);
+		nvgScissor(vg, x, y, width, height);
+		nvgTranslate(vg, x, y);
+
+		NVGpaint  imgPaint = nvgImagePattern(vg, 0, 0, width, height, 0.0f / 180.0f * NVG_PI, sprite_indicies[sprite_name], 1.0f);
+		nvgBeginPath(vg);
+		nvgRect(vg, 0, 0, width, height);
+		nvgFillPaint(vg, imgPaint);
+		nvgFill(vg);
+		nvgRestore(vg);
+		return true;
+	}
+}
+
+
 
 
 void OutputDkDebug(void* userData, const char* context, DkResult result, const char* message)
@@ -74,9 +110,14 @@ BrickGame::BrickGame()
 
 	// Load Resources
 	load_sprite(vg, "spr_cell_selected", "romfs:/images/cell_selected.png");
+	load_sprite(vg, "spr_cell_selected_90", "romfs:/images/cell_selected_90.png");
+	load_sprite(vg, "spr_cell_selected_180", "romfs:/images/cell_selected_180.png");
+	load_sprite(vg, "spr_cell_selected_270", "romfs:/images/cell_selected_270.png");
+
 	load_sprite(vg, "spr_cell_unselected", "romfs:/images/cell_unselected.png");
-	load_sprite(vg, "spr_cell_selected_rot", "romfs:/images/cell_selected_rot.png");
-	load_sprite(vg, "spr_cell_unselected_rot", "romfs:/images/cell_unselected_rot.png");
+	load_sprite(vg, "spr_cell_unselected_90", "romfs:/images/cell_unselected_90.png");
+	load_sprite(vg, "spr_cell_unselected_180", "romfs:/images/cell_unselected_180.png");
+	load_sprite(vg, "spr_cell_unselected_270", "romfs:/images/cell_unselected_270.png");
 
 	int fontIcons = nvgCreateFont(vg, "icons", "romfs:/fonts/entypo.ttf");
 	if (fontIcons == -1) {
@@ -109,7 +150,7 @@ BrickGame::BrickGame()
 
 	game_grid = grid_create(11, 20);
 
-	portrait_mode = false;
+	screen_orientation = orientation_normal;
 
 	//
 	game_item game_menu;
@@ -236,6 +277,151 @@ void BrickGame::recordStaticCommands()
 	render_cmdlist = cmdbuf.finishList();
 }
 
+void renderGame(NVGcontext* vg, BrickGame& game, float mx, float my, float width, float height, float t)
+{
+
+	switch (game.screen_orientation)
+	{
+	case orientation_normal:
+	{
+		int cell_width = 31;
+		int cell_height = 31;
+
+		int draw_grid_width = grid_width(game.game_grid);
+		int draw_grid_height = grid_height(game.game_grid);
+
+		int grid_offset_x = (1280 - (draw_grid_width * cell_width)) / 2.;
+		int grid_offset_y = (720 - (draw_grid_height * cell_height)) / 2.;
+
+		int border_size = 5;
+
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_width + border_size * 2, cell_height * draw_grid_height + border_size * 2, border_size);
+		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+		nvgFill(vg);
+
+		for (int i = 0; i < draw_grid_width; i++)
+		{
+			for (int j = 0; j < draw_grid_height; j++)
+			{
+				float x = grid_offset_x + (i)*cell_width;
+				float y = grid_offset_y + (j)*cell_height;
+
+				if (grid_get(game.game_grid, i, j))
+					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected");
+				else
+					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");
+			}
+		}
+	}
+	break;
+	case (orientation_right_down):
+	{
+		double scale = 1.5;
+
+		int cell_width = 31 * scale;
+		int cell_height = 31 * scale;
+
+		int draw_grid_width = grid_width(game.game_grid);
+		int draw_grid_height = grid_height(game.game_grid);
+
+		int grid_offset_x = (1280 - (draw_grid_height * cell_height)) / 2.;
+		int grid_offset_y = (720 - (draw_grid_width * cell_width)) / 2.;
+
+		int border_size = 5 * scale;
+
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_height + border_size * 2, cell_height * draw_grid_width + border_size * 2, border_size);
+		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+		nvgFill(vg);
+
+		for (int i = 0; i < draw_grid_width; i++)
+		{
+			for (int j = 0; j < draw_grid_height; j++)
+			{
+				float x = grid_offset_x + (j)*cell_height;
+				float y = grid_offset_y + (i)*cell_width;
+
+				if (grid_get(game.game_grid, draw_grid_width - i - 1, j))
+					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected_90");
+				else
+					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected_90");
+			}
+		}
+	}
+	break;
+	case orientation_upside_down:
+	{
+		int cell_width = 31;
+		int cell_height = 31;
+
+		int draw_grid_width = grid_width(game.game_grid);
+		int draw_grid_height = grid_height(game.game_grid);
+
+		int grid_offset_x = (1280 - (draw_grid_width * cell_width)) / 2.;
+		int grid_offset_y = (720 - (draw_grid_height * cell_height)) / 2.;
+
+		int border_size = 5;
+
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_width + border_size * 2, cell_height * draw_grid_height + border_size * 2, border_size);
+		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+		nvgFill(vg);
+
+		for (int i = 0; i < draw_grid_width; i++)
+		{
+			for (int j = 0; j < draw_grid_height; j++)
+			{
+				float x = grid_offset_x + (i)*cell_width;
+				float y = grid_offset_y + (j)*cell_height;
+
+				if (grid_get(game.game_grid, draw_grid_width - i - 1, draw_grid_height - j - 1))
+					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected_180");
+				else
+					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected_180");
+			}
+		}
+	}
+	break;
+	case (orientation_left_down):
+	{
+		double scale = 1.5;
+
+		int cell_width = 31 * scale;
+		int cell_height = 31 * scale;
+
+		int draw_grid_width = grid_width(game.game_grid);
+		int draw_grid_height = grid_height(game.game_grid);
+
+		int grid_offset_x = (1280 - (draw_grid_height * cell_height)) / 2.;
+		int grid_offset_y = (720 - (draw_grid_width * cell_width)) / 2.;
+
+		int border_size = 5 * scale;
+
+		nvgBeginPath(vg);
+		nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_height + border_size * 2, cell_height * draw_grid_width + border_size * 2, border_size);
+		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+		nvgFill(vg);
+
+		for (int i = 0; i < draw_grid_width; i++)
+		{
+			for (int j = 0; j < draw_grid_height; j++)
+			{
+				float x = grid_offset_x + (j)*cell_height;
+				float y = grid_offset_y + (i)*cell_width;
+
+				if (grid_get(game.game_grid, i, draw_grid_height - j - 1))
+					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected_270");
+				else
+					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected_270");
+			}
+		}
+	}
+	break;
+	}
+}
+
+
 void BrickGame::render(u64 ns)
 {
 	float time = ns / 1000000000.0;
@@ -255,7 +441,7 @@ void BrickGame::render(u64 ns)
 
 	nvgBeginFrame(vg, FramebufferWidth, FramebufferHeight, 1.0f);
 	{
-		renderGame(vg, game_grid, 0, 0, FramebufferWidth, FramebufferHeight, time, portrait_mode);
+		renderGame(vg, *this, 0, 0, FramebufferWidth, FramebufferHeight, time);
 		renderGraph(vg, 5, 5, &fps);
 	}
 	nvgEndFrame(vg);
@@ -305,7 +491,8 @@ bool BrickGame::onFrame(u64 ns)
 
 	if (keyboard_check_pressed & HidNpadButton_Minus)
 	{
-		portrait_mode = !portrait_mode;
+		screen_orientation += 1;
+		screen_orientation = screen_orientation % 4;
 	}
 
 	render(ns);

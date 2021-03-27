@@ -7,7 +7,7 @@
 #include <game_snake.h>
 using namespace std;
 
-obj_snake::obj_snake(BrickGame& game, int _x, int _y) :game_object(game, _x, _y)
+obj_snake::obj_snake(BrickGame& game, int _x, int _y) : game_object(game, _x, _y)
 {
 	create_function();
 };
@@ -21,22 +21,45 @@ void obj_snake::create_function()
 	snake_length = 3;
 };
 
+bool keyboard_check_right(BrickGame& game)
+{
+	u64 keyboard_check = padGetButtons(&game.pad);
+	return (keyboard_check & HidNpadButton_Right);
+}
+
+bool keyboard_check_up(BrickGame& game)
+{
+	u64 keyboard_check = padGetButtons(&game.pad);
+	return (keyboard_check & HidNpadButton_Up);
+}
+
+bool keyboard_check_left(BrickGame& game)
+{
+	u64 keyboard_check = padGetButtons(&game.pad);
+	return (keyboard_check & HidNpadButton_Left);
+}
+
+bool keyboard_check_down(BrickGame& game)
+{
+	u64 keyboard_check = padGetButtons(&game.pad);
+	return (keyboard_check & HidNpadButton_Down);
+}
+
 void obj_snake::step_function()
 {
 	printf("ID: %u\n", id);
 	printf("Snake step\n");
 
-
-	u64 keyboard_check_pressed = padGetButtonsDown(&game.pad);
-	u64 keyboard_check = padGetButtons(&game.pad);
-
-	if (keyboard_check & HidNpadButton_Right)
+	if (keyboard_check_right(game))
 		direction = direction_right;
-	if (keyboard_check & HidNpadButton_Up)
+
+	if (keyboard_check_up(game))
 		direction = direction_up;
-	if (keyboard_check & HidNpadButton_Left)
+
+	if (keyboard_check_left(game))
 		direction = direction_left;
-	if (keyboard_check & HidNpadButton_Down)
+
+	if (keyboard_check_down(game))
 		direction = direction_down;
 
 
@@ -91,7 +114,7 @@ void obj_snake::draw_function()
 	printf("%i, %i\n", x, y);
 	grid_set(game.game_grid, x, y, true);
 
-	for (int i = 0; i < tail.size(); i++)
+	for (unsigned int i = 0; i < tail.size(); i++)
 		grid_set(game.game_grid, tail.at(i).x, tail.at(i).y, true);
 };
 

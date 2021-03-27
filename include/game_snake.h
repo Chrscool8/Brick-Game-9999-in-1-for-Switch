@@ -19,7 +19,7 @@ class obj_snake : public game_object
 {
 public:
 	int move_counter;
-	int snake_length;
+	unsigned int snake_length;
 	obj_snake(BrickGame& game, int _x, int _y);
 	virtual void create_function() override;
 	virtual void step_function() override;

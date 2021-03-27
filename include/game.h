@@ -2,6 +2,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <string>
 #include <array>
 #include <optional>
 #include <unistd.h>
@@ -21,6 +22,13 @@ struct game_item {
 	void (*init_function)(BrickGame& game);
 	void (*run_function)(BrickGame& game);
 	void (*exit_function)(BrickGame& game);
+};
+
+enum enum_orientation {
+	orientation_normal,
+	orientation_right_down,
+	orientation_upside_down,
+	orientation_left_down
 };
 
 class BrickGame : public CApplication
@@ -58,7 +66,6 @@ private:
 	PerfGraph fps;
 	float prevTime;
 
-	bool portrait_mode;
 	vector<game_item> game_list;
 
 public:
@@ -72,6 +79,10 @@ public:
 
 	vector<vector<bool>> game_grid;
 	PadState pad;
+	char screen_orientation;
 };
+
+void renderGame(NVGcontext* vg, BrickGame& game, float mx, float my, float width, float height, float t);
+void load_sprite(NVGcontext* vg, std::string sprite_name, std::string sprite_path);
 
 #endif // !GAME_H
