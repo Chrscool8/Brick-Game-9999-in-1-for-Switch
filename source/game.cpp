@@ -14,6 +14,7 @@
 #include <grid_sprites.h>
 #include <game_snake.h>
 #include <game_menu.h>
+#include "audio.h"
 
 static int nxlink_sock = -1;
 
@@ -454,7 +455,7 @@ bool BrickGame::onFrame(u64 ns)
 {
 	padUpdate(&pad);
 	u64 keyboard_check_pressed = padGetButtonsDown(&pad);
-	u64 keyboard_check = padGetButtons(&pad);
+	//u64 keyboard_check = padGetButtons(&pad);
 
 	if (keyboard_check_pressed & HidNpadButton_Plus)
 	{
@@ -501,7 +502,9 @@ bool BrickGame::onFrame(u64 ns)
 
 int main(int argc, char* argv[])
 {
+	init_audio();
 	BrickGame app;
 	app.run();
+	exit_audio();
 	return 0;
 }

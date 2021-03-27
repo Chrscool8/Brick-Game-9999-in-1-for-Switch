@@ -59,7 +59,7 @@ ARCH	:=	-march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 CFLAGS	:=	-g -Wall -Wno-unused-function -Wno-misleading-indentation -O2 -ffunction-sections \
 			$(ARCH) $(DEFINES)
 
-CFLAGS	+=	$(INCLUDE) -D__SWITCH__
+CFLAGS	+=	$(INCLUDE) -D__SWITCH__ `$(PREFIX)pkg-config --cflags SDL2_mixer`
 
 CXXFLAGS	:= $(CFLAGS) -std=c++1z -O2
 
@@ -68,6 +68,7 @@ LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*
 
 # LIBS	:= -lnanovg -ldeko3dd -lglad -lEGL -lglapi -ldrm_nouveau -lnx
  LIBS	:= -lnanovg -ldeko3d -lnx
+ LIBS	+= `$(PREFIX)pkg-config --libs SDL2_mixer`
 
 
 #---------------------------------------------------------------------------------
