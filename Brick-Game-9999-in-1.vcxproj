@@ -37,6 +37,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\audio.h" />
     <ClInclude Include="include\controls.h" />
     <ClInclude Include="include\game.h" />
     <ClInclude Include="include\game_menu.h" />
@@ -76,6 +77,7 @@
     <ClCompile Include="nanovg\source\framework\CShader.cpp" />
     <ClCompile Include="nanovg\source\framework\FileLoader.cpp" />
     <ClCompile Include="nanovg\source\nanovg.c" />
+    <ClCompile Include="source\audio.cpp" />
     <ClCompile Include="source\controls.cpp" />
     <ClCompile Include="source\game.cpp" />
     <ClCompile Include="source\game_menu.cpp" />
@@ -136,7 +138,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>include;nanovg;nanovg\include;nanovg\include\nanovg\framework;C:\devkitPro\libnx\include;C:\devkitPro\msys2\usr\include;C:\devkitPro\devkitA64\lib\gcc\aarch64-none-elf\10.2.0\include\;C:\devkitPro\portlibs\switch\include\;C:\devkitPro\libnx\include\switch\runtime\;C:\devkitPro\libnx\include\switch\runtime\devices;$(IncludePath)</IncludePath>
+    <IncludePath>include;nanovg;nanovg\include;nanovg\include\nanovg\framework;C:\devkitPro\libnx\include;C:\devkitPro\msys2\usr\include;C:\devkitPro\devkitA64\lib\gcc\aarch64-none-elf\10.2.0\include\;C:\devkitPro\portlibs\switch\include\;C:\devkitPro\libnx\include\switch\runtime\;C:\devkitPro\libnx\include\switch\runtime\devices;C:\devkitPro\portlibs\switch\include\SDL2\;$(IncludePath)</IncludePath>
     <SourcePath>nanovg\source;source;$(SourcePath)</SourcePath>
     <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
     <NMakeBuildCommandLine>bash build_and_run.sh</NMakeBuildCommandLine>

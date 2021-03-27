@@ -6,7 +6,8 @@
 #include <map>
 #include <string>
 
-std::map<std::string, Mix_Music*> audio_files;
+std::map<std::string, Mix_Chunk*> audio_files;
+Mix_Music* music;
 
 bool init_audio()
 {
@@ -25,10 +26,12 @@ bool init_audio()
 	printf("%i\n", i);
 
 	// Load sound file to use
-	audio_files["test"] = Mix_LoadMUS("romfs:/audio/sfx_movement_footsteps5.mp3");;
+	audio_files["sfx_movement_footsteps5"] = Mix_LoadWAV("romfs:/audio/sfx_movement_footsteps5.wav");
+	audio_files["sfx_exp_odd3"] = Mix_LoadWAV("romfs:/audio/sfx_exp_odd3.wav");
+	audio_files["sfx_sounds_button6"] = Mix_LoadWAV("romfs:/audio/sfx_sounds_button6.wav");
 
-	//i = Mix_PlayMusic(audio_files["test"], 1);
-	//printf("%i\n", i);
+	music = Mix_LoadMUS("romfs:/audio/chipscape.mp3");
+	Mix_PlayMusic(music, -1);
 
 	return false;
 }
@@ -37,9 +40,10 @@ bool exit_audio()
 {
 	for (auto const& [key, val] : audio_files)
 	{
-		Mix_Music* this_audio = val;
-		Mix_FreeMusic(this_audio);
+		Mix_FreeChunk(val);
 	}
+
+	Mix_FreeMusic(music);
 
 	// Shuts down SDL subsystems
 	SDL_Quit();

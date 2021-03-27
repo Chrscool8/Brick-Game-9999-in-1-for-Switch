@@ -144,7 +144,7 @@ BrickGame::BrickGame()
 	//
 
 	current_game = -1;
-	next_game = -1;
+	next_game = 0;
 
 	padConfigureInput(1, HidNpadStyleSet_NpadStandard);
 	padInitializeDefault(&pad);
