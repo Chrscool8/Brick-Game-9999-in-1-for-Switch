@@ -20,7 +20,6 @@ static int nxlink_sock = -1;
 
 using namespace std;
 
-
 extern "C" void userAppInit(void)
 {
 	romfsInit();
@@ -70,9 +69,6 @@ bool draw_sprite(NVGcontext* vg, float x, float y, float width, float height, st
 		return true;
 	}
 }
-
-
-
 
 void OutputDkDebug(void* userData, const char* context, DkResult result, const char* message)
 {
@@ -145,13 +141,13 @@ BrickGame::BrickGame()
 
 	current_game = -1;
 	next_game = 0;
+	screen_orientation = orientation_normal;
 
 	padConfigureInput(1, HidNpadStyleSet_NpadStandard);
 	padInitializeDefault(&pad);
 
-	game_grid = grid_create(11, 20);
+	game_grid = grid_create(10, 20);
 
-	screen_orientation = orientation_normal;
 
 	//
 	game_item game_menu;
@@ -167,15 +163,12 @@ BrickGame::BrickGame()
 	game_snake.run_function = &game_snake_run;
 	game_snake.exit_function = &game_snake_exit;
 	game_list.push_back(game_snake);
-
 }
 
 BrickGame::~BrickGame()
 {
 	// Destroy the framebuffer resources. This should be done first.
 	destroyFramebufferResources();
-
-	//freeDemoData(vg, &this->data);
 
 	// Cleanup vg. This needs to be done first as it relies on the renderer.
 	nvgDeleteDk(vg);
@@ -450,7 +443,7 @@ void BrickGame::render(u64 ns)
 			nvgFontSize(vg, 20.0f);
 			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
 			nvgFillColor(vg, nvgRGBA(30, 30, 30, 255));
-			nvgText(vg, 20, 100-30, "Welcome to this", NULL);
+			nvgText(vg, 20, 100 - 30, "Welcome to this", NULL);
 			nvgText(vg, 20, 120 - 30, "extremely early", NULL);
 			nvgText(vg, 20, 140 - 30, "version!", NULL);
 			nvgText(vg, 20, 180 - 30, "Minus: Rotate", NULL);

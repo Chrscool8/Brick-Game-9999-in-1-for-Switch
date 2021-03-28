@@ -6,6 +6,7 @@
 #include <object_manager.h>
 #include <game_snake.h>
 #include "audio.h"
+#include <controls.h>
 using namespace std;
 
 obj_snake::obj_snake(BrickGame& game, int _x, int _y) : game_object(game, _x, _y)
@@ -26,30 +27,6 @@ void obj_snake::create_function()
 	last_direction = direction_right;
 	time_til_move = 25;
 };
-
-bool keyboard_check_right(BrickGame& game)
-{
-	u64 keyboard_check = padGetButtons(&game.pad);
-	return (keyboard_check & HidNpadButton_Right);
-}
-
-bool keyboard_check_up(BrickGame& game)
-{
-	u64 keyboard_check = padGetButtons(&game.pad);
-	return (keyboard_check & HidNpadButton_Up);
-}
-
-bool keyboard_check_left(BrickGame& game)
-{
-	u64 keyboard_check = padGetButtons(&game.pad);
-	return (keyboard_check & HidNpadButton_Left);
-}
-
-bool keyboard_check_down(BrickGame& game)
-{
-	u64 keyboard_check = padGetButtons(&game.pad);
-	return (keyboard_check & HidNpadButton_Down);
-}
 
 bool obj_snake::snake_is_at(int _x, int _y)
 {
@@ -98,16 +75,16 @@ void obj_snake::step_function()
 			Mix_PlayChannel(-1, audio_files["sfx_sounds_button6"], 0);
 		}
 
-		if (keyboard_check_right(game) && last_direction != direction_left) // !snake_is_at(x + 1, y))
+		if (keyboard_check_right(game) && last_direction != direction_left)
 			direction = direction_right;
 
-		if (keyboard_check_up(game) && last_direction != direction_down) // !snake_is_at(x, y - 1))
+		if (keyboard_check_up(game) && last_direction != direction_down)
 			direction = direction_up;
 
-		if (keyboard_check_left(game) && last_direction != direction_right) // !snake_is_at(x - 1, y))
+		if (keyboard_check_left(game) && last_direction != direction_right)
 			direction = direction_left;
 
-		if (keyboard_check_down(game) && last_direction != direction_up) // !snake_is_at(x, y + 1))
+		if (keyboard_check_down(game) && last_direction != direction_up)
 			direction = direction_down;
 
 		if (move_counter < time_til_move)
