@@ -9,11 +9,13 @@
 #include <controls.h>
 using namespace std;
 
+// Used to create a snake at a position on the game board
 subgame_snake::obj_snake::obj_snake(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
 {
 	create_function();
 };
 
+// Runs for each instance of a snake object once when it's created
 void subgame_snake::obj_snake::create_function()
 {
 	printf("ID: %u\n", id);
@@ -28,6 +30,7 @@ void subgame_snake::obj_snake::create_function()
 	time_til_move = 25;
 };
 
+// Check if any part of a snake is at this position
 bool subgame_snake::obj_snake::snake_is_at(int _x, int _y)
 {
 	if (x == _x && y == _y)
@@ -47,6 +50,7 @@ bool subgame_snake::obj_snake::snake_is_at(int _x, int _y)
 	return false;
 }
 
+// This instance of the snake dies
 void subgame_snake::obj_snake::die()
 {
 	alive = false;
@@ -55,6 +59,7 @@ void subgame_snake::obj_snake::die()
 	printf("DIED!\n");
 }
 
+// Runs for each instance of a snake object each frame
 void subgame_snake::obj_snake::step_function()
 {
 	printf("ID: %u\n", id);
@@ -145,45 +150,58 @@ void subgame_snake::obj_snake::step_function()
 	}
 };
 
+// Draws each frame of the game whether transitioning or not
 void subgame_snake::obj_snake::draw_function()
 {
 	printf("ID: %u\n", id);
 	printf("Snake draw\n");
 	printf("%i, %i\n", x, y);
+
+	// Draw head
 	grid_set(game.game_grid, x, y, true);
 
+	// Draw each tail segment
 	for (unsigned int i = 0; i < tail.size(); i++)
 		grid_set(game.game_grid, tail.at(i).x, tail.at(i).y, true);
 
+	// Draw the pellet
 	grid_set(game.game_grid, target.x, target.y, true);
 };
 
+// To delete this instance of a snake from the game
 void subgame_snake::obj_snake::destroy_function()
 {
 	printf("ID: %u\n", id);
 	printf("Snake destroy\n");
 };
 
+// Let's the subgame know what main game it belongs to.
 subgame_snake::subgame_snake(BrickGameFramework& _parent) : subgame(_parent)
 {
 }
 
+// Runs once when the subgame starts (when the transition shade is fully black)
 void subgame_snake::subgame_init()
 {
 	printf("Initting Snake!!\n");
+	// Create an instance of a snake object in game 'parent' at position 5, 5.
 	objects.push_back(std::make_unique<obj_snake>(parent, 5, 5));
 }
 
+// Runs every frame of the subgame unless the game is transitioning
 void subgame_snake::subgame_run()
 {
 	printf("Running Snake!!\n");
 }
 
+// Runs every frame of the subgame whether it's transitioning or not (to draw behind the shade)
 void subgame_snake::subgame_draw()
 {
 	printf("Drawing Snake!!\n");
 }
 
+// Clean up subgame objects here, runs once when the game is changing to a different
+// game and the transition shade is fully black
 void subgame_snake::subgame_exit()
 {
 	printf("Exiting Snake!!\n");
