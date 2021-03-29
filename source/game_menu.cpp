@@ -55,17 +55,18 @@ void subgame_menu::obj_border::draw_function()
 	for (int i = 0; i < w; i++)
 	{
 		bool my_on = (on + (i % 2)) % 2;
-		grid_set(game.game_grid, i, 0, my_on);
-		grid_set(game.game_grid, i, h - 1, !my_on);
+		grid_set(game.game_grid, i, 0, my_on, true);
+		grid_set(game.game_grid, i, h - 1, !my_on, true);
 	}
 
 	for (int i = 0; i < h; i++)
 	{
 		bool my_on = (on + (i % 2)) % 2;
-		grid_set(game.game_grid, 0, i, my_on);
+
+		grid_set(game.game_grid, 0, i, my_on, true);
 		if (grid_width(game.game_grid) % 2 == 0)
 			my_on = !my_on;
-		grid_set(game.game_grid, w - 1, i, my_on);
+		grid_set(game.game_grid, w - 1, i, my_on, true);
 	}
 }
 
