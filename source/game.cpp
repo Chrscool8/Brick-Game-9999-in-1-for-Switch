@@ -470,6 +470,7 @@ bool BrickGameFramework::onFrame(u64 ns)
 	{
 		if (current_game != -1)
 		{
+			objects.clear();
 			game_list.at(current_game)->subgame_exit();
 		}
 
@@ -481,7 +482,15 @@ bool BrickGameFramework::onFrame(u64 ns)
 
 	if (current_game != -1)
 	{
+		grid_clear(game_grid);
+		for (unsigned int i = 0; i < objects.size(); i++)
+			objects.at(i)->step_function();
+
 		game_list.at(current_game)->subgame_run();
+
+		for (unsigned int i = 0; i < objects.size(); i++)
+			objects.at(i)->draw_function();
+
 		game_list.at(current_game)->subgame_draw();
 	}
 

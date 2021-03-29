@@ -177,27 +177,14 @@ void subgame_snake::subgame_init()
 void subgame_snake::subgame_run()
 {
 	printf("Running Snake!!\n");
-
-	grid_clear(parent.game_grid);
-
-	for (unsigned int i = 0; i < objects.size(); i++)
-	{
-		objects.at(i)->step_function();
-	}
 }
 
 void subgame_snake::subgame_draw()
 {
-	for (unsigned int i = 0; i < objects.size(); i++)
-	{
-		objects.at(i)->draw_function();
-	}
+	printf("Drawing Snake!!\n");
 }
 
 void subgame_snake::subgame_exit()
 {
 	printf("Exiting Snake!!\n");
-
-	objects.clear();
 }
-

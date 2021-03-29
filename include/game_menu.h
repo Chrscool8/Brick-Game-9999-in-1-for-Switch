@@ -10,6 +10,18 @@ using namespace std;
 class subgame_menu : public subgame
 {
 public:
+
+	class obj_border : public game_object
+	{
+	public:
+		obj_border(BrickGameFramework& game);
+		virtual void create_function() override;
+		virtual void step_function() override;
+		virtual void draw_function() override;
+		virtual void destroy_function() override;
+	};
+
+
 	subgame_menu(BrickGameFramework& parent);
 
 	virtual void subgame_init() override;
