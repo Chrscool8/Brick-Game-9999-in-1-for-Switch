@@ -20,6 +20,8 @@ static int nxlink_sock = -1;
 
 using namespace std;
 
+vector<std::unique_ptr<subgame>> game_list;
+
 extern "C" void userAppInit(void)
 {
 	romfsInit();
@@ -150,12 +152,12 @@ BrickGameFramework::BrickGameFramework()
 
 
 	//
-	game_item game_menu;
-	game_menu.name = "Menu";
-	game_menu.init_function = &game_menu_init;
-	game_menu.run_function = &game_menu_run;
-	game_menu.exit_function = &game_menu_exit;
-	game_list.push_back(game_menu);
+	//game_item game_menu;
+	//game_menu.name = "Menu";
+	//game_menu.init_function = &game_menu_init;
+	//game_menu.run_function = &game_menu_run;
+	//game_menu.exit_function = &game_menu_exit;
+	//game_list.push_back(game_menu);
 
 	//game_item game_snake;
 	//game_snake.name = "Snake";
@@ -164,10 +166,9 @@ BrickGameFramework::BrickGameFramework()
 	//game_snake.exit_function = &game_snake_exit;
 	//game_list.push_back(game_snake);
 
-	subgame_snake snake;
-	game_item game_snake;
-	game_snake.name = "Snake";
-	game_snake.init_function = snake.game_snake_init;
+
+	game_list.push_back(std::make_unique<subgame_snake>(*this));
+
 }
 
 BrickGameFramework::~BrickGameFramework()
@@ -487,18 +488,19 @@ bool BrickGameFramework::onFrame(u64 ns)
 	{
 		if (current_game != -1)
 		{
-			game_list.at(current_game).exit_function(*this);
+			game_list.at(current_game)->subgame_exit();
 		}
 
 		current_game = next_game;
 		next_game = -1;
 
-		game_list.at(current_game).init_function(*this);
+		game_list.at(current_game)->subgame_init();
 	}
 
 	if (current_game != -1)
 	{
-		game_list.at(current_game).run_function(*this);
+		game_list.at(current_game)->subgame_run();
+		game_list.at(current_game)->subgame_draw();
 	}
 
 	if (keyboard_check_pressed & HidNpadButton_Minus)

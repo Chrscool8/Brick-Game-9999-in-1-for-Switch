@@ -2,6 +2,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+
 #include <string>
 #include <array>
 #include <optional>
@@ -13,16 +14,11 @@
 #include <nanovg/framework/CMemPool.h>
 #include <nanovg/framework/CApplication.h>
 #include <nanovg/dk_renderer.hpp>
+#include <subgame.h>
+
 #define NumFramebuffers 2
 
 class BrickGameFramework;
-
-struct game_item {
-	std::string name;
-	void (*init_function)(BrickGameFramework& game);
-	void (*run_function)(BrickGameFramework& game);
-	void (*exit_function)(BrickGameFramework& game);
-};
 
 enum enum_orientation {
 	orientation_normal,
@@ -30,6 +26,8 @@ enum enum_orientation {
 	orientation_upside_down,
 	orientation_left_down
 };
+
+extern vector<std::unique_ptr<subgame>> game_list;
 
 class BrickGameFramework : public CApplication
 {
@@ -66,7 +64,6 @@ private:
 	PerfGraph fps;
 	float prevTime;
 
-	vector<game_item> game_list;
 
 public:
 	BrickGameFramework();

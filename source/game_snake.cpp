@@ -9,12 +9,12 @@
 #include <controls.h>
 using namespace std;
 
-obj_snake::obj_snake(BrickGame& game, int _x, int _y) : game_object(game, _x, _y)
+subgame_snake::obj_snake::obj_snake(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
 {
 	create_function();
 };
 
-void obj_snake::create_function()
+void subgame_snake::obj_snake::create_function()
 {
 	printf("ID: %u\n", id);
 	printf("Snake create\n");
@@ -28,7 +28,7 @@ void obj_snake::create_function()
 	time_til_move = 25;
 };
 
-bool obj_snake::snake_is_at(int _x, int _y)
+bool subgame_snake::obj_snake::snake_is_at(int _x, int _y)
 {
 	if (x == _x && y == _y)
 	{
@@ -47,7 +47,7 @@ bool obj_snake::snake_is_at(int _x, int _y)
 	return false;
 }
 
-void obj_snake::die()
+void subgame_snake::obj_snake::die()
 {
 	alive = false;
 	Mix_PlayChannel(-1, audio_files["sfx_exp_odd3"], 0);
@@ -55,7 +55,7 @@ void obj_snake::die()
 	printf("DIED!\n");
 }
 
-void obj_snake::step_function()
+void subgame_snake::obj_snake::step_function()
 {
 	printf("ID: %u\n", id);
 	printf("Snake step\n");
@@ -145,7 +145,7 @@ void obj_snake::step_function()
 	}
 };
 
-void obj_snake::draw_function()
+void subgame_snake::obj_snake::draw_function()
 {
 	printf("ID: %u\n", id);
 	printf("Snake draw\n");
@@ -158,38 +158,46 @@ void obj_snake::draw_function()
 	grid_set(game.game_grid, target.x, target.y, true);
 };
 
-void obj_snake::destroy_function()
+void subgame_snake::obj_snake::destroy_function()
 {
 	printf("ID: %u\n", id);
 	printf("Snake destroy\n");
 };
 
-void subgame_snake::game_snake_init(BrickGameFramework& game)
+subgame_snake::subgame_snake(BrickGameFramework& _parent) : subgame(_parent)
 {
-	printf("Initting Snake!!\n");
-	objects.push_back(std::make_unique<obj_snake>(game, 5, 5));
 }
 
-void subgame_snake::game_snake_run(BrickGameFramework& game)
+void subgame_snake::subgame_init()
+{
+	printf("Initting Snake!!\n");
+	objects.push_back(std::make_unique<obj_snake>(parent, 5, 5));
+}
+
+void subgame_snake::subgame_run()
 {
 	printf("Running Snake!!\n");
 
-	grid_clear(game.game_grid);
+	grid_clear(parent.game_grid);
 
 	for (unsigned int i = 0; i < objects.size(); i++)
 	{
 		objects.at(i)->step_function();
 	}
+}
 
+void subgame_snake::subgame_draw()
+{
 	for (unsigned int i = 0; i < objects.size(); i++)
 	{
 		objects.at(i)->draw_function();
 	}
 }
 
-void subgame_snake::game_snake_exit(BrickGameFramework& game)
+void subgame_snake::subgame_exit()
 {
 	printf("Exiting Snake!!\n");
 
 	objects.clear();
 }
+

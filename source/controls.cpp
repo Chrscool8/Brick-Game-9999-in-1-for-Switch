@@ -1,3 +1,4 @@
+#include <controls.h>
 #include <game.h>
 
 bool keyboard_check_right(BrickGameFramework& game)
