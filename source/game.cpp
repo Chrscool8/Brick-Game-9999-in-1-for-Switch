@@ -150,25 +150,8 @@ BrickGameFramework::BrickGameFramework()
 
 	game_grid = grid_create(10, 20);
 
-
-	//
-	//game_item game_menu;
-	//game_menu.name = "Menu";
-	//game_menu.init_function = &game_menu_init;
-	//game_menu.run_function = &game_menu_run;
-	//game_menu.exit_function = &game_menu_exit;
-	//game_list.push_back(game_menu);
-
-	//game_item game_snake;
-	//game_snake.name = "Snake";
-	//game_snake.init_function = &game_snake_init;
-	//game_snake.run_function = &game_snake_run;
-	//game_snake.exit_function = &game_snake_exit;
-	//game_list.push_back(game_snake);
-
-
+	game_list.push_back(std::make_unique<subgame_menu>(*this));
 	game_list.push_back(std::make_unique<subgame_snake>(*this));
-
 }
 
 BrickGameFramework::~BrickGameFramework()
@@ -420,7 +403,6 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 	break;
 	}
 }
-
 
 void BrickGameFramework::render(u64 ns)
 {
