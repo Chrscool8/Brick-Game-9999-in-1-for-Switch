@@ -77,6 +77,8 @@ public:
 	vector<vector<bool>> game_grid;
 	PadState pad;
 	char screen_orientation;
+	int transition_stage;
+	double transition_percent;
 };
 
 void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t);

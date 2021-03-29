@@ -145,6 +145,9 @@ BrickGameFramework::BrickGameFramework()
 	next_game = 0;
 	screen_orientation = orientation_normal;
 
+	transition_stage = -1;
+	transition_percent = 0;
+
 	padConfigureInput(1, HidNpadStyleSet_NpadStandard);
 	padInitializeDefault(&pad);
 
@@ -445,6 +448,27 @@ void BrickGameFramework::render(u64 ns)
 	queue.presentImage(swapchain, slot);
 }
 
+void transition(std::vector<std::vector<bool>>& grid, double percent)
+{
+	printf("%f percent\n", percent);
+	if (percent > 0 && percent <= 100)
+	{
+		for (int y = 0; y < (double)grid_height(grid) * ((double)percent / 100.); y++)
+			for (int x = 0; x < grid_width(grid); x++)
+			{
+				grid_set(grid, x, y, true);
+			}
+	}
+	else if (percent > 100 && percent <= 200)
+	{
+		for (int y = (double)grid_height(grid) * ((double)(percent - 100) / 100.); y < grid_height(grid); y++)
+			for (int x = 0; x < grid_width(grid); x++)
+			{
+				grid_set(grid, x, y, true);
+			}
+	}
+}
+
 bool BrickGameFramework::onFrame(u64 ns)
 {
 	padUpdate(&pad);
@@ -466,27 +490,63 @@ bool BrickGameFramework::onFrame(u64 ns)
 		next_game = 1;
 	}
 
-	if (next_game != -1 && next_game != current_game)
+	grid_clear(game_grid);
+
+	if ((next_game != -1 && next_game != current_game) && transition_stage == -1)
 	{
-		if (current_game != -1)
+		transition_stage = 0;
+		transition_percent = 0;
+	}
+
+	if (transition_stage == 0)
+	{
+		if (transition_percent < 100)
 		{
-			objects.clear();
-			game_list.at(current_game)->subgame_exit();
+			transition_percent += 1.5;
+		}
+		else
+		{
+			transition_stage = 1;
+			if (current_game != -1)
+			{
+				objects.clear();
+				game_list.at(current_game)->subgame_exit();
+			}
+
+			current_game = next_game;
+			next_game = -1;
+
+			game_list.at(current_game)->subgame_init();
 		}
 
-		current_game = next_game;
-		next_game = -1;
-
-		game_list.at(current_game)->subgame_init();
+		transition(game_grid, transition_percent);
 	}
+	else if (transition_stage == 1)
+	{
+		if (transition_percent < 200)
+		{
+			transition_percent += 1.5;
+		}
+		else
+		{
+			transition_percent = 0;
+			transition_stage = -1;
+		}
+
+		transition(game_grid, transition_percent);
+	}
+
 
 	if (current_game != -1)
 	{
-		grid_clear(game_grid);
-		for (unsigned int i = 0; i < objects.size(); i++)
-			objects.at(i)->step_function();
+		if (transition_stage == -1)
+		{
 
-		game_list.at(current_game)->subgame_run();
+			for (unsigned int i = 0; i < objects.size(); i++)
+				objects.at(i)->step_function();
+
+			game_list.at(current_game)->subgame_run();
+		}
 
 		for (unsigned int i = 0; i < objects.size(); i++)
 			objects.at(i)->draw_function();
