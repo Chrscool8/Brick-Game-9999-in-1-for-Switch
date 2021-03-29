@@ -164,13 +164,13 @@ void obj_snake::destroy_function()
 	printf("Snake destroy\n");
 };
 
-void game_snake_init(BrickGame& game)
+void subgame_snake::game_snake_init(BrickGameFramework& game)
 {
 	printf("Initting Snake!!\n");
 	objects.push_back(std::make_unique<obj_snake>(game, 5, 5));
 }
 
-void game_snake_run(BrickGame& game)
+void subgame_snake::game_snake_run(BrickGameFramework& game)
 {
 	printf("Running Snake!!\n");
 
@@ -187,7 +187,7 @@ void game_snake_run(BrickGame& game)
 	}
 }
 
-void game_snake_exit(BrickGame& game)
+void subgame_snake::game_snake_exit(BrickGameFramework& game)
 {
 	printf("Exiting Snake!!\n");
 

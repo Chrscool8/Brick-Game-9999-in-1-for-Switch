@@ -75,7 +75,7 @@ void OutputDkDebug(void* userData, const char* context, DkResult result, const c
 	printf("Context: %s\nResult: %d\nMessage: %s\n", context, result, message);
 }
 
-BrickGame::BrickGame()
+BrickGameFramework::BrickGameFramework()
 {
 	FramebufferWidth = 1280;
 	FramebufferHeight = 720;
@@ -157,15 +157,20 @@ BrickGame::BrickGame()
 	game_menu.exit_function = &game_menu_exit;
 	game_list.push_back(game_menu);
 
+	//game_item game_snake;
+	//game_snake.name = "Snake";
+	//game_snake.init_function = &game_snake_init;
+	//game_snake.run_function = &game_snake_run;
+	//game_snake.exit_function = &game_snake_exit;
+	//game_list.push_back(game_snake);
+
+	subgame_snake snake;
 	game_item game_snake;
 	game_snake.name = "Snake";
-	game_snake.init_function = &game_snake_init;
-	game_snake.run_function = &game_snake_run;
-	game_snake.exit_function = &game_snake_exit;
-	game_list.push_back(game_snake);
+	game_snake.init_function = snake.game_snake_init;
 }
 
-BrickGame::~BrickGame()
+BrickGameFramework::~BrickGameFramework()
 {
 	// Destroy the framebuffer resources. This should be done first.
 	destroyFramebufferResources();
@@ -177,7 +182,7 @@ BrickGame::~BrickGame()
 	this->renderer.reset();
 }
 
-void BrickGame::createFramebufferResources()
+void BrickGameFramework::createFramebufferResources()
 {
 	// Create layout for the depth buffer
 	dk::ImageLayout layout_depthbuffer;
@@ -225,7 +230,7 @@ void BrickGame::createFramebufferResources()
 	recordStaticCommands();
 }
 
-void BrickGame::destroyFramebufferResources()
+void BrickGameFramework::destroyFramebufferResources()
 {
 	// Return early if we have nothing to destroy
 	if (!swapchain) return;
@@ -247,7 +252,7 @@ void BrickGame::destroyFramebufferResources()
 	depthBuffer_mem.destroy();
 }
 
-void BrickGame::recordStaticCommands()
+void BrickGameFramework::recordStaticCommands()
 {
 	// Initialize state structs with deko3d defaults
 	dk::RasterizerState rasterizerState;
@@ -271,7 +276,7 @@ void BrickGame::recordStaticCommands()
 	render_cmdlist = cmdbuf.finishList();
 }
 
-void renderGame(NVGcontext* vg, BrickGame& game, float mx, float my, float width, float height, float t)
+void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t)
 {
 
 	switch (game.screen_orientation)
@@ -416,7 +421,7 @@ void renderGame(NVGcontext* vg, BrickGame& game, float mx, float my, float width
 }
 
 
-void BrickGame::render(u64 ns)
+void BrickGameFramework::render(u64 ns)
 {
 	float time = ns / 1000000000.0;
 	float dt = time - prevTime;
@@ -457,7 +462,7 @@ void BrickGame::render(u64 ns)
 	queue.presentImage(swapchain, slot);
 }
 
-bool BrickGame::onFrame(u64 ns)
+bool BrickGameFramework::onFrame(u64 ns)
 {
 	padUpdate(&pad);
 	u64 keyboard_check_pressed = padGetButtonsDown(&pad);
@@ -509,7 +514,7 @@ bool BrickGame::onFrame(u64 ns)
 int main(int argc, char* argv[])
 {
 	init_audio();
-	BrickGame app;
+	BrickGameFramework app;
 	app.run();
 	exit_audio();
 	return 0;

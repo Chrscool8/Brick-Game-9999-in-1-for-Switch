@@ -3,14 +3,14 @@
 #include <grid.hpp>
 #include <chrono>
 
-void game_menu_init(BrickGame& game)
+void game_menu_init(BrickGameFramework& game)
 {
 	printf("Initting Menu!!\n");
 
 	grid_clear(game.game_grid);
 }
 
-void game_menu_run(BrickGame& game)
+void game_menu_run(BrickGameFramework& game)
 {
 	//printf("Running Menu!!\n");
 
@@ -41,7 +41,7 @@ void game_menu_run(BrickGame& game)
 	}
 }
 
-void game_menu_exit(BrickGame& game)
+void game_menu_exit(BrickGameFramework& game)
 {
 	printf("Exiting Menu!!\n");
 }

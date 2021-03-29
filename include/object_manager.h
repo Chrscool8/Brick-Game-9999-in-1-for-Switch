@@ -38,10 +38,10 @@ public:
 
 	int direction;
 
-	BrickGame& game;
+	BrickGameFramework& game;
 	vector<point> tail;
 
-	game_object(BrickGame& game_, int _x, int _y);
+	game_object(BrickGameFramework& game_, int _x, int _y);
 	vector<vector<bool>> sprite;
 	virtual void create_function();
 	virtual void step_function();

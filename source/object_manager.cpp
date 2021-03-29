@@ -10,7 +10,7 @@ using namespace std;
 
 
 
-game_object::game_object(BrickGame& _game, int _x, int _y) : game(_game), x(_x), y(_y)
+game_object::game_object(BrickGameFramework& _game, int _x, int _y) : game(_game), x(_x), y(_y)
 {
 	id = object_index;
 	object_index += 1;

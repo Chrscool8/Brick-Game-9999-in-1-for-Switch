@@ -15,13 +15,13 @@
 #include <nanovg/dk_renderer.hpp>
 #define NumFramebuffers 2
 
-class BrickGame;
+class BrickGameFramework;
 
 struct game_item {
 	std::string name;
-	void (*init_function)(BrickGame& game);
-	void (*run_function)(BrickGame& game);
-	void (*exit_function)(BrickGame& game);
+	void (*init_function)(BrickGameFramework& game);
+	void (*run_function)(BrickGameFramework& game);
+	void (*exit_function)(BrickGameFramework& game);
 };
 
 enum enum_orientation {
@@ -31,7 +31,7 @@ enum enum_orientation {
 	orientation_left_down
 };
 
-class BrickGame : public CApplication
+class BrickGameFramework : public CApplication
 {
 private:
 	int current_game;
@@ -69,8 +69,8 @@ private:
 	vector<game_item> game_list;
 
 public:
-	BrickGame();
-	~BrickGame();
+	BrickGameFramework();
+	~BrickGameFramework();
 	void createFramebufferResources();
 	void destroyFramebufferResources();
 	void recordStaticCommands();
@@ -82,7 +82,7 @@ public:
 	char screen_orientation;
 };
 
-void renderGame(NVGcontext* vg, BrickGame& game, float mx, float my, float width, float height, float t);
+void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t);
 void load_sprite(NVGcontext* vg, std::string sprite_name, std::string sprite_path);
 
 #endif // !GAME_H
