@@ -1,5 +1,6 @@
 #include <vector>
 #include <cstdio>
+#include <grid.hpp>
 
 std::vector<std::vector<bool>> grid_create(int width, int height)
 {
@@ -34,17 +35,18 @@ bool grid_get(std::vector<std::vector<bool>>& grid, int x, int y)
 	return false;
 }
 
-bool grid_set(std::vector<std::vector<bool>>& grid, int x, int y, bool val)
+bool grid_set(std::vector<std::vector<bool>>& grid, int x, int y, bool val, bool additive)
 {
-	if (x >= 0 && x < (int)grid.size())
-	{
-		std::vector<bool>& sub = grid.at(x);
-		if (y >= 0 && y < (int)sub.size())
+	if (!additive || (additive && val))
+		if (x >= 0 && x < (int)grid.size())
 		{
-			sub.at(y) = val;
-			return true;
+			std::vector<bool>& sub = grid.at(x);
+			if (y >= 0 && y < (int)sub.size())
+			{
+				sub.at(y) = val;
+				return true;
+			}
 		}
-	}
 
 	return false;
 }
