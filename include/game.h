@@ -79,6 +79,9 @@ public:
 	char screen_orientation;
 	int transition_stage;
 	double transition_percent;
+
+	std::string score = "";
+	const unsigned int score_length = 10;
 };
 
 void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t);

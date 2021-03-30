@@ -134,8 +134,14 @@ BrickGameFramework::BrickGameFramework()
 	if (fontEmoji == -1) {
 		printf("Could not add font emoji.\n");
 	}
+	int fontSegment = nvgCreateFont(vg, "seg", "romfs:/fonts/DSEG7Classic-Bold.ttf");
+	if (fontSegment == -1) {
+		printf("Could not add font segment.\n");
+	}
+
 	nvgAddFallbackFontId(vg, fontNormal, fontEmoji);
 	nvgAddFallbackFontId(vg, fontBold, fontEmoji);
+
 
 	printf("Done loading\n");
 
@@ -440,6 +446,22 @@ void BrickGameFramework::render(u64 ns)
 			nvgText(vg, 20, 180 - 30, "Minus: Rotate", NULL);
 			nvgText(vg, 20, 200 - 30, "Y : Menu", NULL);
 			nvgText(vg, 20, 220 - 30, "X : Snake", NULL);
+
+			nvgFontFace(vg, "seg");
+			nvgFontSize(vg, 40);
+			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+
+			std::string temp_score = score;
+			while (temp_score.size() < score_length)
+				temp_score = " " + temp_score;
+			for (unsigned int i = 0; i < score_length; i++)
+			{
+				nvgFillColor(vg, nvgRGBA(97, 112, 91, 255));
+				nvgText(vg, 875 + (i * 30), 70, "8", NULL);
+				nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+				std::string charat(1, temp_score.at(i));
+				nvgText(vg, 875 + (i * 30), 70, charat.c_str(), NULL);
+			}
 		}
 	}
 	nvgEndFrame(vg);

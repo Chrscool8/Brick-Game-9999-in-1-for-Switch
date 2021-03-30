@@ -28,6 +28,7 @@ void subgame_snake::obj_snake::create_function()
 	direction = direction_right;
 	last_direction = direction_right;
 	time_til_move = 25;
+	this->game.score = "0";
 };
 
 // Check if any part of a snake is at this position
@@ -76,6 +77,7 @@ void subgame_snake::obj_snake::step_function()
 			} while (attempts > 0 && snake_is_at(target.x, target.y));
 
 			snake_length += 1;
+			game.score = std::to_string(snake_length - 3);
 			time_til_move = max(10, time_til_move - 2);
 			Mix_PlayChannel(-1, audio_files["sfx_sounds_button6"], 0);
 		}

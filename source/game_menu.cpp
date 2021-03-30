@@ -15,6 +15,7 @@ void subgame_menu::subgame_init()
 {
 	printf("Initting Menu!!\n");
 	objects.push_back(std::make_unique<obj_border>(parent));
+	parent.score = " XELL0  ";
 }
 
 void subgame_menu::subgame_run()
