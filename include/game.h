@@ -82,6 +82,9 @@ public:
 
 	std::string score = "";
 	const unsigned int score_length = 10;
+
+	int target_grid_width = 10;
+	int target_grid_height = 20;
 };
 
 void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t);

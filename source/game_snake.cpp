@@ -157,7 +157,7 @@ void subgame_snake::obj_snake::draw_function()
 {
 	printf("ID: %u\n", id);
 	printf("Snake draw\n");
-	printf("%i, %i\n", x, y);
+	printf("%f, %f\n", x, y);
 
 	// Draw head
 	grid_set(game.game_grid, x, y, true);

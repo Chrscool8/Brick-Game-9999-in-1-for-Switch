@@ -45,6 +45,7 @@
     <ClInclude Include="include\game_snake.h" />
     <ClInclude Include="include\grid.hpp" />
     <ClInclude Include="include\grid_sprites.h" />
+    <ClInclude Include="include\grid_sprites_alphabet.h" />
     <ClInclude Include="include\object_manager.h" />
     <ClInclude Include="include\other.h" />
     <ClInclude Include="include\subgame.h" />
@@ -86,6 +87,7 @@
     <ClCompile Include="source\game_snake.cpp" />
     <ClCompile Include="source\grid.cpp" />
     <ClCompile Include="source\grid_sprites.cpp" />
+    <ClCompile Include="source\grid_sprites_alphabet.cpp" />
     <ClCompile Include="source\object_manager.cpp" />
     <ClCompile Include="source\perf.cpp" />
     <ClCompile Include="source\subgame.cpp" />

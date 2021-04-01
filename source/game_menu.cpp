@@ -5,6 +5,9 @@
 #include <game_menu.h>
 #include <subgame.h>
 #include <object_manager.h>
+#include <grid_sprites.h>
+#include <grid_sprites_alphabet.h>
+#include <math.h>
 
 subgame_menu::subgame_menu(BrickGameFramework& _parent) : subgame(_parent)
 {
@@ -15,6 +18,7 @@ void subgame_menu::subgame_init()
 {
 	printf("Initting Menu!!\n");
 	objects.push_back(std::make_unique<obj_border>(parent));
+	objects.push_back(std::make_unique<obj_welcome_text>(parent));
 	parent.score = " XELL0  ";
 }
 
@@ -30,6 +34,11 @@ void subgame_menu::subgame_exit()
 {
 	printf("Exiting Menu!!\n");
 }
+
+/// <summary>
+/// obj_border
+/// </summary>
+/// <param name="game"></param>
 
 subgame_menu::obj_border::obj_border(BrickGameFramework& game) : game_object(game, 0, 0)
 {
@@ -69,8 +78,65 @@ void subgame_menu::obj_border::draw_function()
 			my_on = !my_on;
 		grid_set(game.game_grid, w - 1, i, my_on, true);
 	}
+
+	//for (int i = 1; i < w - 1; i++)
+	//{
+	//	grid_set(game.game_grid, i, 1, true);
+	//	grid_set(game.game_grid, i, h - 2, true);
+	//}
+
+	//for (int i = 1; i < h - 1; i++)
+	//{
+	//	grid_set(game.game_grid, 1, i, true);
+	//	grid_set(game.game_grid, w - 2, i, true);
+	//}
 }
 
 void subgame_menu::obj_border::destroy_function()
+{
+}
+
+/// <summary>
+/// obj_welcome_text
+/// </summary>
+/// <param name="game"></param>
+
+subgame_menu::obj_welcome_text::obj_welcome_text(BrickGameFramework& game) : game_object(game, 0, 0)
+{
+	create_function();
+}
+
+void subgame_menu::obj_welcome_text::create_function()
+{
+	x = 11.5;
+	y = 5;
+}
+
+void subgame_menu::obj_welcome_text::step_function()
+{
+	if (x > -40)
+	{
+		x -= 1. / 15;
+	}
+	else
+	{
+		x = grid_width(game.game_grid);
+	}
+}
+
+void subgame_menu::obj_welcome_text::draw_function()
+{
+	int xx = floor(x);
+	int yy = floor(y);
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_w, xx, yy);
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_e, xx + 6, yy);
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_l, xx + 6 + 5, yy);
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_c, xx + 6 + 5 + 5, yy);
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_o, xx + 6 + 5 + 5 + 5, yy);
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_m, xx + 6 + 5 + 5 + 5 + 5, yy);
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_e, xx + 6 + 5 + 5 + 5 + 5 + 6, yy);
+}
+
+void subgame_menu::obj_welcome_text::destroy_function()
 {
 }

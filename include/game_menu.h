@@ -21,6 +21,15 @@ public:
 		virtual void destroy_function() override;
 	};
 
+	class obj_welcome_text : public game_object
+	{
+	public:
+		obj_welcome_text(BrickGameFramework& game);
+		virtual void create_function() override;
+		virtual void step_function() override;
+		virtual void draw_function() override;
+		virtual void destroy_function() override;
+	};
 
 	subgame_menu(BrickGameFramework& parent);
 

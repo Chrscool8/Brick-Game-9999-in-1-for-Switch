@@ -138,6 +138,10 @@ BrickGameFramework::BrickGameFramework()
 	if (fontSegment == -1) {
 		printf("Could not add font segment.\n");
 	}
+	int fontMinecraft = nvgCreateFont(vg, "minecraft", "romfs:/fonts/Minecraft.ttf");
+	if (fontMinecraft == -1) {
+		printf("Could not add font minecraft.\n");
+	}
 
 	nvgAddFallbackFontId(vg, fontNormal, fontEmoji);
 	nvgAddFallbackFontId(vg, fontBold, fontEmoji);
@@ -271,7 +275,6 @@ void BrickGameFramework::recordStaticCommands()
 
 void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t)
 {
-
 	switch (game.screen_orientation)
 	{
 	case orientation_normal:
@@ -411,6 +414,7 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 	}
 	break;
 	}
+
 }
 
 void BrickGameFramework::render(u64 ns)
@@ -436,20 +440,26 @@ void BrickGameFramework::render(u64 ns)
 		renderGraph(vg, 5, 5, &fps);
 
 		{
-			nvgFontFace(vg, "sans");
-			nvgFontSize(vg, 20.0f);
+			const float size = 25.f;
+			nvgFontFace(vg, "minecraft");
+			nvgFontSize(vg, size);
 			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-			nvgFillColor(vg, nvgRGBA(30, 30, 30, 255));
-			nvgText(vg, 20, 100 - 30, "Welcome to this", NULL);
-			nvgText(vg, 20, 120 - 30, "extremely early", NULL);
-			nvgText(vg, 20, 140 - 30, "version!", NULL);
-			nvgText(vg, 20, 180 - 30, "Minus: Rotate", NULL);
-			nvgText(vg, 20, 200 - 30, "Y : Menu", NULL);
-			nvgText(vg, 20, 220 - 30, "X : Snake", NULL);
+			nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+			nvgText(vg, 20, 70, "Welcome to this", NULL);
+			nvgText(vg, 20, 70 + size * 1, "extremely early", NULL);
+			nvgText(vg, 20, 70 + size * 2, "version!", NULL);
+			nvgText(vg, 20, 70 + size * 4, "Minus: Rotate", NULL);
+			nvgText(vg, 20, 70 + size * 5, "Y : Menu", NULL);
+			nvgText(vg, 20, 70 + size * 6, "X : Snake", NULL);
+			nvgText(vg, 20, 70 + size * 8, "A : Wide Screen", NULL);
+			nvgText(vg, 20, 70 + size * 9, "B : Classic Screen", NULL);
 
 			nvgFontFace(vg, "seg");
 			nvgFontSize(vg, 40);
 			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+
+			int xx = 875 + 100 - 10;
+			int yy = 70;
 
 			std::string temp_score = score;
 			while (temp_score.size() < score_length)
@@ -457,10 +467,10 @@ void BrickGameFramework::render(u64 ns)
 			for (unsigned int i = 0; i < score_length; i++)
 			{
 				nvgFillColor(vg, nvgRGBA(97, 112, 91, 255));
-				nvgText(vg, 875 + (i * 30), 70, "8", NULL);
+				nvgText(vg, xx + (i * 30), yy, "8", NULL);
 				nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
 				std::string charat(1, temp_score.at(i));
-				nvgText(vg, 875 + (i * 30), 70, charat.c_str(), NULL);
+				nvgText(vg, xx + (i * 30), yy, charat.c_str(), NULL);
 			}
 		}
 	}
@@ -511,6 +521,37 @@ bool BrickGameFramework::onFrame(u64 ns)
 	{
 		next_game = 1;
 	}
+
+	if (keyboard_check_pressed & HidNpadButton_B)
+	{
+		target_grid_width = 10;
+		target_grid_height = 20;
+	}
+
+	if (keyboard_check_pressed & HidNpadButton_A)
+	{
+		target_grid_width = 20;
+		target_grid_height = 20;
+	}
+
+	if (grid_width(game_grid) < target_grid_width)
+	{
+		game_grid = grid_create(grid_width(game_grid) + 1, grid_height(game_grid));
+	}
+	else if (grid_width(game_grid) > target_grid_width)
+	{
+		game_grid = grid_create(grid_width(game_grid) - 1, grid_height(game_grid));
+	}
+
+	if (grid_height(game_grid) < target_grid_height)
+	{
+		game_grid = grid_create(grid_width(game_grid), grid_height(game_grid) + 1);
+	}
+	else if (grid_height(game_grid) > target_grid_height)
+	{
+		game_grid = grid_create(grid_width(game_grid), grid_height(game_grid) - 1);
+	}
+
 
 	grid_clear(game_grid);
 

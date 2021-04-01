@@ -31,8 +31,8 @@ struct point {
 class game_object
 {
 public:
-	int x;
-	int y;
+	double x;
+	double y;
 	static unsigned int object_index;
 	unsigned int id;
 
