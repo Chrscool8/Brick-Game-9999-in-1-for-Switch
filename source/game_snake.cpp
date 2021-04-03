@@ -9,14 +9,8 @@
 #include <controls.h>
 using namespace std;
 
-// Used to create a snake at a position on the game board
-subgame_snake::obj_snake::obj_snake(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
-{
-	create_function();
-};
-
 // Runs for each instance of a snake object once when it's created
-void subgame_snake::obj_snake::create_function()
+subgame_snake::obj_snake::obj_snake(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
 {
 	printf("ID: %u\n", id);
 	printf("Snake create\n");

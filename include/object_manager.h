@@ -41,9 +41,8 @@ public:
 	BrickGameFramework& game;
 	vector<point> tail;
 
-	game_object(BrickGameFramework& game_, int _x, int _y);
 	vector<vector<bool>> sprite;
-	virtual void create_function();
+	game_object(BrickGameFramework& game_, int _x, int _y);
 	virtual void step_function();
 	virtual void draw_function();
 	virtual void destroy_function();

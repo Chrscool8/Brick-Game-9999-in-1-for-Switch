@@ -15,7 +15,6 @@ public:
 	{
 	public:
 		obj_border(BrickGameFramework& game);
-		virtual void create_function() override;
 		virtual void step_function() override;
 		virtual void draw_function() override;
 		virtual void destroy_function() override;
@@ -25,7 +24,6 @@ public:
 	{
 	public:
 		obj_welcome_text(BrickGameFramework& game);
-		virtual void create_function() override;
 		virtual void step_function() override;
 		virtual void draw_function() override;
 		virtual void destroy_function() override;

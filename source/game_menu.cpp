@@ -42,10 +42,7 @@ void subgame_menu::subgame_exit()
 
 subgame_menu::obj_border::obj_border(BrickGameFramework& game) : game_object(game, 0, 0)
 {
-}
 
-void subgame_menu::obj_border::create_function()
-{
 }
 
 void subgame_menu::obj_border::step_function()
@@ -103,11 +100,7 @@ void subgame_menu::obj_border::destroy_function()
 
 subgame_menu::obj_welcome_text::obj_welcome_text(BrickGameFramework& game) : game_object(game, 0, 0)
 {
-	create_function();
-}
-
-void subgame_menu::obj_welcome_text::create_function()
-{
+	// create
 	x = 11.5;
 	y = 5;
 }

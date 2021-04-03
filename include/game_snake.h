@@ -18,7 +18,6 @@ public:
 		unsigned int snake_length;
 		obj_snake(BrickGameFramework& game, int _x, int _y);
 		bool snake_is_at(int x, int y);
-		virtual void create_function() override;
 		virtual void step_function() override;
 		virtual void draw_function() override;
 		virtual void destroy_function() override;

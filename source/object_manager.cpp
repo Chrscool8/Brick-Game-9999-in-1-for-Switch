@@ -11,15 +11,10 @@ game_object::game_object(BrickGameFramework& _game, int _x, int _y) : game(_game
 {
 	id = object_index;
 	object_index += 1;
-	create_function();
-	direction = direction_right;
-}
-
-void game_object::create_function()
-{
 	printf("ID: %u\n", id);
 	printf("Obj create\n");
-};
+	direction = direction_right;
+}
 
 void game_object::step_function()
 {
