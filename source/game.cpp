@@ -437,9 +437,11 @@ void BrickGameFramework::render(u64 ns)
 	nvgBeginFrame(vg, FramebufferWidth, FramebufferHeight, 1.0f);
 	{
 		renderGame(vg, *this, 0, 0, FramebufferWidth, FramebufferHeight, time);
-		renderGraph(vg, 5, 5, &fps);
 
+		if (show_ui)
 		{
+			renderGraph(vg, 5, 5, &fps);
+
 			const float size = 25.f;
 			nvgFontFace(vg, "minecraft");
 			nvgFontSize(vg, size);
@@ -453,6 +455,10 @@ void BrickGameFramework::render(u64 ns)
 			nvgText(vg, 20, 70 + size * 6, "X : Snake", NULL);
 			nvgText(vg, 20, 70 + size * 8, "A : Wide Screen", NULL);
 			nvgText(vg, 20, 70 + size * 9, "B : Classic Screen", NULL);
+			nvgText(vg, 20, 70 + size * 11, "L : Toggle This Text", NULL);
+
+			nvgSave(vg);
+			//nvgRotate(vg, 45);
 
 			nvgFontFace(vg, "seg");
 			nvgFontSize(vg, 40);
@@ -472,6 +478,8 @@ void BrickGameFramework::render(u64 ns)
 				std::string charat(1, temp_score.at(i));
 				nvgText(vg, xx + (i * 30), yy, charat.c_str(), NULL);
 			}
+
+			nvgRestore(vg);
 		}
 	}
 	nvgEndFrame(vg);
@@ -505,11 +513,15 @@ bool BrickGameFramework::onFrame(u64 ns)
 {
 	padUpdate(&pad);
 	u64 keyboard_check_pressed = padGetButtonsDown(&pad);
-	//u64 keyboard_check = padGetButtons(&pad);
 
 	if (keyboard_check_pressed & HidNpadButton_Plus)
 	{
 		return false;
+	}
+
+	if (keyboard_check_pressed & HidNpadButton_L)
+	{
+		show_ui = !show_ui;
 	}
 
 	if (keyboard_check_pressed & HidNpadButton_Y)
@@ -551,7 +563,6 @@ bool BrickGameFramework::onFrame(u64 ns)
 	{
 		game_grid = grid_create(grid_width(game_grid), grid_height(game_grid) - 1);
 	}
-
 
 	grid_clear(game_grid);
 
