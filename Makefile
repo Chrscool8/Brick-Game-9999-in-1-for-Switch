@@ -67,7 +67,7 @@ ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
 # LIBS	:= -lnanovg -ldeko3dd -lglad -lEGL -lglapi -ldrm_nouveau -lnx
- LIBS	:= -lnanovg -ldeko3d -lnx
+ LIBS	:= -lnanovg -ldeko3dd -lnx
  LIBS	+= `$(PREFIX)pkg-config --libs SDL2_mixer`
 
 
