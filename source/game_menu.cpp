@@ -16,7 +16,8 @@ subgame_menu::subgame_menu(BrickGameFramework& _parent) : subgame(_parent)
 
 void subgame_menu::subgame_init()
 {
-	printf("Initting Menu!!\n");
+	if (parent.debug_text)
+		printf("Initting Menu!!\n");
 	objects.push_back(std::make_unique<obj_border>(parent));
 	objects.push_back(std::make_unique<obj_welcome_text>(parent));
 	parent.score = " XELL0  ";
@@ -32,7 +33,8 @@ void subgame_menu::subgame_draw()
 
 void subgame_menu::subgame_exit()
 {
-	printf("Exiting Menu!!\n");
+	if (parent.debug_text)
+		printf("Exiting Menu!!\n");
 }
 
 /// <summary>

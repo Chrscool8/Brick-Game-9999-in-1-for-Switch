@@ -62,7 +62,7 @@ bool draw_sprite(NVGcontext* vg, float x, float y, float width, float height, st
 		nvgScissor(vg, x, y, width, height);
 		nvgTranslate(vg, x, y);
 
-		NVGpaint  imgPaint = nvgImagePattern(vg, 0, 0, width, height, 0.0f / 180.0f * NVG_PI, sprite_indicies[sprite_name], 1.0f);
+		NVGpaint imgPaint = nvgImagePattern(vg, 0, 0, width, height, 0.0f / 180.0f * NVG_PI, sprite_indicies[sprite_name], 1.0f);
 		nvgBeginPath(vg);
 		nvgRect(vg, 0, 0, width, height);
 		nvgFillPaint(vg, imgPaint);
@@ -141,6 +141,10 @@ BrickGameFramework::BrickGameFramework()
 	int fontMinecraft = nvgCreateFont(vg, "minecraft", "romfs:/fonts/Minecraft.ttf");
 	if (fontMinecraft == -1) {
 		printf("Could not add font minecraft.\n");
+	}
+	int fontKongtext = nvgCreateFont(vg, "kongtext", "romfs:/fonts/kongtext-regular.ttf");
+	if (fontKongtext == -1) {
+		printf("Could not add font Kongtext.\n");
 	}
 
 	nvgAddFallbackFontId(vg, fontNormal, fontEmoji);
@@ -275,146 +279,104 @@ void BrickGameFramework::recordStaticCommands()
 
 void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t)
 {
+	nvgSave(vg);
+
+	float angle = 0;
+	float scale = 1;
+
 	switch (game.screen_orientation)
 	{
 	case orientation_normal:
-	{
-		int cell_width = 31;
-		int cell_height = 31;
-
-		int draw_grid_width = grid_width(game.game_grid);
-		int draw_grid_height = grid_height(game.game_grid);
-
-		int grid_offset_x = (1280 - (draw_grid_width * cell_width)) / 2.;
-		int grid_offset_y = (720 - (draw_grid_height * cell_height)) / 2.;
-
-		int border_size = 5;
-
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_width + border_size * 2, cell_height * draw_grid_height + border_size * 2, border_size);
-		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-		nvgFill(vg);
-
-		for (int i = 0; i < draw_grid_width; i++)
-		{
-			for (int j = 0; j < draw_grid_height; j++)
-			{
-				float x = grid_offset_x + (i)*cell_width;
-				float y = grid_offset_y + (j)*cell_height;
-
-				if (grid_get(game.game_grid, i, j))
-					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected");
-				else
-					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");
-			}
-		}
-	}
-	break;
-	case (orientation_right_down):
-	{
-		double scale = 1.5;
-
-		int cell_width = 31 * scale;
-		int cell_height = 31 * scale;
-
-		int draw_grid_width = grid_width(game.game_grid);
-		int draw_grid_height = grid_height(game.game_grid);
-
-		int grid_offset_x = (1280 - (draw_grid_height * cell_height)) / 2.;
-		int grid_offset_y = (720 - (draw_grid_width * cell_width)) / 2.;
-
-		int border_size = 5 * scale;
-
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_height + border_size * 2, cell_height * draw_grid_width + border_size * 2, border_size);
-		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-		nvgFill(vg);
-
-		for (int i = 0; i < draw_grid_width; i++)
-		{
-			for (int j = 0; j < draw_grid_height; j++)
-			{
-				float x = grid_offset_x + (j)*cell_height;
-				float y = grid_offset_y + (i)*cell_width;
-
-				if (grid_get(game.game_grid, draw_grid_width - i - 1, j))
-					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected_90");
-				else
-					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected_90");
-			}
-		}
-	}
-	break;
+		angle = 0;
+		scale = 1;
+		break;
+	case orientation_right_down:
+		angle = (90.f * NVG_PI) / 180.;
+		scale = 1.5;
+		break;
 	case orientation_upside_down:
+		angle = (180.f * NVG_PI) / 180.;
+		scale = 1;
+		break;
+	case orientation_left_down:
+		angle = (270.f * NVG_PI) / 180.;
+		scale = 1.5;
+		break;
+	}
+
+	nvgTranslate(vg, 1280 / 2, 720 / 2);
+	nvgScale(vg, scale, scale);
+	nvgRotate(vg, angle);
+
+	int cell_width = 31;
+	int cell_height = 31;
+
+	int draw_grid_width = grid_width(game.game_grid);
+	int draw_grid_height = grid_height(game.game_grid);
+
+	int grid_offset_x = (-(draw_grid_width * cell_width)) / 2.;
+	int grid_offset_y = (-(draw_grid_height * cell_height)) / 2.;
+
+	int border_size = 5;
+
+	nvgBeginPath(vg);
+	nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_width + border_size * 2, cell_height * draw_grid_height + border_size * 2, border_size);
+	nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+	nvgFill(vg);
+
+	nvgBeginPath(vg);
+	nvgRect(vg, grid_offset_x, grid_offset_y, cell_width * draw_grid_width, cell_height * draw_grid_height);
+	nvgFillColor(vg, nvgRGBA(109, 120, 92, 255));
+	nvgFill(vg);
+
+	for (int i = 0; i < draw_grid_width; i++)
 	{
-		int cell_width = 31;
-		int cell_height = 31;
-
-		int draw_grid_width = grid_width(game.game_grid);
-		int draw_grid_height = grid_height(game.game_grid);
-
-		int grid_offset_x = (1280 - (draw_grid_width * cell_width)) / 2.;
-		int grid_offset_y = (720 - (draw_grid_height * cell_height)) / 2.;
-
-		int border_size = 5;
-
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_width + border_size * 2, cell_height * draw_grid_height + border_size * 2, border_size);
-		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-		nvgFill(vg);
-
-		for (int i = 0; i < draw_grid_width; i++)
+		for (int j = 0; j < draw_grid_height; j++)
 		{
-			for (int j = 0; j < draw_grid_height; j++)
-			{
-				float x = grid_offset_x + (i)*cell_width;
-				float y = grid_offset_y + (j)*cell_height;
+			float x = grid_offset_x + (i)*cell_width;
+			float y = grid_offset_y + (j)*cell_height;
 
-				if (grid_get(game.game_grid, draw_grid_width - i - 1, draw_grid_height - j - 1))
-					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected_180");
-				else
-					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected_180");
-			}
+			if (grid_get(game.game_grid, i, j))
+				draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+			else
+				draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");
 		}
 	}
-	break;
-	case (orientation_left_down):
+
+	nvgRestore(vg);
+}
+
+void draw_digital_display(NVGcontext* vg, std::string display_string, int x, int y, std::string title, unsigned int length = 8)
+{
+	nvgSave(vg);
+
+	nvgTranslate(vg, x, y);
+
+	nvgFontFace(vg, "kongtext");
+	nvgFontSize(vg, 24);
+	nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+	nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+	nvgText(vg, 3, 0, title.c_str(), NULL);
+
+	nvgFontFace(vg, "seg");
+	nvgFontSize(vg, 40);
+	nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+
+	std::string temp_score = display_string;
+
+	while (temp_score.size() < length)
+		temp_score = " " + temp_score;
+
+	for (unsigned int i = 0; i < length; i++)
 	{
-		double scale = 1.5;
-
-		int cell_width = 31 * scale;
-		int cell_height = 31 * scale;
-
-		int draw_grid_width = grid_width(game.game_grid);
-		int draw_grid_height = grid_height(game.game_grid);
-
-		int grid_offset_x = (1280 - (draw_grid_height * cell_height)) / 2.;
-		int grid_offset_y = (720 - (draw_grid_width * cell_width)) / 2.;
-
-		int border_size = 5 * scale;
-
-		nvgBeginPath(vg);
-		nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_height + border_size * 2, cell_height * draw_grid_width + border_size * 2, border_size);
+		nvgFillColor(vg, nvgRGBA(97, 112, 91, 255));
+		nvgText(vg, (i * 30), 28, "8", NULL);
 		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-		nvgFill(vg);
-
-		for (int i = 0; i < draw_grid_width; i++)
-		{
-			for (int j = 0; j < draw_grid_height; j++)
-			{
-				float x = grid_offset_x + (j)*cell_height;
-				float y = grid_offset_y + (i)*cell_width;
-
-				if (grid_get(game.game_grid, i, draw_grid_height - j - 1))
-					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected_270");
-				else
-					draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected_270");
-			}
-		}
-	}
-	break;
+		std::string charat(1, temp_score.at(i));
+		nvgText(vg, (i * 30), 28, charat.c_str(), NULL);
 	}
 
+	nvgRestore(vg);
 }
 
 void BrickGameFramework::render(u64 ns)
@@ -457,29 +419,8 @@ void BrickGameFramework::render(u64 ns)
 			nvgText(vg, 20, 70 + size * 9, "B : Classic Screen", NULL);
 			nvgText(vg, 20, 70 + size * 11, "L : Toggle This Text", NULL);
 
-			nvgSave(vg);
-			//nvgRotate(vg, 45);
-
-			nvgFontFace(vg, "seg");
-			nvgFontSize(vg, 40);
-			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-
-			int xx = 875 + 100 - 10;
-			int yy = 70;
-
-			std::string temp_score = score;
-			while (temp_score.size() < score_length)
-				temp_score = " " + temp_score;
-			for (unsigned int i = 0; i < score_length; i++)
-			{
-				nvgFillColor(vg, nvgRGBA(97, 112, 91, 255));
-				nvgText(vg, xx + (i * 30), yy, "8", NULL);
-				nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-				std::string charat(1, temp_score.at(i));
-				nvgText(vg, xx + (i * 30), yy, charat.c_str(), NULL);
-			}
-
-			nvgRestore(vg);
+			draw_digital_display(vg, score, 865, 165, "High Score");
+			draw_digital_display(vg, score, 865, 70, "Score");
 		}
 	}
 	nvgEndFrame(vg);
@@ -610,12 +551,10 @@ bool BrickGameFramework::onFrame(u64 ns)
 		transition(game_grid, transition_percent);
 	}
 
-
 	if (current_game != -1)
 	{
 		if (transition_stage == -1)
 		{
-
 			for (unsigned int i = 0; i < objects.size(); i++)
 				objects.at(i)->step_function();
 
@@ -632,6 +571,7 @@ bool BrickGameFramework::onFrame(u64 ns)
 	{
 		screen_orientation += 1;
 		screen_orientation = screen_orientation % 4;
+		printf("orientation: %i\n", screen_orientation);
 	}
 
 	render(ns);

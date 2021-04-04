@@ -50,6 +50,8 @@
     <ClInclude Include="include\other.h" />
     <ClInclude Include="include\subgame.h" />
     <ClInclude Include="include\utils.hpp" />
+    <ClInclude Include="nanovg\example\source\demo.h" />
+    <ClInclude Include="nanovg\example\source\perf.h" />
     <ClInclude Include="nanovg\include\nanovg.h" />
     <ClInclude Include="nanovg\include\nanovg\dk_renderer.hpp" />
     <ClInclude Include="nanovg\include\nanovg\fontstash.h" />
@@ -71,6 +73,10 @@
     <ClInclude Include="include\perf.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="nanovg\example\source\demo.c" />
+    <ClCompile Include="nanovg\example\source\perf.c" />
+    <ClCompile Include="nanovg\example\source\test_dk.cpp" />
+    <ClCompile Include="nanovg\example\source\test_gl.cpp" />
     <ClCompile Include="nanovg\source\dk_renderer.cpp" />
     <ClCompile Include="nanovg\source\framework\CApplication.cpp" />
     <ClCompile Include="nanovg\source\framework\CExternalImage.cpp" />

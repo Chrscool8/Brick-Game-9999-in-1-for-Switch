@@ -80,13 +80,15 @@ public:
 	int transition_stage;
 	double transition_percent;
 
+	std::string highscore = "";
 	std::string score = "";
-	const unsigned int score_length = 10;
 
 	int target_grid_width = 10;
 	int target_grid_height = 20;
 
 	bool show_ui = true;
+
+	bool debug_text = true;
 };
 
 void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t);

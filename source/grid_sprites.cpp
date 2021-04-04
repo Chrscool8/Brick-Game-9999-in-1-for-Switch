@@ -14,7 +14,7 @@ vector<vector<bool>> grid_sprite_three_x_three_square
 
 void place_grid_sprite(vector<vector<bool>>& grid, vector<vector<bool>>& sprite_name, int x, int y, bool additive)
 {
-	printf("draw sprite: %i, %i\n", x, y);
+	// printf("draw sprite: %i, %i\n", x, y);
 
 	vector<vector<bool>> sprite = sprite_name;
 	int sprite_width = grid_width(sprite);
