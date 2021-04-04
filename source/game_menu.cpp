@@ -47,6 +47,7 @@ subgame_menu::obj_border::obj_border(BrickGameFramework& game) : game_object(gam
 
 void subgame_menu::obj_border::step_function()
 {
+
 }
 
 void subgame_menu::obj_border::draw_function()
@@ -91,6 +92,7 @@ void subgame_menu::obj_border::draw_function()
 
 void subgame_menu::obj_border::destroy_function()
 {
+
 }
 
 /// <summary>
