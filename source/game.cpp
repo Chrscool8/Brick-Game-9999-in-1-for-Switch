@@ -15,6 +15,8 @@
 #include <games/game_snake.h>
 #include <games/game_menu.h>
 #include "audio.h"
+#include <settings.h>
+#include <utils/scores.h>
 
 static int nxlink_sock = -1;
 
@@ -575,6 +577,15 @@ bool BrickGameFramework::onFrame(u64 ns)
 			next_game = -1;
 
 			game_list.at(current_game)->subgame_init();
+			current_game_name = game_list.at(current_game)->name;
+			highscore_display = scores_get_score_value(current_game_name, "highscore");
+			try {
+				highscore = stod(highscore_display);
+			}
+			catch (const std::invalid_argument& ia)
+			{
+				highscore = 0;
+			}
 		}
 
 		transition(game_grid, transition_percent);
@@ -647,16 +658,23 @@ void BrickGameFramework::setScore(double score)
 void BrickGameFramework::setScore(std::string score)
 {
 	score_display = score;
+	scores_set_score_value(current_game_name, "score", score);
 }
 
 void BrickGameFramework::setHighScore(std::string score)
 {
 	highscore_display = score;
+	scores_set_score_value(current_game_name, "highscore", score);
 }
 
 int main(int argc, char* argv[])
 {
 	init_audio();
+
+	read_settings();
+	init_settings();
+	read_scores();
+
 	BrickGameFramework app;
 	app.run();
 	exit_audio();

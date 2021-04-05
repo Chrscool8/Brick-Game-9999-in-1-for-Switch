@@ -34,6 +34,7 @@ class BrickGameFramework : public CApplication
 private:
 	int current_game;
 	int next_game;
+	std::string current_game_name;
 
 	uint32_t FramebufferWidth;
 	uint32_t FramebufferHeight;

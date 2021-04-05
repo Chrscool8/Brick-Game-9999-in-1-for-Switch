@@ -39,9 +39,9 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	Brick-Game-9999-in-1
 BUILD		:=	build
-SOURCES     :=	source source/games nanovg/shaders
+SOURCES     :=	source source/games source/utils nanovg/shaders
 DATA		:=	data
-INCLUDES	:=	include include/games nanovg/include
+INCLUDES	:=	include include/games include/utils include/extern nanovg/include
 ROMFS		:=	romfs
 ICON		:=	resources/icon.jpg
 APP_TITLE	:=	Brick Game 9999-in-1
@@ -57,7 +57,8 @@ OUT_SHADERS	:=	shaders
 ARCH	:=	-march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE
 
 CFLAGS	:=	-g -Wall -Wno-unused-function -Wno-misleading-indentation -O2 -ffunction-sections \
-			$(ARCH) $(DEFINES)
+			$(ARCH) $(DEFINES) \
+			-DAPP_VERSION="\"$(APP_VERSION)\""
 
 CFLAGS	+=	$(INCLUDE) -D__SWITCH__ `$(PREFIX)pkg-config --cflags SDL2_mixer`
 
