@@ -3,6 +3,7 @@
 
 subgame::subgame(BrickGameFramework& game_) :parent(game_)
 {
+	name = "Subgame";
 }
 
 void subgame::subgame_init()
@@ -24,4 +25,3 @@ void subgame::subgame_exit()
 {
 	printf("Subgame Exit\n");
 }
-

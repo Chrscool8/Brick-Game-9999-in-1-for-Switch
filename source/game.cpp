@@ -347,14 +347,42 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 			std::string num = std::to_string(pos);
 			if (pos < 10)
 				num = "0" + num;
-			draw_sprite(vg, x, y, cell_width * 2, cell_height * 2, "spr_cells_" + num);
+
+			if (i + 2 <= draw_grid_width && j + 2 <= draw_grid_height)
+			{
+				draw_sprite(vg, x, y, cell_width * 2, cell_height * 2, "spr_cells_" + num);
+			}
+			else
+			{
+				if (i < draw_grid_width && j < draw_grid_height)
+				{
+					if (grid_get(game.game_grid, i, j))
+						draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+					else
+						draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");
+				}
+
+				if (i + 1 < draw_grid_width && j < draw_grid_height)
+				{
+					if (grid_get(game.game_grid, i + 1, j))
+						draw_sprite(vg, x + cell_width, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+					else
+						draw_sprite(vg, x + cell_width, y, cell_width, cell_height, "spr_cell_unselected");
+				}
+
+				if (i < draw_grid_width && j + 1 < draw_grid_height)
+				{
+					if (grid_get(game.game_grid, i, j + 1))
+						draw_sprite(vg, x, y + cell_height, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+					else
+						draw_sprite(vg, x, y + cell_height, cell_width, cell_height, "spr_cell_unselected");
+				}
+			}
 
 			//if (grid_get(game.game_grid, i, j))
 			//	draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
 			//else
 			//	draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");
-
-			//TODO: Make final rows when odd
 		}
 	}
 
@@ -434,8 +462,8 @@ void BrickGameFramework::render(u64 ns)
 			nvgText(vg, 20, 70 + size * 9, "B : Classic Screen", NULL);
 			nvgText(vg, 20, 70 + size * 11, "L : Toggle This Text", NULL);
 
-			draw_digital_display(vg, score, 865, 165, "High Score");
-			draw_digital_display(vg, score, 865, 70, "Score");
+			draw_digital_display(vg, highscore_display, 865, 165, "High Score");
+			draw_digital_display(vg, score_display, 865, 70, "Score");
 		}
 	}
 	nvgEndFrame(vg);
@@ -591,6 +619,39 @@ bool BrickGameFramework::onFrame(u64 ns)
 
 	render(ns);
 	return true;
+}
+
+void BrickGameFramework::setScore(int score)
+{
+	int hs = highscore;
+
+	if (score > highscore)
+	{
+		hs = score;
+		highscore = score;
+	}
+
+	setScore(std::to_string(score));
+	setHighScore(std::to_string(hs));
+}
+
+void BrickGameFramework::setScore(double score)
+{
+	if (score > highscore)
+		highscore = score;
+
+	setScore(std::to_string(score));
+	setHighScore(std::to_string(highscore));
+}
+
+void BrickGameFramework::setScore(std::string score)
+{
+	score_display = score;
+}
+
+void BrickGameFramework::setHighScore(std::string score)
+{
+	highscore_display = score;
 }
 
 int main(int argc, char* argv[])

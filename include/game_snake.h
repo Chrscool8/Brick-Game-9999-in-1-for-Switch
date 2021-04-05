@@ -9,13 +9,14 @@ using namespace std;
 class subgame_snake : public subgame
 {
 public:
+
 	class obj_snake : public game_object
 	{
 	public:
 		point target;
 		bool alive;
 		int move_counter;
-		unsigned int snake_length;
+		int snake_length;
 		obj_snake(BrickGameFramework& game, int _x, int _y);
 		bool snake_is_at(int x, int y);
 		virtual void step_function() override;

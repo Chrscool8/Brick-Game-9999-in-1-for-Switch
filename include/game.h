@@ -64,6 +64,11 @@ private:
 	PerfGraph fps;
 	float prevTime;
 
+	double score = 0;
+	double highscore = 0;
+
+	std::string highscore_display = "";
+	std::string score_display = "";
 
 public:
 	BrickGameFramework();
@@ -74,14 +79,12 @@ public:
 	void render(u64 ns);
 	bool onFrame(u64 ns) override;
 
+
 	vector<vector<bool>> game_grid;
 	PadState pad;
 	char screen_orientation;
 	int transition_stage;
 	double transition_percent;
-
-	std::string highscore = "";
-	std::string score = "";
 
 	int target_grid_width = 10;
 	int target_grid_height = 20;
@@ -89,6 +92,11 @@ public:
 	bool show_ui = true;
 
 	bool debug_text = true;
+
+	void setScore(int score);
+	void setScore(double score);
+	void setScore(std::string score);
+	void setHighScore(std::string score);
 };
 
 void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t);
