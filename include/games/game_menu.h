@@ -3,7 +3,7 @@
 #define MENU_H
 
 #include <vector>
-#include <subgame.h>
+#include <games/subgame.h>
 #include <object_manager.h>
 using namespace std;
 

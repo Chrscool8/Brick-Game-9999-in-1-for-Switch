@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <subgame.h>
+#include <games/subgame.h>
 
 subgame::subgame(BrickGameFramework& game_) :parent(game_)
 {

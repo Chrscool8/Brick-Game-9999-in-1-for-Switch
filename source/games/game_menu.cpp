@@ -2,8 +2,8 @@
 #include <game.h>
 #include <grid.hpp>
 #include <chrono>
-#include <game_menu.h>
-#include <subgame.h>
+#include <games/game_menu.h>
+#include <games/subgame.h>
 #include <object_manager.h>
 #include <grid_sprites.h>
 #include <grid_sprites_alphabet.h>

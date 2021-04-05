@@ -14,7 +14,7 @@
 #include <nanovg/framework/CMemPool.h>
 #include <nanovg/framework/CApplication.h>
 #include <nanovg/dk_renderer.hpp>
-#include <subgame.h>
+#include <games/subgame.h>
 
 #define NumFramebuffers 2
 

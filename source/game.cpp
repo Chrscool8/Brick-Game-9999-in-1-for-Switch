@@ -12,8 +12,8 @@
 #include <nanovg/framework/CApplication.h>
 #include <switch/runtime/devices/socket.h>
 #include <grid_sprites.h>
-#include <game_snake.h>
-#include <game_menu.h>
+#include <games/game_snake.h>
+#include <games/game_menu.h>
 #include "audio.h"
 
 static int nxlink_sock = -1;

@@ -40,15 +40,15 @@
     <ClInclude Include="include\audio.h" />
     <ClInclude Include="include\controls.h" />
     <ClInclude Include="include\game.h" />
-    <ClInclude Include="include\game_menu.h" />
-    <ClInclude Include="include\game_race.h" />
-    <ClInclude Include="include\game_snake.h" />
+    <ClInclude Include="include\games\game_menu.h" />
+    <ClInclude Include="include\games\game_race.h" />
+    <ClInclude Include="include\games\game_snake.h" />
     <ClInclude Include="include\grid.hpp" />
     <ClInclude Include="include\grid_sprites.h" />
     <ClInclude Include="include\grid_sprites_alphabet.h" />
     <ClInclude Include="include\object_manager.h" />
     <ClInclude Include="include\other.h" />
-    <ClInclude Include="include\subgame.h" />
+    <ClInclude Include="include\games\subgame.h" />
     <ClInclude Include="include\utils.hpp" />
     <ClInclude Include="nanovg\example\source\demo.h" />
     <ClInclude Include="nanovg\example\source\perf.h" />
@@ -88,15 +88,15 @@
     <ClCompile Include="source\audio.cpp" />
     <ClCompile Include="source\controls.cpp" />
     <ClCompile Include="source\game.cpp" />
-    <ClCompile Include="source\game_menu.cpp" />
-    <ClCompile Include="source\game_race.cpp" />
-    <ClCompile Include="source\game_snake.cpp" />
+    <ClCompile Include="source\games\game_menu.cpp" />
+    <ClCompile Include="source\games\game_race.cpp" />
+    <ClCompile Include="source\games\game_snake.cpp" />
     <ClCompile Include="source\grid.cpp" />
     <ClCompile Include="source\grid_sprites.cpp" />
     <ClCompile Include="source\grid_sprites_alphabet.cpp" />
     <ClCompile Include="source\object_manager.cpp" />
     <ClCompile Include="source\perf.cpp" />
-    <ClCompile Include="source\subgame.cpp" />
+    <ClCompile Include="source\games\subgame.cpp" />
     <ClCompile Include="source\utils.cpp" />
   </ItemGroup>
   <ItemGroup>

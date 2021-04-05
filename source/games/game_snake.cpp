@@ -4,7 +4,7 @@
 #include <functional>
 #include <memory>
 #include <object_manager.h>
-#include <game_snake.h>
+#include <games/game_snake.h>
 #include "audio.h"
 #include <controls.h>
 using namespace std;

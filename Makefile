@@ -39,9 +39,9 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	Brick-Game-9999-in-1
 BUILD		:=	build
-SOURCES     :=	source nanovg/shaders
+SOURCES     :=	source source/games nanovg/shaders
 DATA		:=	data
-INCLUDES	:=	include nanovg/include
+INCLUDES	:=	include include/games nanovg/include
 ROMFS		:=	romfs
 ICON		:=	resources/icon.jpg
 APP_TITLE	:=	Brick Game 9999-in-1
