@@ -57,8 +57,8 @@ void subgame_snake::obj_snake::die()
 // Runs for each instance of a snake object each frame
 void subgame_snake::obj_snake::step_function()
 {
-	printf("ID: %u\n", id);
-	printf("Snake step\n");
+	//printf("ID: %u\n", id);
+	//printf("Snake step\n");
 
 	if (alive)
 	{
@@ -149,9 +149,9 @@ void subgame_snake::obj_snake::step_function()
 // Draws each frame of the game whether transitioning or not
 void subgame_snake::obj_snake::draw_function()
 {
-	printf("ID: %u\n", id);
-	printf("Snake draw\n");
-	printf("%f, %f\n", x, y);
+	//printf("ID: %u\n", id);
+	//printf("Snake draw\n");
+	//printf("%f, %f\n", x, y);
 
 	// Draw head
 	grid_set(game.game_grid, x, y, true);
@@ -188,18 +188,18 @@ void subgame_snake::subgame_init()
 // Runs every frame of the subgame unless the game is transitioning
 void subgame_snake::subgame_run()
 {
-	printf("Running Snake!!\n");
+	//printf("Running Snake!!\n");
 }
 
 // Runs every frame of the subgame whether it's transitioning or not (to draw behind the shade)
 void subgame_snake::subgame_draw()
 {
-	printf("Drawing Snake!!\n");
+	//printf("Drawing Snake!!\n");
 }
 
 // Clean up subgame objects here, runs once when the game is changing to a different
 // game and the transition shade is fully black
 void subgame_snake::subgame_exit()
 {
-	printf("Exiting Snake!!\n");
+	//printf("Exiting Snake!!\n");
 }

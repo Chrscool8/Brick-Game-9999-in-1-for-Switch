@@ -11,7 +11,7 @@
 
 subgame_menu::subgame_menu(BrickGameFramework& _parent) : subgame(_parent)
 {
-
+	name = "Menu";
 }
 
 void subgame_menu::subgame_init()
@@ -20,7 +20,8 @@ void subgame_menu::subgame_init()
 		printf("Initting Menu!!\n");
 	objects.push_back(std::make_unique<obj_border>(parent));
 	objects.push_back(std::make_unique<obj_welcome_text>(parent));
-	parent.setScore(" XELL0  ");
+	parent.setScore(" XELL0 ");
+	//parent.setHighScore("");
 }
 
 void subgame_menu::subgame_run()

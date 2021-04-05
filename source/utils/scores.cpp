@@ -49,18 +49,18 @@ std::string scores_get_score_value(std::string category, std::string key)
 		if (j_sub.contains(key))
 		{
 			if (key != "debug")
-				printf(std::string("[BRICKGAME] Reading setting " + category + " " + key + "\n").c_str());
+				printf(std::string("[BRICKGAME] Reading score " + category + " " + key + "\n").c_str());
 			return (j_sub[key]);
 		}
 		else
 		{
-			printf(std::string("[BRICKGAME] Heads up! Setting: " + category + ", >" + key + "< not found.\n").c_str());
+			printf(std::string("[BRICKGAME] Heads up! Score: " + category + ", >" + key + "< not found.\n").c_str());
 			return "---";
 		}
 	}
 	else
 	{
-		printf(std::string("[BRICKGAME] Heads up! Setting: >" + category + "<, " + key + " not found.\n").c_str());
+		printf(std::string("[BRICKGAME] Heads up! Score: >" + category + "<, " + key + " not found.\n").c_str());
 		return "---";
 	}
 }

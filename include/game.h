@@ -22,9 +22,9 @@ class BrickGameFramework;
 
 enum enum_orientation {
 	orientation_normal,
-	orientation_right_down,
+	orientation_left_down,
 	orientation_upside_down,
-	orientation_left_down
+	orientation_right_down
 };
 
 extern vector<std::unique_ptr<subgame>> game_list;

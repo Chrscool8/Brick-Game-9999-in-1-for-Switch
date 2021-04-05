@@ -82,6 +82,8 @@ void initialize_setting(std::string category, std::string setting, std::string i
 
 void init_settings()
 {
+	settings_set_value("meta", "debug", "true");
+
 	if (settings_get_value("history", "last seen version") == "---" || (APP_VERSION != settings_get_value("history", "last seen version")))
 	{
 		settings_set_value("history", "last seen version", APP_VERSION);

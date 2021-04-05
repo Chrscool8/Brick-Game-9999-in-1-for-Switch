@@ -293,7 +293,7 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 		angle = 0;
 		scale = 1;
 		break;
-	case orientation_right_down:
+	case orientation_left_down:
 		angle = nvgDegToRad(90);
 		scale = 1.5;
 		break;
@@ -301,7 +301,7 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 		angle = nvgDegToRad(180);
 		scale = 1;
 		break;
-	case orientation_left_down:
+	case orientation_right_down:
 		angle = nvgDegToRad(270);
 		scale = 1.5;
 		break;
@@ -391,11 +391,11 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 	nvgRestore(vg);
 }
 
-void draw_digital_display(NVGcontext* vg, std::string display_string, int x, int y, std::string title, unsigned int length = 8)
+void draw_digital_display(NVGcontext* vg, std::string display_string, int x, int y, std::string title, int angle = 0, unsigned int length = 8)
 {
 	nvgSave(vg);
-
 	nvgTranslate(vg, x, y);
+	nvgRotate(vg, nvgDegToRad(angle));
 
 	nvgFontFace(vg, "kongtext");
 	nvgFontSize(vg, 24);
@@ -447,25 +447,37 @@ void BrickGameFramework::render(u64 ns)
 
 		if (show_ui)
 		{
-			renderGraph(vg, 5, 5, &fps);
+			if (screen_orientation == orientation_normal)
+			{
+				renderGraph(vg, 5, 5, &fps);
 
-			const float size = 25.f;
-			nvgFontFace(vg, "minecraft");
-			nvgFontSize(vg, size);
-			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-			nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-			nvgText(vg, 20, 70, "Welcome to this", NULL);
-			nvgText(vg, 20, 70 + size * 1, "extremely early", NULL);
-			nvgText(vg, 20, 70 + size * 2, "version!", NULL);
-			nvgText(vg, 20, 70 + size * 4, "Minus: Rotate", NULL);
-			nvgText(vg, 20, 70 + size * 5, "Y : Menu", NULL);
-			nvgText(vg, 20, 70 + size * 6, "X : Snake", NULL);
-			nvgText(vg, 20, 70 + size * 8, "A : Wide Screen", NULL);
-			nvgText(vg, 20, 70 + size * 9, "B : Classic Screen", NULL);
-			nvgText(vg, 20, 70 + size * 11, "L : Toggle This Text", NULL);
+				const float size = 25.f;
+				nvgFontFace(vg, "minecraft");
+				nvgFontSize(vg, size);
+				nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+				nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+				nvgText(vg, 20, 70, "Welcome to this", NULL);
+				nvgText(vg, 20, 70 + size * 1, "extremely early", NULL);
+				nvgText(vg, 20, 70 + size * 2, "version!", NULL);
+				nvgText(vg, 20, 70 + size * 4, "Minus: Rotate", NULL);
+				nvgText(vg, 20, 70 + size * 5, "Y : Menu", NULL);
+				nvgText(vg, 20, 70 + size * 6, "X : Snake", NULL);
+				nvgText(vg, 20, 70 + size * 8, "A : Wide Screen", NULL);
+				nvgText(vg, 20, 70 + size * 9, "B : Classic Screen", NULL);
+				nvgText(vg, 20, 70 + size * 11, "L : Toggle This Text", NULL);
+			}
 
-			draw_digital_display(vg, highscore_display, 865, 165, "High Score");
-			draw_digital_display(vg, score_display, 865, 70, "Score");
+			int wid = 8 * 30;
+			if (screen_orientation == orientation_normal)
+			{
+				draw_digital_display(vg, score_display, 865, 70, "Score");
+				draw_digital_display(vg, highscore_display, 865, 165, "High Score");
+			}
+			else if (screen_orientation == orientation_left_down)
+			{
+				draw_digital_display(vg, score_display, 1235, 720 / 2 - wid - 30, "Score", 90);
+				draw_digital_display(vg, highscore_display, 1235, 720 / 2 + 30, "High Score", 90);
+			}
 		}
 	}
 	nvgEndFrame(vg);
@@ -576,8 +588,8 @@ bool BrickGameFramework::onFrame(u64 ns)
 			current_game = next_game;
 			next_game = -1;
 
-			game_list.at(current_game)->subgame_init();
 			current_game_name = game_list.at(current_game)->name;
+			game_list.at(current_game)->subgame_init();
 			highscore_display = scores_get_score_value(current_game_name, "highscore");
 			try {
 				highscore = stod(highscore_display);
@@ -640,10 +652,10 @@ void BrickGameFramework::setScore(int score)
 	{
 		hs = score;
 		highscore = score;
+	setHighScore(std::to_string(hs));
 	}
 
 	setScore(std::to_string(score));
-	setHighScore(std::to_string(hs));
 }
 
 void BrickGameFramework::setScore(double score)
@@ -673,10 +685,12 @@ int main(int argc, char* argv[])
 
 	read_settings();
 	init_settings();
+
 	read_scores();
 
 	BrickGameFramework app;
 	app.run();
+
 	exit_audio();
 	return 0;
 }
