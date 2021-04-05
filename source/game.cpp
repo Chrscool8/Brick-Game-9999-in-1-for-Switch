@@ -98,25 +98,26 @@ BrickGameFramework::BrickGameFramework()
 	cmdbuf = dk::CmdBufMaker{ device }.create();
 	CMemPool::Handle cmdmem = pool_data->allocate(StaticCmdSize);
 	cmdbuf.addMemory(cmdmem.getMemBlock(), cmdmem.getOffset(), cmdmem.getSize());
-
+	printf("cmdmem size: %u\n", cmdmem.getSize());
 	// Create the framebuffer resources
 	createFramebufferResources();
 
 	this->renderer.emplace(FramebufferWidth, FramebufferHeight, this->device, this->queue, *this->pool_images, *this->pool_code, *this->pool_data);
-	this->vg = nvgCreateDk(&*this->renderer, 0);
+	this->vg = nvgCreateDk(&*this->renderer, NVG_DEBUG);
 
 	initGraph(&fps, GRAPH_RENDER_FPS, "Frame Time");
 
 	// Load Resources
 	load_sprite(vg, "spr_cell_selected", "romfs:/images/cell_selected.png");
-	load_sprite(vg, "spr_cell_selected_90", "romfs:/images/cell_selected_90.png");
-	load_sprite(vg, "spr_cell_selected_180", "romfs:/images/cell_selected_180.png");
-	load_sprite(vg, "spr_cell_selected_270", "romfs:/images/cell_selected_270.png");
-
 	load_sprite(vg, "spr_cell_unselected", "romfs:/images/cell_unselected.png");
-	load_sprite(vg, "spr_cell_unselected_90", "romfs:/images/cell_unselected_90.png");
-	load_sprite(vg, "spr_cell_unselected_180", "romfs:/images/cell_unselected_180.png");
-	load_sprite(vg, "spr_cell_unselected_270", "romfs:/images/cell_unselected_270.png");
+
+	for (int i = 0; i < 16; i++)
+	{
+		std::string num = std::to_string(i);
+		if (i < 10)
+			num = "0" + num;
+		load_sprite(vg, "spr_cells_" + num, "romfs:/images/cells_" + num + ".png");
+	}
 
 	int fontIcons = nvgCreateFont(vg, "icons", "romfs:/fonts/entypo.ttf");
 	if (fontIcons == -1) {
@@ -291,15 +292,15 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 		scale = 1;
 		break;
 	case orientation_right_down:
-		angle = (90.f * NVG_PI) / 180.;
+		angle = nvgDegToRad(90);
 		scale = 1.5;
 		break;
 	case orientation_upside_down:
-		angle = (180.f * NVG_PI) / 180.;
+		angle = nvgDegToRad(180);
 		scale = 1;
 		break;
 	case orientation_left_down:
-		angle = (270.f * NVG_PI) / 180.;
+		angle = nvgDegToRad(270);
 		scale = 1.5;
 		break;
 	}
@@ -329,17 +330,31 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 	nvgFillColor(vg, nvgRGBA(109, 120, 92, 255));
 	nvgFill(vg);
 
-	for (int i = 0; i < draw_grid_width; i++)
+	for (int i = 0; i < draw_grid_width; i += 2)
 	{
-		for (int j = 0; j < draw_grid_height; j++)
+		for (int j = 0; j < draw_grid_height; j += 2)
 		{
 			float x = grid_offset_x + (i)*cell_width;
 			float y = grid_offset_y + (j)*cell_height;
 
-			if (grid_get(game.game_grid, i, j))
-				draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
-			else
-				draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");
+			bool ul = grid_get(game.game_grid, i, j);
+			bool ur = grid_get(game.game_grid, i + 1, j);
+			bool bl = grid_get(game.game_grid, i, j + 1);
+			bool br = grid_get(game.game_grid, i + 1, j + 1);
+
+			unsigned int pos = 1 * ul + 2 * ur + 4 * bl + 8 * br;
+
+			std::string num = std::to_string(pos);
+			if (pos < 10)
+				num = "0" + num;
+			draw_sprite(vg, x, y, cell_width * 2, cell_height * 2, "spr_cells_" + num);
+
+			//if (grid_get(game.game_grid, i, j))
+			//	draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+			//else
+			//	draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");
+
+			//TODO: Make final rows when odd
 		}
 	}
 
@@ -431,7 +446,7 @@ void BrickGameFramework::render(u64 ns)
 
 void transition(std::vector<std::vector<bool>>& grid, double percent)
 {
-	printf("%f percent\n", percent);
+	//printf("%f percent\n", percent);
 	if (percent > 0 && percent <= 100)
 	{
 		for (int y = 0; y < (double)grid_height(grid) * ((double)percent / 100.); y++)
