@@ -17,6 +17,7 @@
 #include "audio.h"
 #include <settings.h>
 #include <utils/scores.h>
+#include <games/game_race.h>
 
 static int nxlink_sock = -1;
 
@@ -172,6 +173,7 @@ BrickGameFramework::BrickGameFramework()
 
 	game_list.push_back(std::make_unique<subgame_menu>(*this));
 	game_list.push_back(std::make_unique<subgame_snake>(*this));
+	game_list.push_back(std::make_unique<subgame_race>(*this));
 }
 
 BrickGameFramework::~BrickGameFramework()
@@ -462,9 +464,8 @@ void BrickGameFramework::render(u64 ns)
 				nvgText(vg, 20, 70 + size * 4, "Minus: Rotate", NULL);
 				nvgText(vg, 20, 70 + size * 5, "Y : Menu", NULL);
 				nvgText(vg, 20, 70 + size * 6, "X : Snake", NULL);
-				nvgText(vg, 20, 70 + size * 8, "A : Wide Screen", NULL);
-				nvgText(vg, 20, 70 + size * 9, "B : Classic Screen", NULL);
-				nvgText(vg, 20, 70 + size * 11, "L : Toggle This Text", NULL);
+				nvgText(vg, 20, 70 + size * 7, "A : Race", NULL);
+				nvgText(vg, 20, 70 + size * 9, "L : Toggle This Text", NULL);
 			}
 
 			int wid = 8 * 30;
@@ -532,16 +533,14 @@ bool BrickGameFramework::onFrame(u64 ns)
 		next_game = 1;
 	}
 
-	if (keyboard_check_pressed & HidNpadButton_B)
-	{
-		target_grid_width = 10;
-		target_grid_height = 20;
-	}
-
 	if (keyboard_check_pressed & HidNpadButton_A)
 	{
-		target_grid_width = 20;
-		target_grid_height = 20;
+		next_game = 2;
+	}
+
+	if (keyboard_check_pressed & HidNpadButton_B)
+	{
+
 	}
 
 	if (grid_width(game_grid) < target_grid_width)

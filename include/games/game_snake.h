@@ -13,15 +13,15 @@ public:
 	class obj_snake : public game_object
 	{
 	public:
+		obj_snake(BrickGameFramework& game, int _x, int _y);
+		virtual void step_function() override;
+		virtual void draw_function() override;
+		virtual void destroy_function() override;
+		bool snake_is_at(int x, int y);
 		point target;
 		bool alive;
 		int move_counter;
 		int snake_length;
-		obj_snake(BrickGameFramework& game, int _x, int _y);
-		bool snake_is_at(int x, int y);
-		virtual void step_function() override;
-		virtual void draw_function() override;
-		virtual void destroy_function() override;
 		void die();
 		unsigned last_direction;
 		int time_til_move;
