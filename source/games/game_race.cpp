@@ -16,75 +16,60 @@ vector<vector<bool>> grid_sprite_racecar
 
 subgame_race::obj_player_car::obj_player_car(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
 {
-	time_til_move_x = 5;
+	time_til_move = 5;
 }
 
 void subgame_race::obj_player_car::step_function()
 {
-	if (keyboard_check_pressed_left(game) || keyboard_check_pressed_right(game))
-		time_til_move_x = 0;
+	if (keyboard_check_pressed_left(game) || keyboard_check_pressed_right(game) || keyboard_check_pressed_up(game) || keyboard_check_pressed_down(game))
+		time_til_move = 0;
+
+	//
 
 	if (keyboard_check_left(game))
 	{
-		if (time_til_move_x <= 0)
+		if (time_til_move <= 0)
 		{
-			time_til_move_x = 5;
 			x -= 1;
-		}
-		else
-		{
-			time_til_move_x -= 1;
 		}
 	}
 
 	if (keyboard_check_right(game))
 	{
-		if (time_til_move_x <= 0)
+		if (time_til_move <= 0)
 		{
-			time_til_move_x = 5;
 			x += 1;
-		}
-		else
-		{
-			time_til_move_x -= 1;
 		}
 	}
 
-	//
-
-	if (keyboard_check_pressed_up(game) || keyboard_check_pressed_down(game))
-		time_til_move_y = 0;
-
 	if (keyboard_check_up(game))
 	{
-		if (time_til_move_y <= 0)
+		if (time_til_move <= 0)
 		{
-			time_til_move_y = 5;
 			y -= 1;
-		}
-		else
-		{
-			time_til_move_y -= 1;
 		}
 	}
 
 	if (keyboard_check_down(game))
 	{
-		if (time_til_move_y <= 0)
+		if (time_til_move <= 0)
 		{
-			time_til_move_y = 5;
 			y += 1;
 		}
+	}
+
+	if (keyboard_check_left(game) || keyboard_check_right(game) || keyboard_check_up(game) || keyboard_check_down(game))
+	{
+		if (time_til_move <= 0)
+			time_til_move = 5;
 		else
-		{
-			time_til_move_y -= 1;
-		}
+			time_til_move -= 1;
 	}
 
 	//
 
 	x = clamp((int)x, 2, grid_width(game.game_grid) - 3);
-	y = clamp((int)y, 2, grid_height(game.game_grid) - 3);
+	y = clamp((int)y, 2, grid_height(game.game_grid) - 4);
 }
 
 void subgame_race::obj_player_car::draw_function()
