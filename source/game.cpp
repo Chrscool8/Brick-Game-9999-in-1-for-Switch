@@ -540,7 +540,10 @@ bool BrickGameFramework::onFrame(u64 ns)
 
 	if (keyboard_check_pressed & HidNpadButton_B)
 	{
-
+		if (target_grid_width != 20)
+			target_grid_width = 20;
+		else
+			target_grid_width = 10;
 	}
 
 	if (grid_width(game_grid) < target_grid_width)
@@ -586,6 +589,7 @@ bool BrickGameFramework::onFrame(u64 ns)
 
 			current_game = next_game;
 			next_game = -1;
+			running = true;
 
 			current_game_name = game_list.at(current_game)->name;
 			game_list.at(current_game)->subgame_init();
@@ -687,6 +691,15 @@ void BrickGameFramework::setScore(std::string score)
 {
 	score_display = score;
 	scores_set_score_value(current_game_name, "score", score);
+}
+
+void BrickGameFramework::incrementScore(int amount)
+{
+	printf("%f\n", score);
+	printf("%i\n", (int)score);
+	printf("%f\n", score + 1);
+	setScore((int)score + 1);
+	printf("%f\n", score);
 }
 
 void BrickGameFramework::setHighScore(std::string score)

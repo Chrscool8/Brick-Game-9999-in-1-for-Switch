@@ -11,10 +11,30 @@ extern vector<vector<bool>> grid_sprite_racecar;
 class subgame_race : public subgame
 {
 public:
+	class obj_border : public game_object
+	{
+	public:
+		obj_border(BrickGameFramework& game, int _x, int _y);
+		virtual void step_function() override;
+		virtual void draw_function() override;
+		virtual void destroy_function() override;
+		double ticker;
+	};
+
 	class obj_player_car : public game_object
 	{
 	public:
 		obj_player_car(BrickGameFramework& game, int _x, int _y);
+		virtual void step_function() override;
+		virtual void draw_function() override;
+		virtual void destroy_function() override;
+		int time_til_move;
+	};
+
+	class obj_player_ai : public game_object
+	{
+	public:
+		obj_player_ai(BrickGameFramework& game, int _x, int _y);
 		virtual void step_function() override;
 		virtual void draw_function() override;
 		virtual void destroy_function() override;
@@ -26,6 +46,7 @@ public:
 	virtual void subgame_step() override;
 	virtual void subgame_draw() override;
 	virtual void subgame_exit() override;
+	int timer;
 };
 
 #endif // !RACE_H

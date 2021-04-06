@@ -71,7 +71,10 @@ private:
 	std::string highscore_display = "";
 	std::string score_display = "";
 
+	bool running;
+
 public:
+
 	BrickGameFramework();
 	~BrickGameFramework();
 	void createFramebufferResources();
@@ -79,7 +82,6 @@ public:
 	void recordStaticCommands();
 	void render(u64 ns);
 	bool onFrame(u64 ns) override;
-
 
 	vector<vector<bool>> game_grid;
 	PadState pad;
@@ -97,6 +99,7 @@ public:
 	void setScore(int score);
 	void setScore(double score);
 	void setScore(std::string score);
+	void incrementScore(int amount);
 	void setHighScore(std::string score);
 };
 
