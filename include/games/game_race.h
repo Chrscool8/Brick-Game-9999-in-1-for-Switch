@@ -23,7 +23,7 @@ public:
 
 	subgame_race(BrickGameFramework& parent);
 	virtual void subgame_init() override;
-	virtual void subgame_run() override;
+	virtual void subgame_step() override;
 	virtual void subgame_draw() override;
 	virtual void subgame_exit() override;
 };

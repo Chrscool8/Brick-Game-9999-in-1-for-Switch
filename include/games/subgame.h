@@ -13,7 +13,7 @@ public:
 
 	std::string name;
 	virtual void subgame_init();
-	virtual void subgame_run();
+	virtual void subgame_step();
 	virtual void subgame_draw();
 	virtual void subgame_exit();
 

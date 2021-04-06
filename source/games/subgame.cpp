@@ -11,7 +11,7 @@ void subgame::subgame_init()
 	printf("Subgame Init\n");
 }
 
-void subgame::subgame_run()
+void subgame::subgame_step()
 {
 	printf("Subgame Run\n");
 }

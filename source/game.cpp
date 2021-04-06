@@ -623,7 +623,7 @@ bool BrickGameFramework::onFrame(u64 ns)
 			for (unsigned int i = 0; i < objects.size(); i++)
 				objects.at(i)->step_function();
 
-			game_list.at(current_game)->subgame_run();
+			game_list.at(current_game)->subgame_step();
 		}
 
 		for (unsigned int i = 0; i < objects.size(); i++)

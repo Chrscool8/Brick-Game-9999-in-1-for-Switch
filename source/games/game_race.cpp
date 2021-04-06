@@ -92,7 +92,7 @@ void subgame_race::subgame_init()
 	objects.push_back(std::make_unique<obj_player_car>(parent, 5, 5));
 }
 
-void subgame_race::subgame_run()
+void subgame_race::subgame_step()
 {
 }
 

@@ -24,7 +24,7 @@ void subgame_menu::subgame_init()
 	//parent.setHighScore("");
 }
 
-void subgame_menu::subgame_run()
+void subgame_menu::subgame_step()
 {
 }
 

@@ -186,7 +186,7 @@ void subgame_snake::subgame_init()
 }
 
 // Runs every frame of the subgame unless the game is transitioning
-void subgame_snake::subgame_run()
+void subgame_snake::subgame_step()
 {
 	//printf("Running Snake!!\n");
 }
