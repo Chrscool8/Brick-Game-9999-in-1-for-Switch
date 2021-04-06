@@ -620,11 +620,24 @@ bool BrickGameFramework::onFrame(u64 ns)
 	{
 		if (transition_stage == -1)
 		{
-			for (unsigned int i = 0; i < objects.size(); i++)
-				objects.at(i)->step_function();
+			if (running)
+				for (unsigned int i = 0; i < objects.size(); i++)
+					objects.at(i)->step_function();
 
 			game_list.at(current_game)->subgame_step();
 		}
+
+		//
+		for (unsigned int i = 0; i < objects.size(); i++)
+		{
+			if (objects.at(i)->marked_for_destruction)
+			{
+				objects.at(i)->destroy_function();
+				objects.erase(objects.begin() + i);
+				i--;
+			}
+		}
+		//
 
 		for (unsigned int i = 0; i < objects.size(); i++)
 			objects.at(i)->draw_function();

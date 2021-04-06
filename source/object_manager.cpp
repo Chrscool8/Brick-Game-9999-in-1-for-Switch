@@ -34,6 +34,11 @@ void game_object::destroy_function()
 	printf("Obj destroy\n");
 };
 
+void game_object::instance_destroy()
+{
+	marked_for_destruction = true;
+}
+
 unsigned int game_object::object_index = 0;
 
 vector<std::unique_ptr<game_object>> objects;

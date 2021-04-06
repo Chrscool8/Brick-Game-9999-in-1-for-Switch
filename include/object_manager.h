@@ -46,6 +46,9 @@ public:
 	virtual void step_function();
 	virtual void draw_function();
 	virtual void destroy_function();
+	void instance_destroy();
+
+	bool marked_for_destruction = false;
 };
 
 extern vector<std::unique_ptr<game_object>> objects;
