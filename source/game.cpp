@@ -656,27 +656,31 @@ bool BrickGameFramework::onFrame(u64 ns)
 	return true;
 }
 
-void BrickGameFramework::setScore(int score)
+void BrickGameFramework::setScore(int _score)
 {
 	int hs = highscore;
 
-	if (score > highscore)
+	if (_score > highscore)
 	{
-		hs = score;
-		highscore = score;
-	setHighScore(std::to_string(hs));
+		hs = _score;
+		highscore = _score;
+		setHighScore(std::to_string(hs));
 	}
 
-	setScore(std::to_string(score));
+	score = _score;
+	setScore(std::to_string(_score));
 }
 
-void BrickGameFramework::setScore(double score)
+void BrickGameFramework::setScore(double _score)
 {
-	if (score > highscore)
-		highscore = score;
+	if (_score > highscore)
+	{
+		highscore = _score;
+		setHighScore(std::to_string(highscore));
+	}
 
-	setScore(std::to_string(score));
-	setHighScore(std::to_string(highscore));
+	score = _score;
+	setScore(std::to_string(_score));
 }
 
 void BrickGameFramework::setScore(std::string score)
