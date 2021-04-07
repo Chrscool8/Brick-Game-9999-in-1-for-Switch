@@ -510,7 +510,7 @@ void transition(std::vector<std::vector<bool>>& grid, double percent)
 
 void BrickGameFramework::SwitchToGame(int i)
 {
-	next_game = 2;
+	next_game = i;
 
 	if (transition_percent == 0)
 	{
