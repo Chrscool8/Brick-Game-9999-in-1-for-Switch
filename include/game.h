@@ -71,9 +71,9 @@ private:
 	std::string highscore_display = "";
 	std::string score_display = "";
 
-	bool running;
 
 public:
+	bool running;
 
 	BrickGameFramework();
 	~BrickGameFramework();
@@ -101,6 +101,8 @@ public:
 	void setScore(std::string score);
 	void incrementScore(int amount);
 	void setHighScore(std::string score);
+
+	void SwitchToGame(int i);
 };
 
 void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t);

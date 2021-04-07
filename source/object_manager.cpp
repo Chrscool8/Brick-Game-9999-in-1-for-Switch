@@ -14,6 +14,7 @@ game_object::game_object(BrickGameFramework& _game, int _x, int _y) : game(_game
 	printf("ID: %u\n", id);
 	printf("Obj create\n");
 	direction = direction_right;
+	name = "object";
 }
 
 void game_object::step_function()
@@ -37,6 +38,46 @@ void game_object::destroy_function()
 void game_object::instance_destroy()
 {
 	marked_for_destruction = true;
+}
+
+obj_explosion::obj_explosion(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
+{
+	animation_percent = 0;
+}
+
+void obj_explosion::step_function()
+{
+
+}
+
+void obj_explosion::draw_function()
+{
+	if (animation_percent < 100)
+	{
+		animation_percent += 2;
+
+		for (int i = 0; i < 360; i += 5)
+		{
+			double radius = 4.5;
+			grid_set(game.game_grid, x + lengthdir_x(animation_percent / 100. * radius, i), y + lengthdir_y(animation_percent / 100. * radius, i), true);
+			radius -= .5;
+			grid_set(game.game_grid, x + lengthdir_x(animation_percent / 100. * radius, i), y + lengthdir_y(animation_percent / 100. * radius, i), true);
+		}
+
+		// Swirly
+		//double radius = 3;
+		//for (int i = 0; i < 360; i += 5)
+		//{
+		//	grid_set(game.game_grid, x + lengthdir_x(animation_percent / 100. * radius, i), y + lengthdir_y(animation_percent / 100. * radius, i), true);
+		//	radius -= .5;
+		//	grid_set(game.game_grid, x + lengthdir_x(animation_percent / 100. * radius, i), y + lengthdir_y(animation_percent / 100. * radius, i), true);
+		//}
+	}
+}
+
+void obj_explosion::destroy_function()
+{
+
 }
 
 unsigned int game_object::object_index = 0;

@@ -31,6 +31,12 @@ struct point {
 class game_object
 {
 public:
+	game_object(BrickGameFramework& game_, int _x, int _y);
+	virtual void step_function();
+	virtual void draw_function();
+	virtual void destroy_function();
+	void instance_destroy();
+
 	double x;
 	double y;
 	static unsigned int object_index;
@@ -42,13 +48,20 @@ public:
 	vector<point> tail;
 
 	vector<vector<bool>> sprite;
-	game_object(BrickGameFramework& game_, int _x, int _y);
-	virtual void step_function();
-	virtual void draw_function();
-	virtual void destroy_function();
-	void instance_destroy();
 
 	bool marked_for_destruction = false;
+
+	std::string name;
+};
+
+class obj_explosion : public game_object
+{
+public:
+	obj_explosion(BrickGameFramework& game, int _x, int _y);
+	virtual void step_function() override;
+	virtual void draw_function() override;
+	virtual void destroy_function() override;
+	double animation_percent;
 };
 
 extern vector<std::unique_ptr<game_object>> objects;

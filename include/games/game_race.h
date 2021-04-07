@@ -29,6 +29,7 @@ public:
 		virtual void draw_function() override;
 		virtual void destroy_function() override;
 		int time_til_move;
+		void die();
 	};
 
 	class obj_player_ai : public game_object

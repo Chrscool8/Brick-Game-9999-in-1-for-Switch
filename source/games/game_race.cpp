@@ -17,6 +17,7 @@ vector<vector<bool>> grid_sprite_racecar
 subgame_race::obj_player_car::obj_player_car(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
 {
 	time_til_move = 5;
+	name = "obj_player_car";
 }
 
 void subgame_race::obj_player_car::step_function()
@@ -70,6 +71,20 @@ void subgame_race::obj_player_car::step_function()
 
 	x = clamp((int)x, 2, grid_width(game.game_grid) - 3);
 	y = clamp((int)y, 2, grid_height(game.game_grid) - 4);
+
+	//
+
+	for (unsigned int i = 0; i < objects.size(); i++)
+	{
+		if (objects.at(i)->name == "obj_player_ai")
+		{
+			if (abs(objects.at(i)->x - x) <= 2 && abs(objects.at(i)->y - y) <= 3)
+			{
+				die();
+				break;
+			}
+		}
+	}
 }
 
 void subgame_race::obj_player_car::draw_function()
@@ -79,6 +94,13 @@ void subgame_race::obj_player_car::draw_function()
 
 void subgame_race::obj_player_car::destroy_function()
 {
+
+}
+
+void subgame_race::obj_player_car::die()
+{
+	game.running = false;
+	objects.push_back(std::make_unique<obj_explosion>(game, x, y));
 }
 
 subgame_race::subgame_race(BrickGameFramework& _parent) : subgame(_parent)
@@ -94,7 +116,7 @@ subgame_race::obj_border::obj_border(BrickGameFramework& game, int _x, int _y) :
 
 void subgame_race::obj_border::step_function()
 {
-	ticker += .15;
+	ticker += .1;
 }
 
 void subgame_race::obj_border::draw_function()
@@ -116,14 +138,14 @@ void subgame_race::subgame_init()
 {
 	printf("Initting Race!!\n");
 	objects.push_back(std::make_unique<obj_border>(parent, 0, 0));
-	objects.push_back(std::make_unique<obj_player_car>(parent, 5, 5));
+	objects.push_back(std::make_unique<obj_player_car>(parent, 5, 15));
 	timer = 0;
 	parent.setScore(0);
 }
 
 void subgame_race::subgame_step()
 {
-	if (timer < 3 * 60 * .5)
+	if (timer < 3 * 60)
 	{
 		timer += 1;
 	}
@@ -152,13 +174,14 @@ void subgame_race::subgame_exit()
 
 subgame_race::obj_player_ai::obj_player_ai(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
 {
+	name = "obj_player_ai";
 }
 
 void subgame_race::obj_player_ai::step_function()
 {
 	if (y < grid_height(game.game_grid))
 	{
-		y += .15;
+		y += .1;
 	}
 	else
 	{

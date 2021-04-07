@@ -508,6 +508,17 @@ void transition(std::vector<std::vector<bool>>& grid, double percent)
 	}
 }
 
+void BrickGameFramework::SwitchToGame(int i)
+{
+	next_game = 2;
+
+	if (transition_percent == 0)
+	{
+		transition_stage = 0;
+		transition_percent = 0;
+	}
+}
+
 bool BrickGameFramework::onFrame(u64 ns)
 {
 	padUpdate(&pad);
@@ -525,17 +536,17 @@ bool BrickGameFramework::onFrame(u64 ns)
 
 	if (keyboard_check_pressed & HidNpadButton_Y)
 	{
-		next_game = 0;
+		SwitchToGame(0);
 	}
 
 	if (keyboard_check_pressed & HidNpadButton_X)
 	{
-		next_game = 1;
+		SwitchToGame(1);
 	}
 
 	if (keyboard_check_pressed & HidNpadButton_A)
 	{
-		next_game = 2;
+		SwitchToGame(2);
 	}
 
 	if (keyboard_check_pressed & HidNpadButton_B)
@@ -625,10 +636,12 @@ bool BrickGameFramework::onFrame(u64 ns)
 		if (transition_stage == -1)
 		{
 			if (running)
+			{
 				for (unsigned int i = 0; i < objects.size(); i++)
 					objects.at(i)->step_function();
 
-			game_list.at(current_game)->subgame_step();
+				game_list.at(current_game)->subgame_step();
+			}
 		}
 
 		//
