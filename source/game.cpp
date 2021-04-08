@@ -18,6 +18,7 @@
 #include <settings.h>
 #include <utils/scores.h>
 #include <games/game_race.h>
+#include <games/game_pong.h>
 
 static int nxlink_sock = -1;
 
@@ -174,6 +175,7 @@ BrickGameFramework::BrickGameFramework()
 	game_list.push_back(std::make_unique<subgame_menu>(*this));
 	game_list.push_back(std::make_unique<subgame_snake>(*this));
 	game_list.push_back(std::make_unique<subgame_race>(*this));
+	game_list.push_back(std::make_unique<subgame_pong>(*this));
 }
 
 BrickGameFramework::~BrickGameFramework()
@@ -465,20 +467,21 @@ void BrickGameFramework::render(u64 ns)
 				nvgText(vg, 20, 70 + size * 5, "Y : Menu", NULL);
 				nvgText(vg, 20, 70 + size * 6, "X : Snake", NULL);
 				nvgText(vg, 20, 70 + size * 7, "A : Race", NULL);
-				nvgText(vg, 20, 70 + size * 9, "L : Toggle This Text", NULL);
+				nvgText(vg, 20, 70 + size * 8, "B : Pong", NULL);
+				nvgText(vg, 20, 70 + size * 10, "L : Toggle This Text", NULL);
 			}
+		}
 
-			int wid = 8 * 30;
-			if (screen_orientation == orientation_normal)
-			{
-				draw_digital_display(vg, score_display, 865, 70, "Score");
-				draw_digital_display(vg, highscore_display, 865, 165, "High Score");
-			}
-			else if (screen_orientation == orientation_left_down)
-			{
-				draw_digital_display(vg, score_display, 1235, 720 / 2 - wid - 30, "Score", 90);
-				draw_digital_display(vg, highscore_display, 1235, 720 / 2 + 30, "High Score", 90);
-			}
+		int wid = 8 * 30;
+		if (screen_orientation == orientation_normal)
+		{
+			draw_digital_display(vg, score_display, 865, 70, "Score");
+			draw_digital_display(vg, highscore_display, 865, 165, "High Score");
+		}
+		else if (screen_orientation == orientation_left_down)
+		{
+			draw_digital_display(vg, score_display, 1235, 720 / 2 - wid - 30, "Score", 90);
+			draw_digital_display(vg, highscore_display, 1235, 720 / 2 + 30, "High Score", 90);
 		}
 	}
 	nvgEndFrame(vg);
@@ -550,6 +553,11 @@ bool BrickGameFramework::onFrame(u64 ns)
 	}
 
 	if (keyboard_check_pressed & HidNpadButton_B)
+	{
+		SwitchToGame(3);
+	}
+
+	if (keyboard_check_pressed & HidNpadButton_R)
 	{
 		if (target_grid_width != 20)
 			target_grid_width = 20;
@@ -708,11 +716,7 @@ void BrickGameFramework::setScore(std::string score)
 
 void BrickGameFramework::incrementScore(int amount)
 {
-	printf("%f\n", score);
-	printf("%i\n", (int)score);
-	printf("%f\n", score + 1);
-	setScore((int)score + 1);
-	printf("%f\n", score);
+	setScore((int)score + amount);
 }
 
 void BrickGameFramework::setHighScore(std::string score)

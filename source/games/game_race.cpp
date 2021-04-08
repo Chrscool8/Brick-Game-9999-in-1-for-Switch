@@ -106,7 +106,6 @@ void subgame_race::obj_player_car::die()
 subgame_race::subgame_race(BrickGameFramework& _parent) : subgame(_parent)
 {
 	name = "Race";
-	_parent.setScore(0);
 }
 
 subgame_race::obj_border::obj_border(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
