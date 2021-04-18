@@ -22,13 +22,14 @@ public:
 	class obj_paddle : public game_object
 	{
 	public:
-		obj_paddle(BrickGameFramework& game, int _x, int _y);
+		obj_paddle(BrickGameFramework& game, int _x, int _y, bool _ai);
 		virtual void step_function() override;
 		virtual void draw_function() override;
 		virtual void destroy_function() override;
-		bool paddle_is_at(int x, int y);
 		int paddle_width;
 		int time_til_move;
+		bool ai;
+		int pause_time;
 	};
 
 	subgame_pong(BrickGameFramework& parent);

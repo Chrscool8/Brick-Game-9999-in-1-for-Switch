@@ -31,6 +31,8 @@ subgame_pong::obj_ball::obj_ball(BrickGameFramework& game, int _x, int _y) : gam
 		vspeed = 1;
 
 	time_til_move = 60;
+
+	name = "obj_ball";
 }
 
 void subgame_pong::obj_ball::step_function()
@@ -56,7 +58,7 @@ void subgame_pong::obj_ball::step_function()
 			}
 
 		if (paddle_is_at(x + hspeed, y + vspeed))
-			vspeed = -abs(vspeed);
+			vspeed = -vspeed;
 
 		x += hspeed;
 		y += vspeed;
@@ -96,7 +98,8 @@ void subgame_pong::subgame_init()
 {
 	parent.setScore(0);
 	objects.push_back(std::make_unique<obj_ball>(parent, grid_width(parent.game_grid) / 2, grid_height(parent.game_grid) / 2));
-	objects.push_back(std::make_unique<obj_paddle>(parent, grid_width(parent.game_grid) / 2, grid_height(parent.game_grid) - 1));
+	objects.push_back(std::make_unique<obj_paddle>(parent, grid_width(parent.game_grid) / 2, grid_height(parent.game_grid) - 1, false));
+	objects.push_back(std::make_unique<obj_paddle>(parent, grid_width(parent.game_grid) / 2, 0, true));
 }
 
 void subgame_pong::subgame_step()
@@ -114,43 +117,89 @@ void subgame_pong::subgame_exit()
 
 }
 
-subgame_pong::obj_paddle::obj_paddle(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
+subgame_pong::obj_paddle::obj_paddle(BrickGameFramework& game, int _x, int _y, bool _ai) : game_object(game, _x, _y)
 {
 	paddle_width = 2;
 	name = "obj_paddle";
+	ai = _ai;
+	pause_time = 5;
+	time_til_move = 0;
 }
 
 void subgame_pong::obj_paddle::step_function()
 {
-	if (keyboard_check_pressed_left(game) || keyboard_check_pressed_right(game))
-		time_til_move = 0;
-
-	//
-
-	if (keyboard_check_left(game))
+	if (!ai)
 	{
-		if (time_til_move <= 0)
+		if (keyboard_check_pressed_left(game) || keyboard_check_pressed_right(game))
+			time_til_move = 0;
+
+		if (keyboard_check_left(game))
 		{
-			x -= 1;
+			if (time_til_move <= 0)
+			{
+				x -= 1;
+			}
+		}
+
+		if (keyboard_check_right(game))
+		{
+			if (time_til_move <= 0)
+			{
+				x += 1;
+			}
+		}
+
+		if (keyboard_check_left(game) || keyboard_check_right(game))
+		{
+			if (time_til_move <= 0)
+				time_til_move = pause_time;
+			else
+				time_til_move -= 1;
 		}
 	}
-
-	if (keyboard_check_right(game))
+	else
 	{
-		if (time_til_move <= 0)
+		int ball_x = -1;
+		int ball_y = -1;
+		for (unsigned int j = 0; j < objects.size(); j++)
 		{
-			x += 1;
+			if (objects.at(j)->name == "obj_ball")
+			{
+				ball_x = objects.at(j)->x;
+				ball_y = objects.at(j)->y;
+			}
+		}
+
+		bool left = (x > ball_x);
+		bool right = (x < ball_x);
+
+		if ((ball_y <= grid_height(game.game_grid) / 2 + 2) && (rand() % 5 != 0))
+		{
+			if (left)
+			{
+				if (time_til_move <= 0)
+				{
+					x -= 1;
+				}
+			}
+
+			if (right)
+			{
+				if (time_til_move <= 0)
+				{
+					x += 1;
+				}
+			}
+
+			if (left || right)
+			{
+				if (time_til_move <= 0)
+					time_til_move = pause_time * 2;
+				else
+					time_til_move -= 1;
+			}
 		}
 	}
-
-	if (keyboard_check_left(game) || keyboard_check_right(game))
-	{
-		if (time_til_move <= 0)
-			time_til_move = 5;
-		else
-			time_til_move -= 1;
-	}
-
 	//
 
 	x = clamp((int)x, paddle_width, grid_width(game.game_grid) - paddle_width);
