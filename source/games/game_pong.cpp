@@ -33,6 +33,7 @@ subgame_pong::obj_ball::obj_ball(BrickGameFramework& game, int _x, int _y) : gam
 	time_til_move = 60;
 
 	name = "obj_ball";
+	pause_time = 10;
 }
 
 void subgame_pong::obj_ball::step_function()
@@ -43,7 +44,7 @@ void subgame_pong::obj_ball::step_function()
 	}
 	else
 	{
-		time_til_move = 10;
+		time_til_move = pause_time * fast_forwarder();
 
 		if (x + hspeed < 0)
 		{
@@ -152,7 +153,7 @@ void subgame_pong::obj_paddle::step_function()
 		if (keyboard_check_left(game) || keyboard_check_right(game))
 		{
 			if (time_til_move <= 0)
-				time_til_move = pause_time;
+				time_til_move = pause_time * fast_forwarder();
 			else
 				time_til_move -= 1;
 		}
@@ -194,7 +195,7 @@ void subgame_pong::obj_paddle::step_function()
 			if (left || right)
 			{
 				if (time_til_move <= 0)
-					time_til_move = pause_time * 2;
+					time_til_move = pause_time * 2 * fast_forwarder();
 				else
 					time_til_move -= 1;
 			}

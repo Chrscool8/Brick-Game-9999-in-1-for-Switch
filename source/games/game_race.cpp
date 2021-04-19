@@ -144,7 +144,7 @@ void subgame_race::subgame_init()
 
 void subgame_race::subgame_step()
 {
-	if (timer < 3 * 60)
+	if (timer < 180)
 	{
 		timer += 1;
 	}

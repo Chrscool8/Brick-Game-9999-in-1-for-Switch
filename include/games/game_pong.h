@@ -17,6 +17,7 @@ public:
 		int time_til_move;
 		int hspeed;
 		int vspeed;
+		int pause_time;
 	};
 
 	class obj_paddle : public game_object

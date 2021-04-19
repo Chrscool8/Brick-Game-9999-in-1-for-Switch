@@ -468,7 +468,7 @@ void BrickGameFramework::render(u64 ns)
 				nvgText(vg, 20, 70 + size * 6, "X : Snake", NULL);
 				nvgText(vg, 20, 70 + size * 7, "A : Race", NULL);
 				nvgText(vg, 20, 70 + size * 8, "B : Pong", NULL);
-				nvgText(vg, 20, 70 + size * 10, "L : Toggle This Text", NULL);
+				nvgText(vg, 20, 70 + size * 10, "ZL/ZR : Fast Forward", NULL);
 			}
 		}
 
@@ -522,10 +522,18 @@ void BrickGameFramework::SwitchToGame(int i)
 	}
 }
 
+double fast_forwarder()
+{
+	return (1 - (.75 * fast_forward));
+}
+
 bool BrickGameFramework::onFrame(u64 ns)
 {
 	padUpdate(&pad);
 	u64 keyboard_check_pressed = padGetButtonsDown(&pad);
+	u64 keyboard_check = padGetButtons(&pad);
+
+	fast_forward = ((keyboard_check & HidNpadButton_ZL) || (keyboard_check & HidNpadButton_ZR));
 
 	if (keyboard_check_pressed & HidNpadButton_Plus)
 	{
@@ -733,6 +741,8 @@ int main(int argc, char* argv[])
 	init_settings();
 
 	read_scores();
+
+	fast_forward = false;
 
 	BrickGameFramework app;
 	app.run();

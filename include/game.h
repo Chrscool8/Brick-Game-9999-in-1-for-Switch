@@ -71,7 +71,6 @@ private:
 	std::string highscore_display = "";
 	std::string score_display = "";
 
-
 public:
 	bool running;
 
@@ -104,6 +103,9 @@ public:
 
 	void SwitchToGame(int i);
 };
+
+static bool fast_forward;
+double fast_forwarder();
 
 void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t);
 void load_sprite(NVGcontext* vg, std::string sprite_name, std::string sprite_path);

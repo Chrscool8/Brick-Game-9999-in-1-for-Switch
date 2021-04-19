@@ -25,6 +25,14 @@ bool keyboard_check_down(BrickGameFramework& game)
 	return (keyboard_check & HidNpadButton_Down);
 }
 
+bool keyboard_check_L(BrickGameFramework& game)
+{
+	u64 keyboard_check = padGetButtons(&game.pad);
+	return (keyboard_check & HidNpadButton_L);
+}
+
+//
+
 bool keyboard_check_pressed_right(BrickGameFramework& game)
 {
 	u64 keyboard_check = padGetButtonsDown(&game.pad);
