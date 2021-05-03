@@ -76,3 +76,24 @@ bool point_in_grid(std::vector<std::vector<bool>>& grid, int x, int y)
 {
 	return (x >= 0 && y >= 0 && x < grid_width(grid) && y < grid_height(grid));
 }
+
+void emplace_grid_in_grid(vector<vector<bool>>& base_grid, vector<vector<bool>>& grid_to_place, int x, int y, bool additive)
+{
+	vector<vector<bool>> sprite = grid_to_place;
+	int sprite_width = grid_width(sprite);
+	int sprite_height = grid_height(sprite);
+
+	for (int i = 0; i < sprite_width; i++)
+	{
+		for (int j = 0; j < sprite_height; j++)
+		{
+			if (additive)
+			{
+				if (grid_get(sprite, i, j))
+					grid_set(base_grid, x + i, y + j, true);
+			}
+			else
+				grid_set(base_grid, x + i, y + j, grid_get(sprite, i, j));
+		}
+	}
+}

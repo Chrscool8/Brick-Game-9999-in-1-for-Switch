@@ -19,6 +19,7 @@
 #include <utils/scores.h>
 #include <games/game_race.h>
 #include <games/game_pong.h>
+#include <games/game_rowfill.h>
 
 static int nxlink_sock = -1;
 
@@ -172,10 +173,11 @@ BrickGameFramework::BrickGameFramework()
 
 	game_grid = grid_create(10, 20);
 
-	game_list.push_back(std::make_unique<subgame_menu>(*this));
+	game_list.push_back(std::make_unique<subgame_rowfill>(*this));
 	game_list.push_back(std::make_unique<subgame_snake>(*this));
 	game_list.push_back(std::make_unique<subgame_race>(*this));
 	game_list.push_back(std::make_unique<subgame_pong>(*this));
+	game_list.push_back(std::make_unique<subgame_menu>(*this));
 }
 
 BrickGameFramework::~BrickGameFramework()

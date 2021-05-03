@@ -10,3 +10,4 @@ bool grid_get(vector<vector<bool>>& grid, int x, int y);
 int grid_width(vector<vector<bool>>& grid);
 int grid_height(vector<vector<bool>>& grid);
 void grid_clear(vector<vector<bool>>& grid);
+void emplace_grid_in_grid(vector<vector<bool>>& grid, vector<vector<bool>>& grid_to_place, int x, int y, bool additive);
