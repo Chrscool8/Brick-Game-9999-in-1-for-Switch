@@ -62,7 +62,7 @@ void subgame_race::obj_player_car::step_function()
 	if (keyboard_check_left(game) || keyboard_check_right(game) || keyboard_check_up(game) || keyboard_check_down(game))
 	{
 		if (time_til_move <= 0)
-			time_til_move = 5;
+			time_til_move = 5 * fast_forwarder();
 		else
 			time_til_move -= 1;
 	}
@@ -115,7 +115,7 @@ subgame_race::obj_border::obj_border(BrickGameFramework& game, int _x, int _y) :
 
 void subgame_race::obj_border::step_function()
 {
-	ticker += .1;
+	ticker += .15 * (2 - fast_forwarder());
 }
 
 void subgame_race::obj_border::draw_function()
@@ -138,19 +138,15 @@ void subgame_race::subgame_init()
 	printf("Initting Race!!\n");
 	objects.push_back(std::make_unique<obj_border>(parent, 0, 0));
 	objects.push_back(std::make_unique<obj_player_car>(parent, 5, 15));
-	timer = 0;
+
 	parent.setScore(0);
 }
 
 void subgame_race::subgame_step()
 {
-	if (timer < 180)
+	if (time_til_spawn <= 0)
 	{
-		timer += 1;
-	}
-	else
-	{
-		timer = 0;
+		time_til_spawn = pause_time * fast_forwarder();
 		const int lane_width = 3;
 		int lane = rand() % ((grid_width(parent.game_grid) - 2) / lane_width);
 		lane = lane * lane_width + 2 + 1;
@@ -159,6 +155,8 @@ void subgame_race::subgame_step()
 		printf("lane: %i\n", lane);
 		objects.push_back(std::make_unique<obj_player_ai>(parent, lane, -5));
 	}
+	else
+		time_til_spawn -= 1;
 }
 
 void subgame_race::subgame_draw()
@@ -174,17 +172,26 @@ void subgame_race::subgame_exit()
 subgame_race::obj_player_ai::obj_player_ai(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
 {
 	name = "obj_player_ai";
+
 }
 
 void subgame_race::obj_player_ai::step_function()
 {
-	if (y < grid_height(game.game_grid))
+	if (time_til_move <= 0)
 	{
-		y += .1;
+		time_til_move = pause_time * fast_forwarder();
+		if (y < grid_height(game.game_grid))
+		{
+			y += 1;
+		}
+		else
+		{
+			instance_destroy();
+		}
 	}
 	else
 	{
-		instance_destroy();
+		time_til_move -= 1;
 	}
 }
 

@@ -39,7 +39,8 @@ public:
 		virtual void step_function() override;
 		virtual void draw_function() override;
 		virtual void destroy_function() override;
-		int time_til_move;
+		int time_til_move = 0;
+		int pause_time = 6;
 	};
 
 	subgame_race(BrickGameFramework& parent);
@@ -47,7 +48,8 @@ public:
 	virtual void subgame_step() override;
 	virtual void subgame_draw() override;
 	virtual void subgame_exit() override;
-	int timer;
+	int time_til_spawn = 180;
+	int pause_time = 180;
 };
 
 #endif // !RACE_H
