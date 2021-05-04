@@ -39,7 +39,7 @@ void subgame_rowfill::obj_rows::lose()
 	objects.push_back(std::make_unique<obj_explosion>(game, grid_width(filled_blocks) / 2, grid_height(filled_blocks)));
 }
 
-int lowest_occupied_line(std::vector<std::vector<bool>>& grid)
+int subgame_rowfill::obj_rows::lowest_occupied_line(std::vector<std::vector<bool>>& grid)
 {
 	for (int i = grid_height(grid); i >= 0; i--)
 	{
@@ -54,7 +54,7 @@ int lowest_occupied_line(std::vector<std::vector<bool>>& grid)
 	return 0;
 }
 
-void generate_row(std::vector<std::vector<bool>>& grid, int row_num)
+void subgame_rowfill::obj_rows::generate_row(std::vector<std::vector<bool>>& grid, int row_num)
 {
 	for (int i = 0; i < grid_width(grid); i++)
 	{
