@@ -524,7 +524,7 @@ void BrickGameFramework::SwitchToGame(int i)
 	}
 }
 
-double fast_forwarder()
+double fast_forwarder_half()
 {
 	return (1 - (.75 * fast_forward));
 }

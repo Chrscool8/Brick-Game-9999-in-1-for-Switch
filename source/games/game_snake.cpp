@@ -88,7 +88,7 @@ void subgame_snake::obj_snake::step_function()
 		if (keyboard_check_down(game) && last_direction != direction_up)
 			direction = direction_down;
 
-		if (move_counter < time_til_move * fast_forwarder())
+		if (move_counter < time_til_move * fast_forwarder_half())
 		{
 			move_counter += 1;
 		}

@@ -105,7 +105,7 @@ public:
 };
 
 static bool fast_forward;
-double fast_forwarder();
+double fast_forwarder_half();
 
 void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t);
 void load_sprite(NVGcontext* vg, std::string sprite_name, std::string sprite_path);

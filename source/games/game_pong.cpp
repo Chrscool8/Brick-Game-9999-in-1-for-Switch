@@ -44,7 +44,7 @@ void subgame_pong::obj_ball::step_function()
 	}
 	else
 	{
-		time_til_move = pause_time * fast_forwarder();
+		time_til_move = pause_time * fast_forwarder_half();
 
 		if (x + hspeed < 0)
 		{
@@ -153,7 +153,7 @@ void subgame_pong::obj_paddle::step_function()
 		if (keyboard_check_left(game) || keyboard_check_right(game))
 		{
 			if (time_til_move <= 0)
-				time_til_move = pause_time * fast_forwarder();
+				time_til_move = pause_time * fast_forwarder_half();
 			else
 				time_til_move -= 1;
 		}
@@ -195,7 +195,7 @@ void subgame_pong::obj_paddle::step_function()
 			if (left || right)
 			{
 				if (time_til_move <= 0)
-					time_til_move = pause_time * 2 * fast_forwarder();
+					time_til_move = pause_time * 2 * fast_forwarder_half();
 				else
 					time_til_move -= 1;
 			}

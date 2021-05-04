@@ -108,7 +108,7 @@ void subgame_menu::obj_welcome_text::step_function()
 {
 	if (x > -40)
 	{
-		x -= (1. / 15) * (2 - fast_forwarder());
+		x -= (1. / 15) * (2 - fast_forwarder_half());
 	}
 	else
 	{

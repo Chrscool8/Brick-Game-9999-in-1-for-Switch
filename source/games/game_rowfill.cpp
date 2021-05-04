@@ -181,7 +181,7 @@ void subgame_rowfill::obj_player::step_function()
 	if (keyboard_check_left(game) || keyboard_check_right(game))
 	{
 		if (time_til_move <= 0)
-			time_til_move = pause_time;// *fast_forwarder();
+			time_til_move = pause_time;// *fast_forwarder_half();
 		else
 			time_til_move -= 1;
 	}
@@ -234,14 +234,11 @@ void subgame_rowfill::obj_bullet::step_function()
 	}
 	else
 	{
-		vector<vector<bool>> rows;
 		for (unsigned int j = 0; j < objects.size(); j++)
 		{
 			if (objects.at(j)->name == "obj_rows")
 			{
 				obj_rows* row_obj = static_cast<obj_rows*>(objects.at(j).get());
-
-				print_debug(std::to_string(grid_height(row_obj->filled_blocks)));
 
 				if (y == 0)
 				{
@@ -285,17 +282,9 @@ void subgame_rowfill::obj_bullet::step_function()
 			}
 		}
 
-
-
-
-
-
-
 		y -= 1;
 		time_til_move = pause_time;
 	}
-
-
 }
 
 void subgame_rowfill::obj_bullet::draw_function()

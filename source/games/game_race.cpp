@@ -62,7 +62,7 @@ void subgame_race::obj_player_car::step_function()
 	if (keyboard_check_left(game) || keyboard_check_right(game) || keyboard_check_up(game) || keyboard_check_down(game))
 	{
 		if (time_til_move <= 0)
-			time_til_move = 5 * fast_forwarder();
+			time_til_move = 5 * fast_forwarder_half();
 		else
 			time_til_move -= 1;
 	}
@@ -115,7 +115,7 @@ subgame_race::obj_border::obj_border(BrickGameFramework& game, int _x, int _y) :
 
 void subgame_race::obj_border::step_function()
 {
-	ticker += .15 * (2 - fast_forwarder());
+	ticker += .15 * (2 - fast_forwarder_half());
 }
 
 void subgame_race::obj_border::draw_function()
@@ -146,7 +146,7 @@ void subgame_race::subgame_step()
 {
 	if (time_til_spawn <= 0)
 	{
-		time_til_spawn = pause_time * fast_forwarder();
+		time_til_spawn = pause_time * fast_forwarder_half();
 		const int lane_width = 3;
 		int lane = rand() % ((grid_width(parent.game_grid) - 2) / lane_width);
 		lane = lane * lane_width + 2 + 1;
@@ -172,14 +172,13 @@ void subgame_race::subgame_exit()
 subgame_race::obj_player_ai::obj_player_ai(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
 {
 	name = "obj_player_ai";
-
 }
 
 void subgame_race::obj_player_ai::step_function()
 {
 	if (time_til_move <= 0)
 	{
-		time_til_move = pause_time * fast_forwarder();
+		time_til_move = pause_time * fast_forwarder_half();
 		if (y < grid_height(game.game_grid))
 		{
 			y += 1;
@@ -202,6 +201,5 @@ void subgame_race::obj_player_ai::draw_function()
 
 void subgame_race::obj_player_ai::destroy_function()
 {
-	printf("Kerblam\n");
 	game.incrementScore(1);
 }
