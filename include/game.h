@@ -60,7 +60,6 @@ private:
 	DkCmdList render_cmdlist;
 
 	std::optional<nvg::DkRenderer> renderer;
-	NVGcontext* vg;
 
 	PerfGraph fps;
 	float prevTime;
@@ -71,7 +70,9 @@ private:
 	std::string highscore_display = "";
 	std::string score_display = "";
 
+
 public:
+	NVGcontext* vg;
 	bool running;
 
 	BrickGameFramework();
@@ -88,6 +89,8 @@ public:
 	int transition_stage;
 	double transition_percent;
 
+	unsigned int game_time_in_frames = 0;
+
 	int target_grid_width = 10;
 	int target_grid_height = 20;
 
@@ -95,6 +98,8 @@ public:
 
 	bool debug_text = true;
 
+	void setScoreDisplay(std::string score);
+	void setHighScoreDisplay(std::string score);
 	void setScore(int score);
 	void setScore(double score);
 	void setScore(std::string score);
@@ -104,7 +109,7 @@ public:
 	void SwitchToGame(int i);
 };
 
-static bool fast_forward;
+static bool fast_forward = false;
 double fast_forwarder_half();
 
 void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t);
