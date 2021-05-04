@@ -56,3 +56,27 @@ bool keyboard_check_pressed_down(BrickGameFramework& game)
 	u64 keyboard_check = padGetButtonsDown(&game.pad);
 	return (keyboard_check & HidNpadButton_Down);
 }
+
+bool keyboard_check_pressed_A(BrickGameFramework& game)
+{
+	u64 keyboard_check = padGetButtonsDown(&game.pad);
+	return (keyboard_check & HidNpadButton_A);
+}
+
+bool keyboard_check_pressed_B(BrickGameFramework& game)
+{
+	u64 keyboard_check = padGetButtonsDown(&game.pad);
+	return (keyboard_check & HidNpadButton_B);
+}
+
+bool keyboard_check_pressed_X(BrickGameFramework& game)
+{
+	u64 keyboard_check = padGetButtonsDown(&game.pad);
+	return (keyboard_check & HidNpadButton_X);
+}
+
+bool keyboard_check_pressed_Y(BrickGameFramework& game)
+{
+	u64 keyboard_check = padGetButtonsDown(&game.pad);
+	return (keyboard_check & HidNpadButton_Y);
+}
