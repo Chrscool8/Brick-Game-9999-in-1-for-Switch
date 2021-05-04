@@ -19,6 +19,7 @@ public:
 		vector<vector<bool>> filled_blocks;
 		void shift_down();
 		void check_rows();
+		void lose();
 		int pause_time;
 		int time_til_move;
 	};

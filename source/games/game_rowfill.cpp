@@ -33,6 +33,27 @@ void subgame_rowfill::subgame_exit()
 
 //
 
+void subgame_rowfill::obj_rows::lose()
+{
+	game.running = false;
+	objects.push_back(std::make_unique<obj_explosion>(game, grid_width(filled_blocks) / 2, grid_height(filled_blocks)));
+}
+
+int lowest_occupied_line(std::vector<std::vector<bool>>& grid)
+{
+	for (int i = grid_height(grid); i >= 0; i--)
+	{
+		for (int j = 0; j < grid_width(grid); j++)
+		{
+			if (grid_get(grid, j, i))
+			{
+				return i;
+			}
+		}
+	}
+	return 0;
+}
+
 void generate_row(std::vector<std::vector<bool>>& grid, int row_num)
 {
 	for (int i = 0; i < grid_width(grid); i++)
@@ -65,6 +86,11 @@ void subgame_rowfill::obj_rows::shift_down()
 	}
 
 	generate_row(filled_blocks, 0);
+
+	if (lowest_occupied_line(filled_blocks) > grid_height(filled_blocks) - 4)
+	{
+		lose();
+	}
 }
 
 void subgame_rowfill::obj_rows::check_rows()
@@ -94,6 +120,11 @@ void subgame_rowfill::obj_rows::check_rows()
 			game.incrementScore(1);
 			iii = -1;
 		}
+	}
+
+	if (lowest_occupied_line(filled_blocks) > grid_height(filled_blocks) - 4)
+	{
+		lose();
 	}
 }
 
