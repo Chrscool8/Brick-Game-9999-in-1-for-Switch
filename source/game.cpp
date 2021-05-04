@@ -20,6 +20,7 @@
 #include <games/game_race.h>
 #include <games/game_pong.h>
 #include <games/game_rowfill.h>
+#include <utils/sprites.h>
 
 static int nxlink_sock = -1;
 
@@ -40,41 +41,6 @@ extern "C" void userAppExit(void)
 		close(nxlink_sock);
 	socketExit();
 	romfsExit();
-}
-
-std::map<std::string, int> sprite_indicies;
-
-void load_sprite(NVGcontext* vg, std::string sprite_name, std::string sprite_path)
-{
-	sprite_indicies[sprite_name] = nvgCreateImage(vg, sprite_path.c_str(), NVG_IMAGE_NEAREST);
-	if (sprite_indicies[sprite_name] == 0)
-		printf(("Problem loading " + sprite_name + "\n").c_str());
-	else
-		printf(("Loaded " + sprite_name + " to index " + std::to_string(sprite_indicies[sprite_name]) + "\n").c_str());
-}
-
-bool draw_sprite(NVGcontext* vg, float x, float y, float width, float height, std::string sprite_name)
-{
-	if (sprite_indicies.count(sprite_name) == 0)
-	{
-		printf(("Trying to draw unloaded sprite, " + sprite_name + "\n").c_str());
-		return false;
-	}
-	else
-	{
-		//printf(("Trying to draw loaded sprite, " + sprite_name + "\n").c_str());
-		nvgSave(vg);
-		nvgScissor(vg, x, y, width, height);
-		nvgTranslate(vg, x, y);
-
-		NVGpaint imgPaint = nvgImagePattern(vg, 0, 0, width, height, 0.0f / 180.0f * NVG_PI, sprite_indicies[sprite_name], 1.0f);
-		nvgBeginPath(vg);
-		nvgRect(vg, 0, 0, width, height);
-		nvgFillPaint(vg, imgPaint);
-		nvgFill(vg);
-		nvgRestore(vg);
-		return true;
-	}
 }
 
 void OutputDkDebug(void* userData, const char* context, DkResult result, const char* message)
@@ -115,6 +81,9 @@ BrickGameFramework::BrickGameFramework()
 	// Load Resources
 	load_sprite(vg, "spr_cell_selected", "romfs:/images/cell_selected.png");
 	load_sprite(vg, "spr_cell_unselected", "romfs:/images/cell_unselected.png");
+
+	load_sprite(vg, "spr_page_blip_selected", "romfs:/images/page_blip_selected.png");
+	load_sprite(vg, "spr_page_blip_unselected", "romfs:/images/page_blip_unselected.png");
 
 	for (int i = 0; i < 16; i++)
 	{
@@ -178,11 +147,11 @@ BrickGameFramework::BrickGameFramework()
 
 	game_grid = grid_create(10, 20);
 
-	game_list.push_back(std::make_unique<subgame_rowfill>(*this));
+	game_list.push_back(std::make_unique<subgame_menu>(*this));
 	game_list.push_back(std::make_unique<subgame_snake>(*this));
 	game_list.push_back(std::make_unique<subgame_race>(*this));
 	game_list.push_back(std::make_unique<subgame_pong>(*this));
-	game_list.push_back(std::make_unique<subgame_menu>(*this));
+	game_list.push_back(std::make_unique<subgame_rowfill>(*this));
 }
 
 BrickGameFramework::~BrickGameFramework()
@@ -456,32 +425,44 @@ void BrickGameFramework::render(u64 ns)
 	{
 		renderGame(vg, *this, 0, 0, FramebufferWidth, FramebufferHeight, time);
 
-		if (show_ui)
-		{
-			if (screen_orientation == orientation_normal)
-			{
-				renderGraph(vg, 5, 5, &fps);
+		//if (show_ui)
+		//{
+		//	if (screen_orientation == orientation_normal)
+		//	{
+		//		renderGraph(vg, 5, 5, &fps);
 
-				const float size = 25.f;
-				nvgFontFace(vg, "minecraft");
-				nvgFontSize(vg, size);
-				nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-				nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-				nvgText(vg, 20, 70, "Welcome to this", NULL);
-				nvgText(vg, 20, 70 + size * 1, "extremely early", NULL);
-				nvgText(vg, 20, 70 + size * 2, "version!", NULL);
-				nvgText(vg, 20, 70 + size * 4, "Minus: Rotate", NULL);
-				nvgText(vg, 20, 70 + size * 5, "Y : Menu", NULL);
-				nvgText(vg, 20, 70 + size * 6, "X : Snake", NULL);
-				nvgText(vg, 20, 70 + size * 7, "A : Race", NULL);
-				nvgText(vg, 20, 70 + size * 8, "B : Pong", NULL);
-				nvgText(vg, 20, 70 + size * 10, "ZL/ZR : Fast Forward", NULL);
-			}
-		}
+		//		const float size = 25.f;
+		//		nvgFontFace(vg, "minecraft");
+		//		nvgFontSize(vg, size);
+		//		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+		//		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+		//		nvgText(vg, 20, 70, "Welcome to this", NULL);
+		//		nvgText(vg, 20, 70 + size * 1, "extremely early", NULL);
+		//		nvgText(vg, 20, 70 + size * 2, "version!", NULL);
+		//		nvgText(vg, 20, 70 + size * 4, "Minus: Rotate", NULL);
+		//		nvgText(vg, 20, 70 + size * 5, "Y : Menu", NULL);
+		//		nvgText(vg, 20, 70 + size * 6, "X : Snake", NULL);
+		//		nvgText(vg, 20, 70 + size * 7, "A : Race", NULL);
+		//		nvgText(vg, 20, 70 + size * 8, "B : Pong", NULL);
+		//		nvgText(vg, 20, 70 + size * 10, "ZL/ZR : Fast Forward", NULL);
+		//	}
+		//}
 
 		int wid = 8 * 30;
 		if (screen_orientation == orientation_normal)
 		{
+			nvgSave(vg);
+			nvgTranslate(vg, 150, 80);
+			//nvgRotate(vg, nvgDegToRad(angle));
+
+			nvgFontFace(vg, "vcrtext");
+			nvgFontSize(vg, 72);
+			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+			nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+			nvgText(vg, 3, 0, current_game_name.c_str(), NULL);
+			nvgRestore(vg);
+
+
 			draw_digital_display(vg, score_display, 865, 70, "Score");
 			draw_digital_display(vg, highscore_display, 865, 165, "High Score");
 		}
@@ -544,41 +525,44 @@ bool BrickGameFramework::onFrame(u64 ns)
 
 	if (keyboard_check_pressed & HidNpadButton_Plus)
 	{
-		return false;
-	}
-
-	if (keyboard_check_pressed & HidNpadButton_L)
-	{
-		show_ui = !show_ui;
-	}
-
-	if (keyboard_check_pressed & HidNpadButton_Y)
-	{
-		SwitchToGame(0);
-	}
-
-	if (keyboard_check_pressed & HidNpadButton_X)
-	{
-		SwitchToGame(1);
-	}
-
-	if (keyboard_check_pressed & HidNpadButton_A)
-	{
-		SwitchToGame(2);
-	}
-
-	if (keyboard_check_pressed & HidNpadButton_B)
-	{
-		SwitchToGame(3);
-	}
-
-	if (keyboard_check_pressed & HidNpadButton_R)
-	{
-		if (target_grid_width != 20)
-			target_grid_width = 20;
+		if (current_game == 0)
+			return false;
 		else
-			target_grid_width = 10;
+			SwitchToGame(0);
 	}
+
+	//if (keyboard_check_pressed & HidNpadButton_L)
+	//{
+	//	show_ui = !show_ui;
+	//}
+
+	//if (keyboard_check_pressed & HidNpadButton_Y)
+	//{
+	//	SwitchToGame(0);
+	//}
+
+	//if (keyboard_check_pressed & HidNpadButton_X)
+	//{
+	//	SwitchToGame(1);
+	//}
+
+	//if (keyboard_check_pressed & HidNpadButton_A)
+	//{
+	//	SwitchToGame(2);
+	//}
+
+	//if (keyboard_check_pressed & HidNpadButton_B)
+	//{
+	//	SwitchToGame(3);
+	//}
+
+	//if (keyboard_check_pressed & HidNpadButton_R)
+	//{
+	//	if (target_grid_width != 20)
+	//		target_grid_width = 20;
+	//	else
+	//		target_grid_width = 10;
+	//}
 
 	if (grid_width(game_grid) < target_grid_width)
 	{
@@ -692,8 +676,20 @@ bool BrickGameFramework::onFrame(u64 ns)
 		printf("orientation: %i\n", screen_orientation);
 	}
 
+	game_time_in_frames += 1;
+
 	render(ns);
 	return true;
+}
+
+void BrickGameFramework::setScoreDisplay(std::string score)
+{
+	score_display = score;
+}
+
+void BrickGameFramework::setHighScoreDisplay(std::string score)
+{
+	highscore_display = score;
 }
 
 void BrickGameFramework::setScore(int _score)
