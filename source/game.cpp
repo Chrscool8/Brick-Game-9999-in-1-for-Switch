@@ -152,6 +152,11 @@ BrickGameFramework::BrickGameFramework()
 	if (fontKongtext == -1) {
 		printf("Could not add font Kongtext.\n");
 	}
+	int vcrtext = nvgCreateFont(vg, "vcrtext", "romfs:/fonts/VCR_OSD_MONO_1.ttf");
+	if (vcrtext == -1) {
+		printf("Could not add font vcrtext.\n");
+	}
+
 
 	nvgAddFallbackFontId(vg, fontNormal, fontEmoji);
 	nvgAddFallbackFontId(vg, fontBold, fontEmoji);
