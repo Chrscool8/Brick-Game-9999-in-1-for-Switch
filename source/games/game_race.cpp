@@ -138,8 +138,6 @@ void subgame_race::subgame_init()
 	printf("Initting Race!!\n");
 	objects.push_back(std::make_unique<obj_border>(parent, 0, 0));
 	objects.push_back(std::make_unique<obj_player_car>(parent, 5, 15));
-
-	parent.setScore(0);
 }
 
 void subgame_race::subgame_step()

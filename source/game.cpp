@@ -657,7 +657,7 @@ bool BrickGameFramework::onFrame(u64 ns)
 			running = true;
 
 			current_game_name = game_list.at(current_game)->name;
-			game_list.at(current_game)->subgame_init();
+			setScore(0);
 			highscore_display = scores_get_score_value(current_game_name, "highscore");
 			try
 			{
@@ -667,6 +667,7 @@ bool BrickGameFramework::onFrame(u64 ns)
 			{
 				highscore = 0;
 			}
+			game_list.at(current_game)->subgame_init();
 		}
 
 		transition(game_grid, transition_percent);

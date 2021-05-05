@@ -97,7 +97,6 @@ subgame_pong::subgame_pong(BrickGameFramework& _parent) : subgame(_parent)
 
 void subgame_pong::subgame_init()
 {
-	parent.setScore(0);
 	objects.push_back(std::make_unique<obj_ball>(parent, grid_width(parent.game_grid) / 2, grid_height(parent.game_grid) / 2));
 	objects.push_back(std::make_unique<obj_paddle>(parent, grid_width(parent.game_grid) / 2, grid_height(parent.game_grid) - 1, false));
 	objects.push_back(std::make_unique<obj_paddle>(parent, grid_width(parent.game_grid) / 2, 0, true));

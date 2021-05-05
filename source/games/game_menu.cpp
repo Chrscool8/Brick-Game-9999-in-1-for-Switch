@@ -22,10 +22,15 @@ void subgame_menu::subgame_init()
 	if (parent.debug_text)
 		printf("Initting Menu!!\n");
 	objects.push_back(std::make_unique<obj_border>(parent));
-	//objects.push_back(std::make_unique<obj_welcome_text>(parent));
-	//parent.setScore(" XELL0 ");
-	//parent.setHighScore("");
-	//selected_game = 0;
+	parent.setScoreDisplay("---");
+
+	try {
+		parent.setHighScoreDisplay(scores_get_score_value(game_list.at(selected_game)->name, "highscore"));
+	}
+	catch (exception& e)
+	{
+		parent.setHighScoreDisplay("---");
+	}
 }
 
 void subgame_menu::subgame_step()
@@ -50,13 +55,12 @@ void subgame_menu::subgame_step()
 
 	if (keyboard_check_pressed_left(parent) || keyboard_check_pressed_right(parent))
 	{
+		parent.setScoreDisplay("---");
 		try {
-			parent.setScoreDisplay("---");
 			parent.setHighScoreDisplay(scores_get_score_value(game_list.at(selected_game)->name, "highscore"));
 		}
 		catch (exception& e)
 		{
-			parent.setScoreDisplay("---");
 			parent.setHighScoreDisplay("---");
 		}
 	}

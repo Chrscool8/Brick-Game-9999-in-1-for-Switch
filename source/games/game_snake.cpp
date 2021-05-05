@@ -22,7 +22,6 @@ subgame_snake::obj_snake::obj_snake(BrickGameFramework& game, int _x, int _y) : 
 	direction = direction_right;
 	last_direction = direction_right;
 	time_til_move = 25;
-	game.setScore(0);
 };
 
 // Check if any part of a snake is at this position
