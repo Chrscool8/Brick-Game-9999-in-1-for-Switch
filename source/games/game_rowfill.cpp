@@ -33,7 +33,7 @@ void subgame_rowfill::subgame_exit()
 
 std::string subgame_rowfill::subgame_controls_text()
 {
-	return "D-Pad: Move\nA: Shoot";
+	return "D-Pad: Move\nA:     Shoot";
 }
 
 //
