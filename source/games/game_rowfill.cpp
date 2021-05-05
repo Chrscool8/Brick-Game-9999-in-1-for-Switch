@@ -152,6 +152,7 @@ void subgame_rowfill::obj_rows::draw_function()
 
 void subgame_rowfill::obj_rows::destroy_function()
 {
+
 }
 
 //
@@ -206,7 +207,6 @@ void subgame_rowfill::obj_player::step_function()
 			time_til_shoot = shoot_delay;
 			// shoot!
 			objects.push_back(std::make_unique<obj_bullet>(game, x, y));
-
 		}
 	}
 }
@@ -240,51 +240,48 @@ void subgame_rowfill::obj_bullet::step_function()
 	}
 	else
 	{
-		for (unsigned int j = 0; j < objects.size(); j++)
+		game_object* obj = get_object_by_name("obj_rows");
+		if (obj != NULL)
 		{
-			if (objects.at(j)->name == "obj_rows")
+			obj_rows* row_obj = static_cast<obj_rows*>(obj);
+
+			if (y == 0)
 			{
-				obj_rows* row_obj = static_cast<obj_rows*>(objects.at(j).get());
-
-				if (y == 0)
+				grid_set(row_obj->filled_blocks, x, y, true);
+				instance_destroy();
+				row_obj->check_rows();
+			}
+			else if (grid_get(row_obj->filled_blocks, x, y))
+			{
+				grid_set(row_obj->filled_blocks, x, y + 1, true);
+				instance_destroy();
+				row_obj->check_rows();
+			}
+			else if (grid_get(row_obj->filled_blocks, x, y - 1))
+			{
+				grid_set(row_obj->filled_blocks, x, y, true);
+				instance_destroy();
+				row_obj->check_rows();
+			}
+			else if (false)
+			{
+				//anywhere on row
+				bool any_seen = false;
+				for (int i = 0; i < grid_width(row_obj->filled_blocks); i++)
 				{
-					grid_set(row_obj->filled_blocks, x, y, true);
-					instance_destroy();
-					row_obj->check_rows();
-				}
-				else if (grid_get(row_obj->filled_blocks, x, y))
-				{
-					grid_set(row_obj->filled_blocks, x, y + 1, true);
-					instance_destroy();
-					row_obj->check_rows();
-				}
-				else if (grid_get(row_obj->filled_blocks, x, y - 1))
-				{
-					grid_set(row_obj->filled_blocks, x, y, true);
-					instance_destroy();
-					row_obj->check_rows();
-				}
-				else if (false)
-				{
-					//anywhere on row
-					bool any_seen = false;
-					for (int i = 0; i < grid_width(row_obj->filled_blocks); i++)
+					if (grid_get(row_obj->filled_blocks, i, y - 1))
 					{
-						if (grid_get(row_obj->filled_blocks, i, y - 1))
-						{
-							any_seen = true;
-							break;
-						}
-					}
-
-					if (any_seen)
-					{
-						grid_set(row_obj->filled_blocks, x, y - 1, true);
-						instance_destroy();
-						row_obj->check_rows();
+						any_seen = true;
+						break;
 					}
 				}
-				break;
+
+				if (any_seen)
+				{
+					grid_set(row_obj->filled_blocks, x, y - 1, true);
+					instance_destroy();
+					row_obj->check_rows();
+				}
 			}
 		}
 
@@ -300,4 +297,5 @@ void subgame_rowfill::obj_bullet::draw_function()
 
 void subgame_rowfill::obj_bullet::destroy_function()
 {
+
 }
