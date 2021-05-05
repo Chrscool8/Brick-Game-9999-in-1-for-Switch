@@ -795,6 +795,7 @@ int main(int argc, char* argv[])
 	read_scores();
 
 	fast_forward = false;
+	srand(time(NULL));
 
 	BrickGameFramework app;
 	app.run();
