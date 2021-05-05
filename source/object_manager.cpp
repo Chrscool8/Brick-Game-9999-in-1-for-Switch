@@ -80,6 +80,20 @@ void obj_explosion::destroy_function()
 
 }
 
+// Get first object of name
+game_object* get_object_by_name(std::string name)
+{
+	for (unsigned int j = 0; j < objects.size(); j++)
+	{
+		if (objects.at(j)->name == name)
+		{
+			return objects.at(j).get();
+		}
+	}
+
+	return NULL;
+}
+
 unsigned int game_object::object_index = 0;
 
 vector<std::unique_ptr<game_object>> objects;
