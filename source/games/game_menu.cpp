@@ -25,7 +25,7 @@ void subgame_menu::subgame_init()
 	//objects.push_back(std::make_unique<obj_welcome_text>(parent));
 	//parent.setScore(" XELL0 ");
 	//parent.setHighScore("");
-	selected_game = 0;
+	//selected_game = 0;
 }
 
 void subgame_menu::subgame_step()
