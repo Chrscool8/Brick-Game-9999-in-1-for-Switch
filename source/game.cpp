@@ -470,6 +470,7 @@ void BrickGameFramework::render(u64 ns)
 					global_controls += "\n\n";
 				global_controls += "L: Toggle Music\n";
 				global_controls += "R: Toggle Sounds\n";
+				global_controls += "+: Exit\n";
 
 				controls_text = "Controls:\n\n" + controls_text;
 				controls_text += global_controls;

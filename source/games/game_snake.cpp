@@ -206,5 +206,5 @@ void subgame_snake::subgame_exit()
 
 std::string subgame_snake::subgame_controls_text()
 {
-	return "";
+	return "D-Pad: Move\nZL/ZR: Fast";
 }

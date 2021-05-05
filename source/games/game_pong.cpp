@@ -125,7 +125,7 @@ void subgame_pong::subgame_demo()
 
 std::string subgame_pong::subgame_controls_text()
 {
-	return "Controls:\nLeft/Right: Move Paddle";
+	return "D-Pad: Move\nZL/ZR: Fast";
 }
 
 

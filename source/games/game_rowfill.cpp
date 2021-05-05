@@ -33,7 +33,7 @@ void subgame_rowfill::subgame_exit()
 
 std::string subgame_rowfill::subgame_controls_text()
 {
-	return "";
+	return "D-Pad: Move\nA: Shoot";
 }
 
 //
@@ -200,7 +200,7 @@ void subgame_rowfill::obj_player::step_function()
 		time_til_shoot -= 1;
 	}
 
-	if (keyboard_check_up(game))
+	if (keyboard_check_A(game))
 	{
 		if (time_til_shoot == 0)
 		{
@@ -223,12 +223,14 @@ void subgame_rowfill::obj_player::draw_function()
 
 void subgame_rowfill::obj_player::destroy_function()
 {
+
 }
 
 /////
 
 subgame_rowfill::obj_bullet::obj_bullet(BrickGameFramework& game, int x, int y) : game_object(game, x, y)
 {
+
 }
 
 void subgame_rowfill::obj_bullet::step_function()

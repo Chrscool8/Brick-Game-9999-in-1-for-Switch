@@ -176,7 +176,7 @@ void subgame_race::subgame_demo()
 
 std::string subgame_race::subgame_controls_text()
 {
-	return "";
+	return "D-Pad: Move\nZL/ZR: Fast";
 }
 
 subgame_race::obj_player_ai::obj_player_ai(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
