@@ -53,7 +53,7 @@ void subgame::subgame_demo()
 
 	place_grid_sprite(parent.game_grid, sprite, 5, 5);
 
-	printf("Subgame Demo\n");
+	//printf("Subgame Demo\n");
 }
 
 std::string subgame::subgame_controls_text()
