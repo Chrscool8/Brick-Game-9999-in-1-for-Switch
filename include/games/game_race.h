@@ -49,6 +49,7 @@ public:
 	virtual void subgame_draw() override;
 	virtual void subgame_exit() override;
 	virtual void subgame_demo() override;
+	virtual std::string subgame_controls_text() override;
 	int time_til_spawn = 180;
 	int pause_time = 180;
 };

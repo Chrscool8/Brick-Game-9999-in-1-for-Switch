@@ -55,3 +55,8 @@ void subgame::subgame_demo()
 
 	printf("Subgame Demo\n");
 }
+
+std::string subgame::subgame_controls_text()
+{
+	return "Controls:";
+}

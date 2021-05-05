@@ -203,3 +203,8 @@ void subgame_snake::subgame_exit()
 {
 	//printf("Exiting Snake!!\n");
 }
+
+std::string subgame_snake::subgame_controls_text()
+{
+	return "";
+}

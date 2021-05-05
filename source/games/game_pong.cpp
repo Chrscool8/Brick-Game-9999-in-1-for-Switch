@@ -123,6 +123,12 @@ void subgame_pong::subgame_demo()
 
 }
 
+std::string subgame_pong::subgame_controls_text()
+{
+	return "Controls:\nLeft/Right: Move Paddle";
+}
+
+
 subgame_pong::obj_paddle::obj_paddle(BrickGameFramework& game, int _x, int _y, bool _ai) : game_object(game, _x, _y)
 {
 	paddle_width = 2;

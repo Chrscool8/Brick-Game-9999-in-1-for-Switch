@@ -31,6 +31,11 @@ void subgame_rowfill::subgame_exit()
 		printf("Exiting Template!!\n");
 }
 
+std::string subgame_rowfill::subgame_controls_text()
+{
+	return "";
+}
+
 //
 
 void subgame_rowfill::obj_rows::lose()

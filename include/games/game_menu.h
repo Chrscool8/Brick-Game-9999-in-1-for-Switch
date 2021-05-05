@@ -36,6 +36,7 @@ public:
 	virtual void subgame_draw() override;
 	virtual void subgame_exit() override;
 	virtual void subgame_demo() override;
+	virtual std::string subgame_controls_text() override;
 
 	int selected_game = 0;
 	unsigned int ticker = 0;

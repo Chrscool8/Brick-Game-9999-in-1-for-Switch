@@ -26,3 +26,8 @@ void subgame_template::subgame_exit()
 	if (parent.debug_text)
 		printf("Exiting Template!!\n");
 }
+
+std::string subgame_template::subgame_controls_text()
+{
+	return "";
+}

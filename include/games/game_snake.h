@@ -9,7 +9,6 @@ using namespace std;
 class subgame_snake : public subgame
 {
 public:
-
 	class obj_snake : public game_object
 	{
 	public:
@@ -32,6 +31,7 @@ public:
 	virtual void subgame_step() override;
 	virtual void subgame_draw() override;
 	virtual void subgame_exit() override;
+	virtual std::string subgame_controls_text() override;
 };
 
 

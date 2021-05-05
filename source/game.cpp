@@ -126,10 +126,8 @@ BrickGameFramework::BrickGameFramework()
 		printf("Could not add font vcrtext.\n");
 	}
 
-
 	nvgAddFallbackFontId(vg, fontNormal, fontEmoji);
 	nvgAddFallbackFontId(vg, fontBold, fontEmoji);
-
 
 	printf("Done loading\n");
 
@@ -453,8 +451,6 @@ void BrickGameFramework::render(u64 ns)
 		{
 			nvgSave(vg);
 			nvgTranslate(vg, 150, 80);
-			//nvgRotate(vg, nvgDegToRad(angle));
-
 			nvgFontFace(vg, "vcrtext");
 			nvgFontSize(vg, 72);
 			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
@@ -462,9 +458,34 @@ void BrickGameFramework::render(u64 ns)
 			nvgText(vg, 3, 0, current_game_name.c_str(), NULL);
 			nvgRestore(vg);
 
-
 			draw_digital_display(vg, score_display, 865, 70, "Score");
 			draw_digital_display(vg, highscore_display, 865, 165, "High Score");
+
+			if (current_game != -1)
+			{
+				std::string controls_text = game_list.at(current_game)->subgame_controls_text();
+
+				std::string global_controls;
+				if (!controls_text.empty())
+					global_controls += "\n\n";
+				global_controls += "L: Toggle Music\n";
+				global_controls += "R: Toggle Sounds\n";
+
+				controls_text = "Controls:\n\n" + controls_text;
+				controls_text += global_controls;
+
+				if (!controls_text.empty())
+				{
+					nvgSave(vg);
+					nvgTranslate(vg, 865, 475);
+					nvgFontFace(vg, "kongtext");
+					nvgFontSize(vg, 16);
+					nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+					nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+					nvgTextBox(vg, 3, 0, 1000, controls_text.c_str(), NULL);
+					nvgRestore(vg);
+				}
+			}
 		}
 		else if (screen_orientation == orientation_left_down)
 		{
@@ -531,10 +552,6 @@ bool BrickGameFramework::onFrame(u64 ns)
 			SwitchToGame(0);
 	}
 
-	//if (keyboard_check_pressed & HidNpadButton_L)
-	//{
-	//	show_ui = !show_ui;
-	//}
 	if (keyboard_check_pressed & HidNpadButton_L)
 	{
 		if (settings_get_value_true("temp_prefs", "music_bool"))
@@ -641,7 +658,8 @@ bool BrickGameFramework::onFrame(u64 ns)
 			current_game_name = game_list.at(current_game)->name;
 			game_list.at(current_game)->subgame_init();
 			highscore_display = scores_get_score_value(current_game_name, "highscore");
-			try {
+			try
+			{
 				highscore = stod(highscore_display);
 			}
 			catch (const std::invalid_argument& ia)

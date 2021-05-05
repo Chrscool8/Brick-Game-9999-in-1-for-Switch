@@ -15,6 +15,7 @@ public:
 	virtual void subgame_step() override;
 	virtual void subgame_draw() override;
 	virtual void subgame_exit() override;
+	virtual std::string subgame_controls_text() override;
 };
 
 #endif

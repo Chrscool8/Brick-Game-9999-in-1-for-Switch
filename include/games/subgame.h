@@ -17,6 +17,7 @@ public:
 	virtual void subgame_draw();
 	virtual void subgame_exit();
 	virtual void subgame_demo();
+	virtual std::string subgame_controls_text();
 
 	subgame(BrickGameFramework& game_);
 

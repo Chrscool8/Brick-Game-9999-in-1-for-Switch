@@ -85,7 +85,7 @@ void subgame_menu::subgame_draw()
 	nvgText(parent.vg, 3, 0, game_list.at(selected_game)->name.c_str(), NULL);
 	nvgRestore(parent.vg);
 
-	for (int i = 0; i < game_list.size(); i++)
+	for (unsigned int i = 0; i < game_list.size(); i++)
 	{
 		int size = 15;
 		int xx = (1280 / 2) - (game_list.size() * (size + 15) / 2) + (i * (size + 15)) - 10;
@@ -113,6 +113,11 @@ void subgame_menu::subgame_demo()
 	place_grid_sprite(parent.game_grid, grid_sprite_alphabet_o, xx, yy); xx += 5;
 	place_grid_sprite(parent.game_grid, grid_sprite_alphabet_m, xx, yy); xx += 6;
 	place_grid_sprite(parent.game_grid, grid_sprite_alphabet_e, xx, yy);
+}
+
+std::string subgame_menu::subgame_controls_text()
+{
+	return "D-Pad: Change\nA:     Start";
 }
 
 //
