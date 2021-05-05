@@ -535,6 +535,35 @@ bool BrickGameFramework::onFrame(u64 ns)
 	//{
 	//	show_ui = !show_ui;
 	//}
+	if (keyboard_check_pressed & HidNpadButton_L)
+	{
+		if (settings_get_value_true("temp_prefs", "music_bool"))
+		{
+			Mix_VolumeMusic(0);
+			settings_set_value("temp_prefs", "music_bool", "false");
+		}
+		else
+		{
+			Mix_VolumeMusic(128);
+			settings_set_value("temp_prefs", "music_bool", "true");
+		}
+	}
+
+	if (keyboard_check_pressed & HidNpadButton_R)
+	{
+		if (settings_get_value_true("temp_prefs", "sound_bool"))
+		{
+			for (auto const& [key, val] : audio_files)
+				Mix_VolumeChunk(val, 0);
+			settings_set_value("temp_prefs", "sound_bool", "false");
+		}
+		else
+		{
+			for (auto const& [key, val] : audio_files)
+				Mix_VolumeChunk(val, 32);
+			settings_set_value("temp_prefs", "sound_bool", "true");
+		}
+	}
 
 	//if (keyboard_check_pressed & HidNpadButton_Y)
 	//{
@@ -738,10 +767,10 @@ void BrickGameFramework::setHighScore(std::string score)
 
 int main(int argc, char* argv[])
 {
-	init_audio();
-
 	read_settings();
 	init_settings();
+
+	init_audio();
 
 	read_scores();
 

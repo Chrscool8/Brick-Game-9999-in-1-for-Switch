@@ -89,4 +89,7 @@ void init_settings()
 		settings_set_value("history", "last seen version", APP_VERSION);
 		print_debug("DIFFERING VERSION!!");
 	}
+
+	initialize_setting("temp_prefs", "music_bool", "true");
+	initialize_setting("temp_prefs", "sound_bool", "true");
 }

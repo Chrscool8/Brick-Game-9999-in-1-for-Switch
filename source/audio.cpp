@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <settings.h>
 
 std::map<std::string, Mix_Chunk*> audio_files;
 Mix_Music* music;
@@ -30,8 +31,27 @@ bool init_audio()
 	audio_files["sfx_exp_odd3"] = Mix_LoadWAV("romfs:/audio/sfx_exp_odd3.wav");
 	audio_files["sfx_sounds_button6"] = Mix_LoadWAV("romfs:/audio/sfx_sounds_button6.wav");
 
+	for (auto const& [key, val] : audio_files)
+		Mix_VolumeChunk(val, 32);
+
 	music = Mix_LoadMUS("romfs:/audio/chipscape.mp3");
 	Mix_PlayMusic(music, -1);
+
+	//
+
+	if (!settings_get_value_true("temp_prefs", "music_bool"))
+	{
+		Mix_VolumeMusic(0);
+		settings_set_value("temp_prefs", "music_bool", "false");
+	}
+
+	if (!settings_get_value_true("temp_prefs", "sound_bool"))
+	{
+		for (auto const& [key, val] : audio_files)
+			Mix_VolumeChunk(val, 0);
+	}
+
+	//
 
 	return false;
 }
