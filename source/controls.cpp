@@ -31,6 +31,36 @@ bool keyboard_check_L(BrickGameFramework& game)
 	return (keyboard_check & HidNpadButton_L);
 }
 
+bool keyboard_check_R(BrickGameFramework& game)
+{
+	u64 keyboard_check = padGetButtons(&game.pad);
+	return (keyboard_check & HidNpadButton_R);
+}
+
+bool keyboard_check_A(BrickGameFramework& game)
+{
+	u64 keyboard_check = padGetButtons(&game.pad);
+	return (keyboard_check & HidNpadButton_A);
+}
+
+bool keyboard_check_B(BrickGameFramework& game)
+{
+	u64 keyboard_check = padGetButtons(&game.pad);
+	return (keyboard_check & HidNpadButton_B);
+}
+
+bool keyboard_check_X(BrickGameFramework& game)
+{
+	u64 keyboard_check = padGetButtons(&game.pad);
+	return (keyboard_check & HidNpadButton_X);
+}
+
+bool keyboard_check_Y(BrickGameFramework& game)
+{
+	u64 keyboard_check = padGetButtons(&game.pad);
+	return (keyboard_check & HidNpadButton_Y);
+}
+
 //
 
 bool keyboard_check_pressed_right(BrickGameFramework& game)
