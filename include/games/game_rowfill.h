@@ -1,6 +1,6 @@
 #pragma once
-#ifndef TEMPLATE_H
-#define TEMPLATE_H
+#ifndef ROWFILL_H
+#define ROWFILL_H
 
 #include <games/subgame.h>
 #include <object_manager.h>
