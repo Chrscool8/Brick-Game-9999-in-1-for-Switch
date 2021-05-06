@@ -12,7 +12,7 @@ subgame_rowfill::subgame_rowfill(BrickGameFramework& _parent) : subgame(_parent)
 
 void subgame_rowfill::subgame_init()
 {
-	objects.push_back(std::make_unique<obj_rows>(parent, 5));
+	objects.push_back(std::make_unique<obj_rows>(parent, 3));
 	objects.push_back(std::make_unique<obj_player>(parent, grid_width(parent.game_grid) / 2, grid_height(parent.game_grid) - 1));
 }
 
@@ -69,9 +69,8 @@ void subgame_rowfill::obj_rows::generate_row(std::vector<std::vector<bool>>& gri
 subgame_rowfill::obj_rows::obj_rows(BrickGameFramework& game, int starting_rows) : game_object(game, 0, 0)
 {
 	filled_blocks = grid_create(grid_width(game.game_grid), grid_height(game.game_grid));
-	generate_row(filled_blocks, 0);
-	generate_row(filled_blocks, 1);
-	generate_row(filled_blocks, 2);
+	for (int i = 0; i < starting_rows; i++)
+		generate_row(filled_blocks, i);
 
 	time_til_move = 60;
 	pause_time = 60 * 4;

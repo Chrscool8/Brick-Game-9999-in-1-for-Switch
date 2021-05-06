@@ -45,6 +45,7 @@
     <ClInclude Include="include\games\game_pong.h" />
     <ClInclude Include="include\games\game_race.h" />
     <ClInclude Include="include\games\game_rowfill.h" />
+    <ClInclude Include="include\games\game_rowsmash.h" />
     <ClInclude Include="include\games\game_snake.h" />
     <ClInclude Include="include\grid.hpp" />
     <ClInclude Include="include\grid_sprites.h" />
@@ -100,6 +101,7 @@
     <ClCompile Include="source\games\game_pong.cpp" />
     <ClCompile Include="source\games\game_race.cpp" />
     <ClCompile Include="source\games\game_rowfill.cpp" />
+    <ClCompile Include="source\games\game_rowsmash.cpp" />
     <ClCompile Include="source\games\game_snake.cpp" />
     <ClCompile Include="source\grid.cpp" />
     <ClCompile Include="source\grid_sprites.cpp" />

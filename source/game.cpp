@@ -12,14 +12,15 @@
 #include <nanovg/framework/CApplication.h>
 #include <switch/runtime/devices/socket.h>
 #include <grid_sprites.h>
-#include <games/game_snake.h>
-#include <games/game_menu.h>
 #include "audio.h"
 #include <settings.h>
 #include <utils/scores.h>
+#include <games/game_menu.h>
+#include <games/game_snake.h>
 #include <games/game_race.h>
 #include <games/game_pong.h>
 #include <games/game_rowfill.h>
+#include <games/game_rowsmash.h>
 #include <utils/sprites.h>
 
 static int nxlink_sock = -1;
@@ -150,6 +151,7 @@ BrickGameFramework::BrickGameFramework()
 	game_list.push_back(std::make_unique<subgame_race>(*this));
 	game_list.push_back(std::make_unique<subgame_pong>(*this));
 	game_list.push_back(std::make_unique<subgame_rowfill>(*this));
+	game_list.push_back(std::make_unique<subgame_rowsmash>(*this));
 }
 
 BrickGameFramework::~BrickGameFramework()
