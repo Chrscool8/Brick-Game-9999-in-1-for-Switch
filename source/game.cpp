@@ -22,6 +22,7 @@
 #include <games/game_rowfill.h>
 #include <games/game_rowsmash.h>
 #include <utils/sprites.h>
+#include <games/game_HiOrLo.h>
 
 static int nxlink_sock = -1;
 
@@ -152,6 +153,7 @@ BrickGameFramework::BrickGameFramework()
 	game_list.push_back(std::make_unique<subgame_pong>(*this));
 	game_list.push_back(std::make_unique<subgame_rowfill>(*this));
 	game_list.push_back(std::make_unique<subgame_rowsmash>(*this));
+	game_list.push_back(std::make_unique<subgame_HiOrLo>(*this));
 }
 
 BrickGameFramework::~BrickGameFramework()
@@ -633,6 +635,37 @@ bool BrickGameFramework::onFrame(u64 ns)
 
 	grid_clear(game_grid);
 
+	if (current_game != -1)
+	{
+		if (transition_stage == -1)
+		{
+			if (running)
+			{
+				for (unsigned int i = 0; i < objects.size(); i++)
+					objects.at(i)->step_function();
+
+				game_list.at(current_game)->subgame_step();
+			}
+		}
+
+		//
+		for (unsigned int i = 0; i < objects.size(); i++)
+		{
+			if (objects.at(i)->marked_for_destruction)
+			{
+				objects.at(i)->destroy_function();
+				objects.erase(objects.begin() + i);
+				i--;
+			}
+		}
+		//
+
+		for (unsigned int i = 0; i < objects.size(); i++)
+			objects.at(i)->draw_function();
+
+		game_list.at(current_game)->subgame_draw();
+	}
+
 	if ((next_game != -1 && next_game != current_game) && transition_stage == -1)
 	{
 		transition_stage = 0;
@@ -689,36 +722,6 @@ bool BrickGameFramework::onFrame(u64 ns)
 		transition(game_grid, transition_percent);
 	}
 
-	if (current_game != -1)
-	{
-		if (transition_stage == -1)
-		{
-			if (running)
-			{
-				for (unsigned int i = 0; i < objects.size(); i++)
-					objects.at(i)->step_function();
-
-				game_list.at(current_game)->subgame_step();
-			}
-		}
-
-		//
-		for (unsigned int i = 0; i < objects.size(); i++)
-		{
-			if (objects.at(i)->marked_for_destruction)
-			{
-				objects.at(i)->destroy_function();
-				objects.erase(objects.begin() + i);
-				i--;
-			}
-		}
-		//
-
-		for (unsigned int i = 0; i < objects.size(); i++)
-			objects.at(i)->draw_function();
-
-		game_list.at(current_game)->subgame_draw();
-	}
 
 	if (keyboard_check_pressed & HidNpadButton_Minus)
 	{
