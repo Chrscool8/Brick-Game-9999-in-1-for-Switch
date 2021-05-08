@@ -41,6 +41,7 @@
     <ClInclude Include="include\controls.h" />
     <ClInclude Include="include\extern\nlohmann\json.hpp" />
     <ClInclude Include="include\game.h" />
+    <ClInclude Include="include\games\game_HiOrLo.h" />
     <ClInclude Include="include\games\game_menu.h" />
     <ClInclude Include="include\games\game_pong.h" />
     <ClInclude Include="include\games\game_race.h" />
@@ -50,6 +51,7 @@
     <ClInclude Include="include\grid.hpp" />
     <ClInclude Include="include\grid_sprites.h" />
     <ClInclude Include="include\grid_sprites_alphabet.h" />
+    <ClInclude Include="include\grid_sprites_numbers.h" />
     <ClInclude Include="include\object_manager.h" />
     <ClInclude Include="include\other.h" />
     <ClInclude Include="include\games\subgame.h" />
@@ -97,6 +99,7 @@
     <ClCompile Include="source\audio.cpp" />
     <ClCompile Include="source\controls.cpp" />
     <ClCompile Include="source\game.cpp" />
+    <ClCompile Include="source\games\game_HiOrLo.cpp" />
     <ClCompile Include="source\games\game_menu.cpp" />
     <ClCompile Include="source\games\game_pong.cpp" />
     <ClCompile Include="source\games\game_race.cpp" />
@@ -106,6 +109,7 @@
     <ClCompile Include="source\grid.cpp" />
     <ClCompile Include="source\grid_sprites.cpp" />
     <ClCompile Include="source\grid_sprites_alphabet.cpp" />
+    <ClCompile Include="source\grid_sprites_numbers.cpp" />
     <ClCompile Include="source\object_manager.cpp" />
     <ClCompile Include="source\perf.cpp" />
     <ClCompile Include="source\games\subgame.cpp" />
