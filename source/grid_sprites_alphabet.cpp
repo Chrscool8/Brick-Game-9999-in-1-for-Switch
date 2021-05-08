@@ -2,6 +2,15 @@
 #include <grid_sprites_alphabet.h>
 using namespace std;
 
+vector<vector<bool>> grid_sprite_alphabet_space
+{
+	{ 0, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0 }
+};
+
 vector<vector<bool>> grid_sprite_alphabet_c
 {
 	{ 0, 1, 1, 1, 0 },
