@@ -25,7 +25,7 @@ public:
 		unsigned last_direction;
 		int time_til_move;
 	};
-	subgame_snake(BrickGameFramework& parent);
+	subgame_snake(BrickGameFramework& game);
 
 	virtual void subgame_init() override;
 	virtual void subgame_step() override;

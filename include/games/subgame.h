@@ -9,7 +9,7 @@ class BrickGameFramework;
 class subgame
 {
 public:
-	BrickGameFramework& parent;
+	BrickGameFramework& game;
 
 	std::string name;
 	virtual void subgame_init();

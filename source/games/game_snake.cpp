@@ -180,8 +180,8 @@ subgame_snake::subgame_snake(BrickGameFramework& _parent) : subgame(_parent)
 void subgame_snake::subgame_init()
 {
 	printf("Initting Snake!!\n");
-	// Create an instance of a snake object in game 'parent' at position 5, 5.
-	objects.push_back(std::make_unique<obj_snake>(parent, 5, 5));
+	// Create an instance of a snake object in game 'game' at position 5, 5.
+	objects.push_back(std::make_unique<obj_snake>(game, 5, 5));
 }
 
 // Runs every frame of the subgame unless the game is transitioning

@@ -52,7 +52,7 @@ public:
 		int time_til_move = 0;
 	};
 
-	subgame_rowsmash(BrickGameFramework& parent);
+	subgame_rowsmash(BrickGameFramework& game);
 
 	virtual void subgame_init() override;
 	virtual void subgame_step() override;

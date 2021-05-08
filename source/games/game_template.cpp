@@ -9,7 +9,7 @@ subgame_template::subgame_template(BrickGameFramework& _parent) : subgame(_paren
 
 void subgame_template::subgame_init()
 {
-	if (parent.debug_text)
+	if (game.debug_text)
 		printf("Initting Template!!\n");
 }
 
@@ -23,7 +23,7 @@ void subgame_template::subgame_draw()
 
 void subgame_template::subgame_exit()
 {
-	if (parent.debug_text)
+	if (game.debug_text)
 		printf("Exiting Template!!\n");
 }
 

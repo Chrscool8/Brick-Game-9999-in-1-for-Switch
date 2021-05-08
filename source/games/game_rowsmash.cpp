@@ -12,8 +12,8 @@ subgame_rowsmash::subgame_rowsmash(BrickGameFramework& _parent) : subgame(_paren
 
 void subgame_rowsmash::subgame_init()
 {
-	objects.push_back(std::make_unique<obj_rows>(parent, 5));
-	objects.push_back(std::make_unique<obj_player>(parent, grid_width(parent.game_grid) / 2, grid_height(parent.game_grid) - 1));
+	objects.push_back(std::make_unique<obj_rows>(game, 5));
+	objects.push_back(std::make_unique<obj_player>(game, grid_width(game.game_grid) / 2, grid_height(game.game_grid) - 1));
 }
 
 void subgame_rowsmash::subgame_step()
@@ -26,7 +26,7 @@ void subgame_rowsmash::subgame_draw()
 
 void subgame_rowsmash::subgame_exit()
 {
-	if (parent.debug_text)
+	if (game.debug_text)
 		printf("Exiting Template!!\n");
 }
 

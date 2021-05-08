@@ -29,7 +29,7 @@ public:
 		virtual void destroy_function() override;
 	};
 
-	subgame_menu(BrickGameFramework& parent);
+	subgame_menu(BrickGameFramework& game);
 
 	virtual void subgame_init() override;
 	virtual void subgame_step() override;

@@ -3,7 +3,7 @@
 #include <games/subgame.h>
 #include <grid_sprites.h>
 
-subgame::subgame(BrickGameFramework& game_) :parent(game_)
+subgame::subgame(BrickGameFramework& game_) :game(game_)
 {
 	name = "Subgame";
 }
@@ -32,7 +32,7 @@ void subgame::subgame_demo()
 {
 	vector<vector<bool>> sprite;
 
-	if (parent.game_time_in_frames % 120 < 60)
+	if (game.game_time_in_frames % 120 < 60)
 	{
 		sprite =
 		{
@@ -51,7 +51,7 @@ void subgame::subgame_demo()
 		};
 	}
 
-	place_grid_sprite(parent.game_grid, sprite, 5, 5);
+	place_grid_sprite(game.game_grid, sprite, 5, 5);
 
 	//printf("Subgame Demo\n");
 }

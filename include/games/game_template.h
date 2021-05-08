@@ -9,7 +9,7 @@ using namespace std;
 class subgame_template : public subgame
 {
 public:
-	subgame_template(BrickGameFramework& parent);
+	subgame_template(BrickGameFramework& game);
 
 	virtual void subgame_init() override;
 	virtual void subgame_step() override;

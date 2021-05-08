@@ -136,8 +136,8 @@ void subgame_race::obj_border::destroy_function()
 void subgame_race::subgame_init()
 {
 	printf("Initting Race!!\n");
-	objects.push_back(std::make_unique<obj_border>(parent, 0, 0));
-	objects.push_back(std::make_unique<obj_player_car>(parent, 5, 15));
+	objects.push_back(std::make_unique<obj_border>(game, 0, 0));
+	objects.push_back(std::make_unique<obj_player_car>(game, 5, 15));
 }
 
 void subgame_race::subgame_step()
@@ -146,12 +146,12 @@ void subgame_race::subgame_step()
 	{
 		time_til_spawn = pause_time * fast_forwarder_half();
 		const int lane_width = 3;
-		int lane = rand() % ((grid_width(parent.game_grid) - 2) / lane_width);
+		int lane = rand() % ((grid_width(game.game_grid) - 2) / lane_width);
 		lane = lane * lane_width + 2 + 1;
-		lane = clamp((int)lane, 2, grid_width(parent.game_grid) - 3 - 1);
+		lane = clamp((int)lane, 2, grid_width(game.game_grid) - 3 - 1);
 
 		printf("lane: %i\n", lane);
-		objects.push_back(std::make_unique<obj_player_ai>(parent, lane, -5));
+		objects.push_back(std::make_unique<obj_player_ai>(game, lane, -5));
 	}
 	else
 		time_til_spawn -= 1;

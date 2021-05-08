@@ -19,28 +19,28 @@ subgame_menu::subgame_menu(BrickGameFramework& _parent) : subgame(_parent)
 
 void subgame_menu::subgame_init()
 {
-	if (parent.debug_text)
+	if (game.debug_text)
 		printf("Initting Menu!!\n");
-	objects.push_back(std::make_unique<obj_border>(parent));
-	parent.setScoreDisplay("---");
+	objects.push_back(std::make_unique<obj_border>(game));
+	game.setScoreDisplay("---");
 
 	try {
-		parent.setHighScoreDisplay(scores_get_score_value(game_list.at(selected_game)->name, "highscore"));
+		game.setHighScoreDisplay(scores_get_score_value(game_list.at(selected_game)->name, "highscore"));
 	}
 	catch (exception& e)
 	{
-		parent.setHighScoreDisplay("---");
+		game.setHighScoreDisplay("---");
 	}
 }
 
 void subgame_menu::subgame_step()
 {
-	if (keyboard_check_pressed_left(parent))
+	if (keyboard_check_pressed_left(game))
 	{
 		selected_game -= 1;
 	}
 
-	if (keyboard_check_pressed_right(parent))
+	if (keyboard_check_pressed_right(game))
 	{
 		selected_game += 1;
 	}
@@ -53,21 +53,21 @@ void subgame_menu::subgame_step()
 		selected_game -= game_list.size();
 	}
 
-	if (keyboard_check_pressed_left(parent) || keyboard_check_pressed_right(parent))
+	if (keyboard_check_pressed_left(game) || keyboard_check_pressed_right(game))
 	{
-		parent.setScoreDisplay("---");
+		game.setScoreDisplay("---");
 		try {
-			parent.setHighScoreDisplay(scores_get_score_value(game_list.at(selected_game)->name, "highscore"));
+			game.setHighScoreDisplay(scores_get_score_value(game_list.at(selected_game)->name, "highscore"));
 		}
 		catch (exception& e)
 		{
-			parent.setHighScoreDisplay("---");
+			game.setHighScoreDisplay("---");
 		}
 	}
 
-	if (keyboard_check_pressed_A(parent))
+	if (keyboard_check_pressed_A(game))
 	{
-		parent.SwitchToGame(selected_game);
+		game.SwitchToGame(selected_game);
 	}
 
 	ticker += 1;
@@ -78,45 +78,45 @@ void subgame_menu::subgame_draw()
 {
 	game_list.at(selected_game)->subgame_demo();
 
-	nvgSave(parent.vg);
-	nvgTranslate(parent.vg, 150 + 15, 80 + 64);
+	nvgSave(game.vg);
+	nvgTranslate(game.vg, 150 + 15, 80 + 64);
 	//nvgRotate(vg, nvgDegToRad(angle));
 
-	nvgFontFace(parent.vg, "vcrtext");
-	nvgFontSize(parent.vg, 48);
-	nvgTextAlign(parent.vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-	nvgFillColor(parent.vg, nvgRGBA(0, 0, 0, 255));
-	nvgText(parent.vg, 3, 0, game_list.at(selected_game)->name.c_str(), NULL);
-	nvgRestore(parent.vg);
+	nvgFontFace(game.vg, "vcrtext");
+	nvgFontSize(game.vg, 48);
+	nvgTextAlign(game.vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+	nvgFillColor(game.vg, nvgRGBA(0, 0, 0, 255));
+	nvgText(game.vg, 3, 0, game_list.at(selected_game)->name.c_str(), NULL);
+	nvgRestore(game.vg);
 
 	for (unsigned int i = 0; i < game_list.size(); i++)
 	{
 		int size = 15;
 		int xx = (1280 / 2) - (game_list.size() * (size + 15) / 2) + (i * (size + 15)) - 10;
 		if (i == selected_game)
-			draw_sprite(parent.vg, xx, 720 - 30, size, size, "spr_page_blip_selected");
+			draw_sprite(game.vg, xx, 720 - 30, size, size, "spr_page_blip_selected");
 		else
-			draw_sprite(parent.vg, xx, 720 - 30, size, size, "spr_page_blip_unselected");
+			draw_sprite(game.vg, xx, 720 - 30, size, size, "spr_page_blip_unselected");
 	}
 }
 
 void subgame_menu::subgame_exit()
 {
-	if (parent.debug_text)
+	if (game.debug_text)
 		printf("Exiting Menu!!\n");
 }
 
 void subgame_menu::subgame_demo()
 {
-	int xx = -((ticker / 30) % 46) + grid_width(parent.game_grid);
+	int xx = -((ticker / 30) % 46) + grid_width(game.game_grid);
 	int yy = 6;
-	place_grid_sprite(parent.game_grid, grid_sprite_alphabet_w, xx, yy); xx += 6;
-	place_grid_sprite(parent.game_grid, grid_sprite_alphabet_e, xx, yy); xx += 5;
-	place_grid_sprite(parent.game_grid, grid_sprite_alphabet_l, xx, yy); xx += 5;
-	place_grid_sprite(parent.game_grid, grid_sprite_alphabet_c, xx, yy); xx += 5;
-	place_grid_sprite(parent.game_grid, grid_sprite_alphabet_o, xx, yy); xx += 5;
-	place_grid_sprite(parent.game_grid, grid_sprite_alphabet_m, xx, yy); xx += 6;
-	place_grid_sprite(parent.game_grid, grid_sprite_alphabet_e, xx, yy);
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_w, xx, yy); xx += 6;
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_e, xx, yy); xx += 5;
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_l, xx, yy); xx += 5;
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_c, xx, yy); xx += 5;
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_o, xx, yy); xx += 5;
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_m, xx, yy); xx += 6;
+	place_grid_sprite(game.game_grid, grid_sprite_alphabet_e, xx, yy);
 }
 
 std::string subgame_menu::subgame_controls_text()

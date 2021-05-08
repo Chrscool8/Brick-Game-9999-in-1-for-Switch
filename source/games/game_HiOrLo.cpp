@@ -19,7 +19,7 @@ int subgame_HiOrLo::get_next_num()
 
 void subgame_HiOrLo::subgame_init()
 {
-	if (parent.debug_text)
+	if (game.debug_text)
 		printf("Initting HiOrLo!!\n");
 
 	current_number = 5;
@@ -28,51 +28,51 @@ void subgame_HiOrLo::subgame_init()
 
 void subgame_HiOrLo::subgame_step()
 {
-	if (keyboard_check_pressed_up(parent))
+	if (keyboard_check_pressed_up(game))
 	{
 		if (next_number > current_number)
 		{
-			parent.incrementScore(1);
-			objects.push_back(std::make_unique<obj_check>(parent, 3, 1));
+			game.incrementScore(1);
+			objects.push_back(std::make_unique<obj_check>(game, 3, 1));
 		}
 		else
 		{
-			parent.incrementScore(-1);
-			objects.push_back(std::make_unique<obj_x>(parent, 3, 1));
+			game.incrementScore(-1);
+			objects.push_back(std::make_unique<obj_x>(game, 3, 1));
 		}
 	}
 
-	if (keyboard_check_pressed_down(parent))
+	if (keyboard_check_pressed_down(game))
 	{
 		if (next_number < current_number)
 		{
-			parent.incrementScore(1);
-			objects.push_back(std::make_unique<obj_check>(parent, 3, 14));
+			game.incrementScore(1);
+			objects.push_back(std::make_unique<obj_check>(game, 3, 14));
 		}
 		else
 		{
-			parent.incrementScore(-1);
-			objects.push_back(std::make_unique<obj_x>(parent, 3, 14));
+			game.incrementScore(-1);
+			objects.push_back(std::make_unique<obj_x>(game, 3, 14));
 		}
 	}
 
-	if (keyboard_check_pressed_A(parent))
+	if (keyboard_check_pressed_A(game))
 	{
 		if (next_number == current_number)
 		{
-			parent.incrementScore(5);
-			objects.push_back(std::make_unique<obj_check>(parent, 3, 1));
-			objects.push_back(std::make_unique<obj_check>(parent, 3, 14));
+			game.incrementScore(5);
+			objects.push_back(std::make_unique<obj_check>(game, 3, 1));
+			objects.push_back(std::make_unique<obj_check>(game, 3, 14));
 		}
 		else
 		{
-			parent.incrementScore(-5);
-			objects.push_back(std::make_unique<obj_x>(parent, 3, 1));
-			objects.push_back(std::make_unique<obj_x>(parent, 3, 14));
+			game.incrementScore(-5);
+			objects.push_back(std::make_unique<obj_x>(game, 3, 1));
+			objects.push_back(std::make_unique<obj_x>(game, 3, 14));
 		}
 	}
 
-	if (keyboard_check_pressed_up(parent) || keyboard_check_pressed_down(parent) || keyboard_check_pressed_A(parent))
+	if (keyboard_check_pressed_up(game) || keyboard_check_pressed_down(game) || keyboard_check_pressed_A(game))
 	{
 		current_number = next_number;
 		next_number = get_next_num();
@@ -82,13 +82,13 @@ void subgame_HiOrLo::subgame_step()
 void subgame_HiOrLo::subgame_draw()
 {
 	vector<vector<bool>> spr = get_gridsprite_number(current_number);
-	place_grid_sprite(parent.game_grid, spr, 4, 7);
+	place_grid_sprite(game.game_grid, spr, 4, 7);
 
 }
 
 void subgame_HiOrLo::subgame_exit()
 {
-	if (parent.debug_text)
+	if (game.debug_text)
 		printf("Exiting HiOrLo!!\n");
 }
 

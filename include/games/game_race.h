@@ -43,7 +43,7 @@ public:
 		int pause_time = 6;
 	};
 
-	subgame_race(BrickGameFramework& parent);
+	subgame_race(BrickGameFramework& game);
 	virtual void subgame_init() override;
 	virtual void subgame_step() override;
 	virtual void subgame_draw() override;

@@ -33,7 +33,7 @@ public:
 		int pause_time;
 	};
 
-	subgame_pong(BrickGameFramework& parent);
+	subgame_pong(BrickGameFramework& game);
 	virtual void subgame_init() override;
 	virtual void subgame_step() override;
 	virtual void subgame_draw() override;
