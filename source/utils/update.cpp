@@ -1,0 +1,186 @@
+#include <sys/select.h>
+#include <utils/settings.h>
+#include <utils/update.h>
+//
+#include <curl/curl.h>
+#include <string>
+#include <utils.hpp>
+
+s_online_info online_info;
+
+void init_online_info()
+{
+    online_info.online_version_name        = "None";
+    online_info.online_version_number      = "0";
+    online_info.online_version_description = "No Desc.";
+    online_info.update_available           = false;
+    online_info.online_version_date        = "x";
+}
+
+std::string get_online_version_name()
+{
+    return online_info.online_version_name;
+}
+
+std::string get_online_version_number()
+{
+    return online_info.online_version_number;
+}
+
+std::string get_online_version_description()
+{
+    return online_info.online_version_description;
+}
+
+std::string get_online_version_date()
+{
+    return online_info.online_version_date;
+}
+
+bool get_online_version_available()
+{
+    return online_info.update_available;
+}
+
+void set_online_version_name(std::string name)
+{
+    online_info.online_version_name = name;
+}
+
+void set_online_version_number(std::string number)
+{
+    online_info.online_version_number = number;
+}
+
+void set_online_version_description(std::string desc)
+{
+    online_info.online_version_description = desc;
+}
+
+void set_online_version_available(bool available)
+{
+    online_info.update_available = available;
+}
+
+void set_online_version_date(std::string date)
+{
+    online_info.online_version_date = date;
+}
+
+size_t CurlWrite_CallbackFunc_StdString(void* contents, size_t size, size_t nmemb, std::string* s)
+{
+    size_t newLength = size * nmemb;
+    s->append((char*)contents, newLength);
+    return newLength;
+}
+
+bool is_number(const std::string& s)
+{
+    return (s.length() > 0 && strspn(s.c_str(), "-.0123456789") == s.size());
+}
+
+std::string parse_version(std::string version)
+{
+    if (!version.empty())
+    {
+        if (version.at(version.length() - 1) == 'd')
+            version = version.substr(0, version.length() - 1);
+        if (version.at(0) == 'v')
+            version = version.substr(1);
+    }
+
+    if (!version.empty())
+        return version;
+    else
+        return "0";
+}
+
+int json_load_value_int(nlohmann::json json, std::string key)
+{
+    if (json.contains(key))
+        return json[key].get<int>();
+    else
+        return -1;
+}
+
+std::string json_load_value_string(nlohmann::json json, std::string key)
+{
+    if (json.contains(key))
+    {
+        if (json[key].is_string())
+            return json[key].get<std::string>();
+        else
+            return std::to_string(json[key].get<int>());
+    }
+    else
+        return "---";
+}
+
+bool check_for_updates()
+{
+    print_debug("curl time\n");
+
+    CURL* curl;
+    CURLcode res;
+
+    print_debug("curl globally initting\n");
+    curl_global_init(CURL_GLOBAL_ALL);
+
+    curl = curl_easy_init();
+    if (curl)
+    {
+        print_debug("curl easily initted\n");
+        std::string s;
+
+        curl_easy_setopt(curl, CURLOPT_URL, "https://api.github.com/repos/Chrscool8/Brick-Game-9999-in-1-for-Switch/releases/latest");
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); //only for https
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L); //only for https
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, CurlWrite_CallbackFunc_StdString);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, "Homebrew-Details");
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
+
+        res = curl_easy_perform(curl);
+        print_debug("curl easily performed\n");
+        curl_easy_cleanup(curl);
+        //curl_global_cleanup();
+
+        if (res == CURLE_OK)
+        {
+            nlohmann::json j = nlohmann::json::parse(s);
+
+            set_online_version_number(parse_version(json_load_value_string(j, "tag_name")));
+            set_online_version_name(json_load_value_string(j, "name"));
+            set_online_version_description(json_load_value_string(j, "body"));
+            set_online_version_date(json_load_value_string(j, "created_at"));
+
+            print_debug((std::string("") + get_online_version_number() + " : " + APP_VERSION + "\n").c_str());
+            if (is_number(get_online_version_number()))
+            {
+                print_debug("nums\n");
+                if (std::stod(get_online_version_number()) > std::stod(APP_VERSION))
+                {
+                    print_debug("need up\n");
+                    set_online_version_available(true);
+                    return true;
+                }
+            }
+        }
+        else
+        {
+            print_debug(std::string("Curl Error: ") + curl_easy_strerror(res));
+        }
+    }
+
+    if (settings_get_value_true("meta", "debug"))
+    {
+        print_debug("debug force up\n");
+        set_online_version_available(true);
+        return true;
+    }
+
+    print_debug("no update\n");
+    set_online_version_available(false);
+    return false;
+}
