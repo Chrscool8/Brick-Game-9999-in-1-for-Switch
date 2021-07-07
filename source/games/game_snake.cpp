@@ -6,7 +6,7 @@
 #include <object_manager.h>
 #include <games/game_snake.h>
 #include "audio.h"
-#include <controls.h>
+#include <platform/control_layer.h>
 using namespace std;
 
 // Runs for each instance of a snake object once when it's created
@@ -75,16 +75,16 @@ void subgame_snake::obj_snake::step_function()
 			Mix_PlayChannel(-1, audio_files["sfx_sounds_button6"], 0);
 		}
 
-		if (keyboard_check_right(game) && last_direction != direction_left)
+		if (keyboard_check_right() && last_direction != direction_left)
 			direction = direction_right;
 
-		if (keyboard_check_up(game) && last_direction != direction_down)
+		if (keyboard_check_up() && last_direction != direction_down)
 			direction = direction_up;
 
-		if (keyboard_check_left(game) && last_direction != direction_right)
+		if (keyboard_check_left() && last_direction != direction_right)
 			direction = direction_left;
 
-		if (keyboard_check_down(game) && last_direction != direction_up)
+		if (keyboard_check_down() && last_direction != direction_up)
 			direction = direction_down;
 
 		if (move_counter < time_til_move * fast_forwarder_half())

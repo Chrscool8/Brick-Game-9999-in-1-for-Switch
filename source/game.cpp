@@ -13,7 +13,6 @@
 #include <switch/runtime/devices/socket.h>
 #include <grid_sprites.h>
 #include "audio.h"
-#include <settings.h>
 #include <utils/scores.h>
 #include <games/game_menu.h>
 #include <games/game_snake.h>
@@ -21,115 +20,37 @@
 #include <games/game_pong.h>
 #include <games/game_rowfill.h>
 #include <games/game_rowsmash.h>
-#include <utils/sprites.h>
 #include <games/game_HiOrLo.h>
-
-static int nxlink_sock = -1;
+#include <utils/settings.h>
+#include <platform/control_layer.h>
+#include <platform/graphics_layer.h>
 
 using namespace std;
 
 vector<std::unique_ptr<subgame>> game_list;
 
-extern "C" void userAppInit(void)
-{
-	romfsInit();
-	socketInitialize(NULL);
-	nxlink_sock = nxlinkConnectToHost(true, true);
-}
-
-extern "C" void userAppExit(void)
-{
-	if (nxlink_sock != -1)
-		close(nxlink_sock);
-	socketExit();
-	romfsExit();
-}
-
-void OutputDkDebug(void* userData, const char* context, DkResult result, const char* message)
-{
-	printf("Context: %s\nResult: %d\nMessage: %s\n", context, result, message);
-}
-
 BrickGameFramework::BrickGameFramework()
 {
-	FramebufferWidth = 1280;
-	FramebufferHeight = 720;
-	StaticCmdSize = 0x1000;
-
-	// Create the deko3d device
-	device = dk::DeviceMaker{}.setCbDebug(OutputDkDebug).create();
-
-	// Create the main queue
-	queue = dk::QueueMaker{ device }.setFlags(DkQueueFlags_Graphics).create();
-
-	// Create the memory pools
-	pool_images.emplace(device, DkMemBlockFlags_GpuCached | DkMemBlockFlags_Image, 16 * 1024 * 1024);
-	pool_code.emplace(device, DkMemBlockFlags_CpuUncached | DkMemBlockFlags_GpuCached | DkMemBlockFlags_Code, 128 * 1024);
-	pool_data.emplace(device, DkMemBlockFlags_CpuUncached | DkMemBlockFlags_GpuCached, 1 * 1024 * 1024);
-
-	// Create the static command buffer and feed it freshly allocated memory
-	cmdbuf = dk::CmdBufMaker{ device }.create();
-	CMemPool::Handle cmdmem = pool_data->allocate(StaticCmdSize);
-	cmdbuf.addMemory(cmdmem.getMemBlock(), cmdmem.getOffset(), cmdmem.getSize());
-	printf("cmdmem size: %u\n", cmdmem.getSize());
-	// Create the framebuffer resources
-	createFramebufferResources();
-
-	this->renderer.emplace(FramebufferWidth, FramebufferHeight, this->device, this->queue, *this->pool_images, *this->pool_code, *this->pool_data);
-	this->vg = nvgCreateDk(&*this->renderer, NVG_DEBUG);
+	initialize_graphics(1280, 720);
 
 	initGraph(&fps, GRAPH_RENDER_FPS, "Frame Time");
 
 	// Load Resources
-	load_sprite(vg, "spr_cell_selected", "romfs:/images/cell_selected.png");
-	load_sprite(vg, "spr_cell_unselected", "romfs:/images/cell_unselected.png");
+	load_sprite("spr_cell_selected", "romfs:/images/cell_selected.png");
+	load_sprite("spr_cell_unselected", "romfs:/images/cell_unselected.png");
 
-	load_sprite(vg, "spr_page_blip_selected", "romfs:/images/page_blip_selected.png");
-	load_sprite(vg, "spr_page_blip_unselected", "romfs:/images/page_blip_unselected.png");
+	load_sprite("spr_page_blip_selected", "romfs:/images/page_blip_selected.png");
+	load_sprite("spr_page_blip_unselected", "romfs:/images/page_blip_unselected.png");
 
 	for (int i = 0; i < 16; i++)
 	{
 		std::string num = std::to_string(i);
 		if (i < 10)
 			num = "0" + num;
-		load_sprite(vg, "spr_cells_" + num, "romfs:/images/cells_" + num + ".png");
+		load_sprite("spr_cells_" + num, "romfs:/images/cells_" + num + ".png");
 	}
 
-	int fontIcons = nvgCreateFont(vg, "icons", "romfs:/fonts/entypo.ttf");
-	if (fontIcons == -1) {
-		printf("Could not add font icons.\n");
-	}
-	int fontNormal = nvgCreateFont(vg, "sans", "romfs:/fonts/Roboto-Regular.ttf");
-	if (fontNormal == -1) {
-		printf("Could not add font italic.\n");
-	}
-	int fontBold = nvgCreateFont(vg, "sans-bold", "romfs:/fonts/Roboto-Bold.ttf");
-	if (fontBold == -1) {
-		printf("Could not add font bold.\n");
-	}
-	int fontEmoji = nvgCreateFont(vg, "emoji", "romfs:/fonts/NotoEmoji-Regular.ttf");
-	if (fontEmoji == -1) {
-		printf("Could not add font emoji.\n");
-	}
-	int fontSegment = nvgCreateFont(vg, "seg", "romfs:/fonts/DSEG7Classic-Bold.ttf");
-	if (fontSegment == -1) {
-		printf("Could not add font segment.\n");
-	}
-	int fontMinecraft = nvgCreateFont(vg, "minecraft", "romfs:/fonts/Minecraft.ttf");
-	if (fontMinecraft == -1) {
-		printf("Could not add font minecraft.\n");
-	}
-	int fontKongtext = nvgCreateFont(vg, "kongtext", "romfs:/fonts/kongtext-regular.ttf");
-	if (fontKongtext == -1) {
-		printf("Could not add font Kongtext.\n");
-	}
-	int vcrtext = nvgCreateFont(vg, "vcrtext", "romfs:/fonts/VCR_OSD_MONO_1.ttf");
-	if (vcrtext == -1) {
-		printf("Could not add font vcrtext.\n");
-	}
-
-	nvgAddFallbackFontId(vg, fontNormal, fontEmoji);
-	nvgAddFallbackFontId(vg, fontBold, fontEmoji);
+	load_fonts();
 
 	printf("Done loading\n");
 
@@ -142,8 +63,7 @@ BrickGameFramework::BrickGameFramework()
 	transition_stage = -1;
 	transition_percent = 0;
 
-	padConfigureInput(1, HidNpadStyleSet_NpadStandard);
-	padInitializeDefault(&pad);
+	init_controllers();
 
 	game_grid = grid_create(10, 20);
 
@@ -158,113 +78,12 @@ BrickGameFramework::BrickGameFramework()
 
 BrickGameFramework::~BrickGameFramework()
 {
-	// Destroy the framebuffer resources. This should be done first.
-	destroyFramebufferResources();
-
-	// Cleanup vg. This needs to be done first as it relies on the renderer.
-	nvgDeleteDk(vg);
-
-	// Destroy the renderer
-	this->renderer.reset();
+	exit_graphics();
 }
 
-void BrickGameFramework::createFramebufferResources()
+void renderGame(BrickGameFramework& game, float mx, float my, float t)
 {
-	// Create layout for the depth buffer
-	dk::ImageLayout layout_depthbuffer;
-	dk::ImageLayoutMaker{ device }
-		.setFlags(DkImageFlags_UsageRender | DkImageFlags_HwCompression)
-		.setFormat(DkImageFormat_S8)
-		.setDimensions(FramebufferWidth, FramebufferHeight)
-		.initialize(layout_depthbuffer);
-
-	// Create the depth buffer
-	depthBuffer_mem = pool_images->allocate(layout_depthbuffer.getSize(), layout_depthbuffer.getAlignment());
-	depthBuffer.initialize(layout_depthbuffer, depthBuffer_mem.getMemBlock(), depthBuffer_mem.getOffset());
-
-	// Create layout for the framebuffers
-	dk::ImageLayout layout_framebuffer;
-	dk::ImageLayoutMaker{ device }
-		.setFlags(DkImageFlags_UsageRender | DkImageFlags_UsagePresent | DkImageFlags_HwCompression)
-		.setFormat(DkImageFormat_RGBA8_Unorm)
-		.setDimensions(FramebufferWidth, FramebufferHeight)
-		.initialize(layout_framebuffer);
-
-	// Create the framebuffers
-	std::array<DkImage const*, NumFramebuffers> fb_array;
-	uint64_t fb_size = layout_framebuffer.getSize();
-	uint32_t fb_align = layout_framebuffer.getAlignment();
-	for (unsigned i = 0; i < NumFramebuffers; i++)
-	{
-		// Allocate a framebuffer
-		framebuffers_mem[i] = pool_images->allocate(fb_size, fb_align);
-		framebuffers[i].initialize(layout_framebuffer, framebuffers_mem[i].getMemBlock(), framebuffers_mem[i].getOffset());
-
-		// Generate a command list that binds it
-		dk::ImageView colorTarget{ framebuffers[i] }, depthTarget{ depthBuffer };
-		cmdbuf.bindRenderTargets(&colorTarget, &depthTarget);
-		framebuffer_cmdlists[i] = cmdbuf.finishList();
-
-		// Fill in the array for use later by the swapchain creation code
-		fb_array[i] = &framebuffers[i];
-	}
-
-	// Create the swapchain using the framebuffers
-	swapchain = dk::SwapchainMaker{ device, nwindowGetDefault(), fb_array }.create();
-
-	// Generate the main rendering cmdlist
-	recordStaticCommands();
-}
-
-void BrickGameFramework::destroyFramebufferResources()
-{
-	// Return early if we have nothing to destroy
-	if (!swapchain) return;
-
-	// Make sure the queue is idle before destroying anything
-	queue.waitIdle();
-
-	// Clear the static cmdbuf, destroying the static cmdlists in the process
-	cmdbuf.clear();
-
-	// Destroy the swapchain
-	swapchain.destroy();
-
-	// Destroy the framebuffers
-	for (unsigned i = 0; i < NumFramebuffers; i++)
-		framebuffers_mem[i].destroy();
-
-	// Destroy the depth buffer
-	depthBuffer_mem.destroy();
-}
-
-void BrickGameFramework::recordStaticCommands()
-{
-	// Initialize state structs with deko3d defaults
-	dk::RasterizerState rasterizerState;
-	dk::ColorState colorState;
-	dk::ColorWriteState colorWriteState;
-	dk::BlendState blendState;
-
-	// Configure the viewport and scissor
-	cmdbuf.setViewports(0, { { 0.0f, 0.0f, (float)FramebufferWidth, (float)FramebufferHeight, 0.0f, 1.0f } });
-	cmdbuf.setScissors(0, { { 0, 0, FramebufferWidth, FramebufferHeight } });
-
-	// Clear the color and depth buffers
-	cmdbuf.clearColor(0, DkColorMask_RGBA, 109.f / 255.f, 120.f / 255.f, 92.f / 255.f, 1.0f);
-	cmdbuf.clearDepthStencil(true, 1.0f, 0xFF, 0);
-
-	// Bind required state
-	cmdbuf.bindRasterizerState(rasterizerState);
-	cmdbuf.bindColorState(colorState);
-	cmdbuf.bindColorWriteState(colorWriteState);
-
-	render_cmdlist = cmdbuf.finishList();
-}
-
-void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t)
-{
-	nvgSave(vg);
+	push_graphics();
 
 	float angle = 0;
 	float scale = 1;
@@ -276,22 +95,22 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 		scale = 1;
 		break;
 	case orientation_left_down:
-		angle = nvgDegToRad(90);
+		angle = DegToRad(90);
 		scale = 1.5;
 		break;
 	case orientation_upside_down:
-		angle = nvgDegToRad(180);
+		angle = DegToRad(180);
 		scale = 1;
 		break;
 	case orientation_right_down:
-		angle = nvgDegToRad(270);
+		angle = DegToRad(270);
 		scale = 1.5;
 		break;
 	}
 
-	nvgTranslate(vg, 1280 / 2, 720 / 2);
-	nvgScale(vg, scale, scale);
-	nvgRotate(vg, angle);
+	gfx_translate(1280 / 2, 720 / 2);
+	gfx_scale(scale, scale);
+	gfx_rotate(angle);
 
 	int cell_width = 31;
 	int cell_height = 31;
@@ -334,32 +153,32 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 
 			if (i + 2 <= draw_grid_width && j + 2 <= draw_grid_height)
 			{
-				draw_sprite(vg, x, y, cell_width * 2, cell_height * 2, "spr_cells_" + num);
+				draw_sprite(x, y, cell_width * 2, cell_height * 2, "spr_cells_" + num);
 			}
 			else
 			{
 				if (i < draw_grid_width && j < draw_grid_height)
 				{
 					if (grid_get(game.game_grid, i, j))
-						draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+						draw_sprite(x, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
 					else
-						draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");
+						draw_sprite(x, y, cell_width, cell_height, "spr_cell_unselected");
 				}
 
 				if (i + 1 < draw_grid_width && j < draw_grid_height)
 				{
 					if (grid_get(game.game_grid, i + 1, j))
-						draw_sprite(vg, x + cell_width, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+						draw_sprite(x + cell_width, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
 					else
-						draw_sprite(vg, x + cell_width, y, cell_width, cell_height, "spr_cell_unselected");
+						draw_sprite(x + cell_width, y, cell_width, cell_height, "spr_cell_unselected");
 				}
 
 				if (i < draw_grid_width && j + 1 < draw_grid_height)
 				{
 					if (grid_get(game.game_grid, i, j + 1))
-						draw_sprite(vg, x, y + cell_height, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+						draw_sprite(x, y + cell_height, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
 					else
-						draw_sprite(vg, x, y + cell_height, cell_width, cell_height, "spr_cell_unselected");
+						draw_sprite(x, y + cell_height, cell_width, cell_height, "spr_cell_unselected");
 				}
 			}
 
@@ -370,7 +189,7 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 		}
 	}
 
-	nvgRestore(vg);
+	pop_graphics();
 }
 
 void draw_digital_display(NVGcontext* vg, std::string display_string, int x, int y, std::string title, int angle = 0, unsigned int length = 8)
@@ -411,50 +230,17 @@ void BrickGameFramework::render(u64 ns)
 	float time = ns / 1000000000.0;
 	float dt = time - prevTime;
 	prevTime = time;
-
-	// Acquire a framebuffer from the swapchain (and wait for it to be available)
-	int slot = queue.acquireImage(swapchain);
-
-	// Run the command list that attaches said framebuffer to the queue
-	queue.submitCommands(framebuffer_cmdlists[slot]);
-
-	// Run the main rendering command list
-	queue.submitCommands(render_cmdlist);
-
 	updateGraph(&fps, dt);
 
-	nvgBeginFrame(vg, FramebufferWidth, FramebufferHeight, 1.0f);
+	gfx_start_frame();
 	{
-		renderGame(vg, *this, 0, 0, FramebufferWidth, FramebufferHeight, time);
-
-		//if (show_ui)
-		//{
-		//	if (screen_orientation == orientation_normal)
-		//	{
-		//		renderGraph(vg, 5, 5, &fps);
-
-		//		const float size = 25.f;
-		//		nvgFontFace(vg, "minecraft");
-		//		nvgFontSize(vg, size);
-		//		nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-		//		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-		//		nvgText(vg, 20, 70, "Welcome to this", NULL);
-		//		nvgText(vg, 20, 70 + size * 1, "extremely early", NULL);
-		//		nvgText(vg, 20, 70 + size * 2, "version!", NULL);
-		//		nvgText(vg, 20, 70 + size * 4, "Minus: Rotate", NULL);
-		//		nvgText(vg, 20, 70 + size * 5, "Y : Menu", NULL);
-		//		nvgText(vg, 20, 70 + size * 6, "X : Snake", NULL);
-		//		nvgText(vg, 20, 70 + size * 7, "A : Race", NULL);
-		//		nvgText(vg, 20, 70 + size * 8, "B : Pong", NULL);
-		//		nvgText(vg, 20, 70 + size * 10, "ZL/ZR : Fast Forward", NULL);
-		//	}
-		//}
+		renderGame(*this, 0, 0, time);
 
 		int wid = 8 * 30;
 		if (screen_orientation == orientation_normal)
 		{
-			nvgSave(vg);
-			nvgTranslate(vg, 150, 80);
+			push_graphics();
+			gfx_translate(150, 80);
 			nvgFontFace(vg, "vcrtext");
 			nvgFontSize(vg, 72);
 			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
@@ -498,10 +284,8 @@ void BrickGameFramework::render(u64 ns)
 			draw_digital_display(vg, highscore_display, 1235, 720 / 2 + 30, "High Score", 90);
 		}
 	}
-	nvgEndFrame(vg);
 
-	// Now that we are done rendering, present it to the screen
-	queue.presentImage(swapchain, slot);
+	gfx_end_frame();
 }
 
 void transition(std::vector<std::vector<bool>>& grid, double percent)
@@ -543,13 +327,11 @@ double fast_forwarder_half()
 
 bool BrickGameFramework::onFrame(u64 ns)
 {
-	padUpdate(&pad);
-	u64 keyboard_check_pressed = padGetButtonsDown(&pad);
-	u64 keyboard_check = padGetButtons(&pad);
+	update_controller();
 
-	fast_forward = ((keyboard_check & HidNpadButton_ZL) || (keyboard_check & HidNpadButton_ZR));
+	fast_forward = (keyboard_check_ZL() || keyboard_check_ZR());
 
-	if (keyboard_check_pressed & HidNpadButton_Plus)
+	if (keyboard_check_pressed_start())
 	{
 		if (current_game == 0)
 			return false;
@@ -557,7 +339,7 @@ bool BrickGameFramework::onFrame(u64 ns)
 			SwitchToGame(0);
 	}
 
-	if (keyboard_check_pressed & HidNpadButton_L)
+	if (keyboard_check_pressed_L())
 	{
 		if (settings_get_value_true("temp_prefs", "music_bool"))
 		{
@@ -571,7 +353,7 @@ bool BrickGameFramework::onFrame(u64 ns)
 		}
 	}
 
-	if (keyboard_check_pressed & HidNpadButton_R)
+	if (keyboard_check_pressed_R())
 	{
 		if (settings_get_value_true("temp_prefs", "sound_bool"))
 		{
@@ -586,34 +368,6 @@ bool BrickGameFramework::onFrame(u64 ns)
 			settings_set_value("temp_prefs", "sound_bool", "true");
 		}
 	}
-
-	//if (keyboard_check_pressed & HidNpadButton_Y)
-	//{
-	//	SwitchToGame(0);
-	//}
-
-	//if (keyboard_check_pressed & HidNpadButton_X)
-	//{
-	//	SwitchToGame(1);
-	//}
-
-	//if (keyboard_check_pressed & HidNpadButton_A)
-	//{
-	//	SwitchToGame(2);
-	//}
-
-	//if (keyboard_check_pressed & HidNpadButton_B)
-	//{
-	//	SwitchToGame(3);
-	//}
-
-	//if (keyboard_check_pressed & HidNpadButton_R)
-	//{
-	//	if (target_grid_width != 20)
-	//		target_grid_width = 20;
-	//	else
-	//		target_grid_width = 10;
-	//}
 
 	if (grid_width(game_grid) < target_grid_width)
 	{
@@ -723,7 +477,7 @@ bool BrickGameFramework::onFrame(u64 ns)
 	}
 
 
-	if (keyboard_check_pressed & HidNpadButton_Minus)
+	if (keyboard_check_pressed_select())
 	{
 		screen_orientation += 1;
 		screen_orientation = screen_orientation % 4;

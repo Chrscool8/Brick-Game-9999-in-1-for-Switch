@@ -1,6 +1,6 @@
 #include <games/game_pong.h>
-#include <controls.h>
 #include <algorithm>
+#include <platform/control_layer.h>
 
 bool paddle_is_at(int x, int y)
 {
@@ -141,10 +141,10 @@ void subgame_pong::obj_paddle::step_function()
 {
 	if (!ai)
 	{
-		if (keyboard_check_pressed_left(game) || keyboard_check_pressed_right(game))
+		if (keyboard_check_pressed_left() || keyboard_check_pressed_right())
 			time_til_move = 0;
 
-		if (keyboard_check_left(game))
+		if (keyboard_check_left())
 		{
 			if (time_til_move <= 0)
 			{
@@ -152,7 +152,7 @@ void subgame_pong::obj_paddle::step_function()
 			}
 		}
 
-		if (keyboard_check_right(game))
+		if (keyboard_check_right())
 		{
 			if (time_til_move <= 0)
 			{
@@ -160,7 +160,7 @@ void subgame_pong::obj_paddle::step_function()
 			}
 		}
 
-		if (keyboard_check_left(game) || keyboard_check_right(game))
+		if (keyboard_check_left() || keyboard_check_right())
 		{
 			if (time_til_move <= 0)
 				time_til_move = pause_time * fast_forwarder_half();
