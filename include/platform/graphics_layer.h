@@ -18,3 +18,7 @@ void gfx_set_fill_color(unsigned char r, unsigned char g, unsigned char b, unsig
 void draw_text(float x, float y, std::string text);
 void gfx_start_frame();
 void gfx_end_frame();
+void draw_rounded_rect(float x, float y, float w, float h, float radius, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+void draw_rect(float x, float y, float w, float h, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+void draw_set_font(std::string fontname);
+void draw_set_font_size(float size);

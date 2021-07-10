@@ -123,15 +123,8 @@ void renderGame(BrickGameFramework& game, float mx, float my, float t)
 
 	int border_size = 5;
 
-	nvgBeginPath(vg);
-	nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_width + border_size * 2, cell_height * draw_grid_height + border_size * 2, border_size);
-	nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-	nvgFill(vg);
-
-	nvgBeginPath(vg);
-	nvgRect(vg, grid_offset_x, grid_offset_y, cell_width * draw_grid_width, cell_height * draw_grid_height);
-	nvgFillColor(vg, nvgRGBA(109, 120, 92, 255));
-	nvgFill(vg);
+	draw_rounded_rect(grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_width + border_size * 2, cell_height * draw_grid_height + border_size * 2, border_size, 0, 0, 0, 255);
+	draw_rect(grid_offset_x, grid_offset_y, cell_width * draw_grid_width, cell_height * draw_grid_height, 109, 120, 92, 255);
 
 	for (int i = 0; i < draw_grid_width; i += 2)
 	{
@@ -241,8 +234,8 @@ void BrickGameFramework::render(u64 ns)
 		{
 			push_graphics();
 			gfx_translate(150, 80);
-			nvgFontFace(vg, "vcrtext");
-			nvgFontSize(vg, 72);
+			draw_set_font("vcrtext");
+			draw_set_font_size(72);
 			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
 			nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
 			nvgText(vg, 3, 0, current_game_name.c_str(), NULL);

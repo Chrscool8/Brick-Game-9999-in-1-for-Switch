@@ -309,3 +309,29 @@ void gfx_end_frame_switch()
 	// Now that we are done rendering, present it to the screen
 	GL.queue.presentImage(GL.swapchain, GL.slot);
 }
+
+void draw_rounded_rect_switch(float x, float y, float w, float h, float radius, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+{
+	nvgBeginPath(GL.vg);
+	nvgRoundedRect(GL.vg, x, y, w, h, radius);
+	nvgFillColor(GL.vg, nvgRGBA(red, green, blue, alpha));
+	nvgFill(GL.vg);
+}
+
+void draw_rect_switch(float x, float y, float w, float h, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+{
+	nvgBeginPath(GL.vg);
+	nvgRect(GL.vg, x, y, w, h);
+	nvgFillColor(GL.vg, nvgRGBA(red, green, blue, alpha));
+	nvgFill(GL.vg);
+}
+
+void draw_set_font_switch(std::string fontname)
+{
+	nvgFontFace(GL.vg, fontname.c_str());
+}
+
+void draw_set_font_size_switch(float size)
+{
+	nvgFontSize(GL.vg, size);
+}

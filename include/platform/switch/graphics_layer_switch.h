@@ -60,3 +60,7 @@ void load_sprite_switch(std::string sprite_name, std::string sprite_path);
 bool draw_sprite_switch(float x, float y, float width, float height, std::string sprite_name);
 void gfx_start_frame_switch();
 void gfx_end_frame_switch();
+void draw_rounded_rect_switch(float x, float y, float w, float h, float radius, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+void draw_rect_switch(float x, float y, float w, float h, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
+void draw_set_font_switch(std::string fontname);
+void draw_set_font_size_switch(float size);

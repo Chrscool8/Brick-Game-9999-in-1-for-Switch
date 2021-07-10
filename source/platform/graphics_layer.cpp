@@ -1,6 +1,7 @@
 #include <string>
 #include "nanovg.h"
 #include <platform/switch/graphics_layer_switch.h>
+#include "..\..\include\platform\graphics_layer.h"
 
 void initialize_graphics(unsigned int width, unsigned int height)
 {
@@ -85,4 +86,24 @@ void gfx_start_frame()
 void gfx_end_frame()
 {
 	gfx_end_frame_switch();
+}
+
+void draw_rounded_rect(float x, float y, float w, float h, float radius, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+{
+	draw_rounded_rect_switch(x, y, w, h, radius, red, green, blue, alpha);
+}
+
+void draw_rect(float x, float y, float w, float h, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+{
+	draw_rect_switch(x, y, w, h, red, green, blue, alpha);
+}
+
+void draw_set_font(std::string fontname)
+{
+	draw_set_font_switch(fontname);
+}
+
+void draw_set_font_size(float size)
+{
+	draw_set_font_size_switch(size);
 }
