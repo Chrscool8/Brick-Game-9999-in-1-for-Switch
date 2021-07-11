@@ -19,8 +19,8 @@ public:
 		vector<vector<bool>> filled_blocks;
 		void shift_down();
 		void check_rows();
-		void lose();
 		int lowest_occupied_line(std::vector<std::vector<bool>>& grid);
+		void lose();
 		void generate_row(std::vector<std::vector<bool>>& grid, int row_num);
 		int pause_time;
 		int time_til_move;
