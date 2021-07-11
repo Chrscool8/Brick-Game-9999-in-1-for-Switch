@@ -23,6 +23,7 @@
 #include <games/game_rowsmash.h>
 #include <utils/sprites.h>
 #include <games/game_HiOrLo.h>
+#include <games/game_tetris.h>
 
 static int nxlink_sock = -1;
 
@@ -148,6 +149,7 @@ BrickGameFramework::BrickGameFramework()
 	game_grid = grid_create(10, 20);
 
 	game_list.push_back(std::make_unique<subgame_menu>(*this));
+	game_list.push_back(std::make_unique<subgame_tetris>(*this));
 	game_list.push_back(std::make_unique<subgame_snake>(*this));
 	game_list.push_back(std::make_unique<subgame_race>(*this));
 	game_list.push_back(std::make_unique<subgame_pong>(*this));
