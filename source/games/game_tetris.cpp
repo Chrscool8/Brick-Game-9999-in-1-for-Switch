@@ -50,8 +50,8 @@ subgame_tetris::obj_tetromino::obj_tetromino(BrickGameFramework& game, int _x, i
 {
 	name = "obj_tetromino";
 	angle = 0;
-	time_til_move = 60;
-	pause_time = 60;
+	time_til_drop_move = 60;
+	pause_time_drop = 60;
 	shape_index = rand() % tetris_shapes.size();
 }
 
@@ -71,13 +71,13 @@ void subgame_tetris::obj_tetromino::step_function()
 		if (keyboard_check_pressed_right(game))
 			move_right();
 
-		if (time_til_move > 0)
+		if (time_til_drop_move > 0)
 		{
-			time_til_move -= 1;
+			time_til_drop_move -= 1;
 		}
 		else
 		{
-			time_til_move = pause_time;
+			time_til_drop_move = pause_time_drop;
 			y += 1;
 		}
 	}

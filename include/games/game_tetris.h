@@ -28,8 +28,8 @@ public:
 		int shape_index = 0;
 		int color_index = 0;
 
-		int pause_time = 5;
-		int time_til_move = 0;
+		int pause_time_drop = 5;
+		int time_til_drop_move = 0;
 
 		bool moving = true;
 
