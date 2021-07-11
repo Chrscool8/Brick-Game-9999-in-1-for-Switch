@@ -43,7 +43,7 @@ void subgame_tetris::subgame_exit()
 
 std::string subgame_tetris::subgame_controls_text()
 {
-	return "D-Pad: Move\nZL/ZR: Fast";
+	return "Left/Right: Move\nUp: Rotate";
 }
 
 subgame_tetris::obj_tetromino::obj_tetromino(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
@@ -102,7 +102,7 @@ bool subgame_tetris::obj_tetromino::check_collision(vector<vector<bool>> shape, 
 		{
 			if (shape[j][i])
 			{
-				if (_x + i < 0)
+				if (_x + i < 0 || _x + i >= grid_width(game.game_grid))
 				{
 					can_move = false;
 					break;
