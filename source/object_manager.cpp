@@ -91,6 +91,7 @@ game_object* get_object_by_name(std::string name)
 		}
 	}
 
+	print_debug("Could not find " + name);
 	return NULL;
 }
 
