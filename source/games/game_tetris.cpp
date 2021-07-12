@@ -16,6 +16,7 @@ void subgame_tetris::subgame_init()
 {
 	printf("Initting Tetris!!\n");
 	// Create an instance of a snake object in game 'game' at position 5, 5.
+	objects.push_back(std::make_unique<obj_tetris_rows>(game));
 }
 
 // Runs every frame of the subgame unless the game is transitioning
@@ -71,6 +72,12 @@ void subgame_tetris::obj_tetromino::step_function()
 		if (keyboard_check_pressed_right(game))
 			move_right();
 
+		if (keyboard_check_pressed_down(game))
+		{
+			move_down();
+			time_til_drop_move = pause_time_drop;
+		}
+
 		if (time_til_drop_move > 0)
 		{
 			time_til_drop_move -= 1;
@@ -78,7 +85,7 @@ void subgame_tetris::obj_tetromino::step_function()
 		else
 		{
 			time_til_drop_move = pause_time_drop;
-			y += 1;
+			move_down();
 		}
 	}
 }
@@ -95,28 +102,31 @@ void subgame_tetris::obj_tetromino::destroy_function()
 
 bool subgame_tetris::obj_tetromino::check_collision(vector<vector<bool>> shape, int _x, int _y)
 {
-	bool can_move = true;
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
 			if (shape[j][i])
 			{
-				if (_x + i < 0 || _x + i >= grid_width(game.game_grid))
+				if (_x + i < 0 || _x + i >= grid_width(game.game_grid) || _y + j >= grid_height(game.game_grid))
 				{
-					can_move = false;
-					break;
+					return true;
+				}
+
+				game_object* rows = get_object_by_name("obj_tetris_rows");
+				if (rows != NULL)
+				{
+					obj_tetris_rows* row_obj = static_cast<obj_tetris_rows*>(rows);
+					if (grid_get(row_obj->filled_blocks, _x + i, _y + j))
+					{
+						return true;
+					}
 				}
 			}
 		}
-
-		if (!can_move)
-		{
-			break;
-		}
 	}
 
-	return can_move;
+	return false;
 }
 
 vector<vector<bool>> subgame_tetris::obj_tetromino::get_sprite(int index, int rotation)
@@ -126,7 +136,7 @@ vector<vector<bool>> subgame_tetris::obj_tetromino::get_sprite(int index, int ro
 
 void subgame_tetris::obj_tetromino::move_left()
 {
-	if (check_collision(get_sprite(shape_index, angle), x - 1, y))
+	if (!check_collision(get_sprite(shape_index, angle), x - 1, y))
 	{
 		x -= 1;
 	}
@@ -134,16 +144,36 @@ void subgame_tetris::obj_tetromino::move_left()
 
 void subgame_tetris::obj_tetromino::move_right()
 {
-	if (check_collision(get_sprite(shape_index, angle), x + 1, y))
+	if (!check_collision(get_sprite(shape_index, angle), x + 1, y))
 	{
 		x += 1;
 	}
 }
 
-subgame_tetris::obj_rows::obj_rows(BrickGameFramework& game, int starting_rows) : game_object(game, 0, 0)
+void subgame_tetris::obj_tetromino::move_down()
+{
+	if (!check_collision(get_sprite(shape_index, angle), x, y + 1))
+	{
+		y += 1;
+	}
+	else
+	{
+		game_object* rows = get_object_by_name("obj_tetris_rows");
+		if (rows != NULL)
+		{
+			obj_tetris_rows* row_obj = static_cast<obj_tetris_rows*>(rows);
+
+			vector<vector<bool>> gtp = get_sprite(shape_index, angle);
+			place_grid_sprite(row_obj->filled_blocks, gtp, x, y, true);
+		}
+		instance_destroy();
+	}
+}
+
+subgame_tetris::obj_tetris_rows::obj_tetris_rows(BrickGameFramework& game) : game_object(game, 0, 0)
 {
 	filled_blocks = grid_create(grid_width(game.game_grid), grid_height(game.game_grid));
-	for (int i = 0; i < starting_rows; i++)
+	for (int i = 0; i < grid_height(game.game_grid); i++)
 	{
 		for (int j = 0; j < grid_width(game.game_grid); j++)
 		{
@@ -151,19 +181,33 @@ subgame_tetris::obj_rows::obj_rows(BrickGameFramework& game, int starting_rows) 
 		}
 	}
 
-	name = "obj_rows";
+	name = "obj_tetris_rows";
 }
 
-void subgame_tetris::obj_rows::step_function()
+void subgame_tetris::obj_tetris_rows::step_function()
 {
+
 }
 
-void subgame_tetris::obj_rows::draw_function()
+void subgame_tetris::obj_tetris_rows::draw_function()
 {
 	emplace_grid_in_grid(game.game_grid, filled_blocks, x, y, true);
 }
 
-void subgame_tetris::obj_rows::destroy_function()
+void subgame_tetris::obj_tetris_rows::destroy_function()
 {
 
+}
+
+void subgame_tetris::obj_tetris_rows::shift_down()
+{
+}
+
+void subgame_tetris::obj_tetris_rows::check_rows()
+{
+}
+
+int subgame_tetris::obj_tetris_rows::lowest_occupied_line(std::vector<std::vector<bool>>& grid)
+{
+	return 0;
 }

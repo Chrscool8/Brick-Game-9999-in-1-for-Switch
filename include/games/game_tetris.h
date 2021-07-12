@@ -9,9 +9,10 @@ using namespace std;
 class subgame_tetris : public subgame
 {
 public:
-	class obj_rows : public game_object
+	class obj_tetris_rows : public game_object
 	{
-		obj_rows(BrickGameFramework& game, int starting_rows);
+	public:
+		obj_tetris_rows(BrickGameFramework& game);
 		virtual void step_function() override;
 		virtual void draw_function() override;
 		virtual void destroy_function() override;
@@ -44,6 +45,7 @@ public:
 
 		void move_left();
 		void move_right();
+		void move_down();
 	};
 
 	subgame_tetris(BrickGameFramework& game);
