@@ -81,7 +81,6 @@ vector<vector<vector<bool>>> shape_b
 
 //
 
-
 vector<vector<bool>> shape_c0
 {
 	{0, 0, 1},
@@ -219,8 +218,8 @@ vector<vector<bool>> shape_g0
 vector<vector<bool>> shape_g1
 {
 	{0, 1, 0},
-	{1, 1, 0},
-	{1, 0, 0}
+	{0, 1, 1},
+	{0, 0, 1}
 };
 
 vector<vector<bool>> shape_g2
@@ -232,9 +231,9 @@ vector<vector<bool>> shape_g2
 
 vector<vector<bool>> shape_g3
 {
-	{0, 0, 1},
-	{0, 1, 1},
-	{0, 1, 0}
+	{0, 1, 0},
+	{1, 1, 0},
+	{1, 0, 0}
 };
 
 vector<vector<vector<bool>>> shape_g
