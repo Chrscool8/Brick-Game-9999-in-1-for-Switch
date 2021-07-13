@@ -39,13 +39,12 @@ public:
 		virtual void draw_function() override;
 		virtual void destroy_function() override;
 
-		bool check_collision(vector<vector<bool>> shape, int _x, int _y);
-
+		int check_collision(vector<vector<bool>> shape, int _x, int _y);
 		vector<vector<bool>> get_sprite(int index, int rotation);
-
 		void move_left();
 		void move_right();
 		void move_down();
+		void rotate_piece(bool right);
 	};
 
 	subgame_tetris(BrickGameFramework& game);

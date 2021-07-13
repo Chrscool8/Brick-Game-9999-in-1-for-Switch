@@ -56,6 +56,48 @@ subgame_tetris::obj_tetromino::obj_tetromino(BrickGameFramework& game, int _x, i
 	shape_index = rand() % tetris_shapes.size();
 }
 
+void subgame_tetris::obj_tetromino::rotate_piece()
+{
+	vector<vector<bool>> new_shape = get_sprite(shape_index, angle + 1);
+	int collision = check_collision(new_shape, x, y);
+	print_debug("Col: " + to_string(collision));
+	if (collision == 0)
+	{
+		angle += 1;
+		return;
+	}
+	else if (collision == 1)
+	{
+		if (!check_collision(new_shape, x + 1, y))
+		{
+			angle += 1;
+			x += 1;
+			return;
+		}
+		else if (!check_collision(new_shape, x + 2, y))
+		{
+			angle += 1;
+			x += 2;
+			return;
+		}
+	}
+	else if (collision == 2)
+	{
+		if (!check_collision(new_shape, x - 1, y))
+		{
+			angle += 1;
+			x -= 1;
+			return;
+		}
+		else if (!check_collision(new_shape, x - 2, y))
+		{
+			angle += 1;
+			x -= 2;
+			return;
+		}
+	}
+}
+
 void subgame_tetris::obj_tetromino::step_function()
 {
 	if (moving)
@@ -64,7 +106,7 @@ void subgame_tetris::obj_tetromino::step_function()
 			instance_destroy();
 
 		if (keyboard_check_pressed_up(game))
-			angle += 1;
+			rotate_piece();
 
 		if (keyboard_check_pressed_left(game))
 			move_left();
@@ -100,33 +142,49 @@ void subgame_tetris::obj_tetromino::destroy_function()
 
 }
 
-bool subgame_tetris::obj_tetromino::check_collision(vector<vector<bool>> shape, int _x, int _y)
+// 0 - No Collision
+// 1 - Off Board Side Left
+// 2 - Off Board Side Right
+// 3 - Off Board Bottom
+// 4 - Another Piece
+int subgame_tetris::obj_tetromino::check_collision(vector<vector<bool>> shape, int _x, int _y)
 {
-	for (int i = 0; i < 4; i++)
+	game_object* rows = get_object_by_name("obj_tetris_rows");
+
+	for (int i = 0; i < grid_width(shape); i++)
 	{
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < grid_height(shape); j++)
 		{
 			if (shape[j][i])
 			{
-				if (_x + i < 0 || _x + i >= grid_width(game.game_grid) || _y + j >= grid_height(game.game_grid))
+				if (_x + i < 0)
 				{
-					return true;
+					return 1;
 				}
 
-				game_object* rows = get_object_by_name("obj_tetris_rows");
+				if (_x + i >= grid_width(game.game_grid))
+				{
+					return 2;
+				}
+
+				if (_y + j >= grid_height(game.game_grid))
+				{
+					return 3;
+				}
+
 				if (rows != NULL)
 				{
 					obj_tetris_rows* row_obj = static_cast<obj_tetris_rows*>(rows);
 					if (grid_get(row_obj->filled_blocks, _x + i, _y + j))
 					{
-						return true;
+						return 4;
 					}
 				}
 			}
 		}
 	}
 
-	return false;
+	return 0;
 }
 
 vector<vector<bool>> subgame_tetris::obj_tetromino::get_sprite(int index, int rotation)
