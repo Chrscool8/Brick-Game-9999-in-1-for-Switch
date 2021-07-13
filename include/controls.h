@@ -27,4 +27,8 @@ bool keyboard_check_pressed_B(BrickGameFramework& game);
 bool keyboard_check_pressed_X(BrickGameFramework& game);
 bool keyboard_check_pressed_Y(BrickGameFramework& game);
 
+bool keyboard_check_pressed_L(BrickGameFramework& game);
+bool keyboard_check_pressed_R(BrickGameFramework& game);
+
+
 #endif // !CONTROLS_H
