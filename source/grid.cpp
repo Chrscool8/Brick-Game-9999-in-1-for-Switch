@@ -4,7 +4,7 @@
 
 std::vector<std::vector<bool>> grid_create(int width, int height)
 {
-	printf("Grid create: %i, %i\n", width, height);
+	//printf("Grid create: %i, %i\n", width, height);
 
 	std::vector<std::vector<bool>> grid;
 
