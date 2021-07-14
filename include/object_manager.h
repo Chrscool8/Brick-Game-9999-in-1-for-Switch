@@ -65,6 +65,7 @@ public:
 };
 
 game_object* get_object_by_name(std::string name);
+bool object_exists(std::string name);
 
 extern vector<std::unique_ptr<game_object>> objects;
 

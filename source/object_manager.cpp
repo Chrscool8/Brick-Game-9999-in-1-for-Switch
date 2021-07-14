@@ -95,6 +95,11 @@ game_object* get_object_by_name(std::string name)
 	return NULL;
 }
 
+bool object_exists(std::string name)
+{
+	return (get_object_by_name(name) != NULL);
+}
+
 unsigned int game_object::object_index = 0;
 
 vector<std::unique_ptr<game_object>> objects;
