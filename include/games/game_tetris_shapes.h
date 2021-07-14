@@ -217,9 +217,9 @@ vector<vector<bool>> shape_g0
 
 vector<vector<bool>> shape_g1
 {
-	{0, 1, 0},
+	{0, 0, 1},
 	{0, 1, 1},
-	{0, 0, 1}
+	{0, 1, 0}
 };
 
 vector<vector<bool>> shape_g2
