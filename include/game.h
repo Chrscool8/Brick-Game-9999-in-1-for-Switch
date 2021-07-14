@@ -112,7 +112,8 @@ public:
 static bool fast_forward = false;
 double fast_forwarder_half();
 
-void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t);
+void draw_grid(NVGcontext* vg, vector<vector<bool>> _grid, float x, float y, double cell_size);
+void renderGame(NVGcontext* vg, BrickGameFramework& game);
 void load_sprite(NVGcontext* vg, std::string sprite_name, std::string sprite_path);
 
 #endif // !GAME_H

@@ -25,6 +25,7 @@
 #include <games/game_rowsmash.h>
 #include <games/game_HiOrLo.h>
 #include <games/game_tetris.h>
+#include <controls.h>
 
 static int nxlink_sock = -1;
 
@@ -265,7 +266,91 @@ void BrickGameFramework::recordStaticCommands()
 	render_cmdlist = cmdbuf.finishList();
 }
 
-void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, float width, float height, float t)
+void draw_grid(NVGcontext* vg, vector<vector<bool>> _grid, float _x, float _y, double cell_size)
+{
+	nvgSave(vg);
+	float angle = 0;
+	float scale = 1;
+
+	nvgTranslate(vg, _x, _y);
+	nvgRotate(vg, angle);
+
+	int cell_width = cell_size * scale;
+	int cell_height = cell_size * scale;
+
+	int draw_grid_width = grid_width(_grid);
+	int draw_grid_height = grid_height(_grid);
+
+	int grid_offset_x = (-(draw_grid_width * cell_width)) / 2.;
+	int grid_offset_y = (-(draw_grid_height * cell_height)) / 2.;
+
+	int border_size = 5;
+
+	nvgBeginPath(vg);
+	nvgRoundedRect(vg, grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_width + border_size * 2, cell_height * draw_grid_height + border_size * 2, border_size);
+	nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+	nvgFill(vg);
+
+	nvgBeginPath(vg);
+	nvgRect(vg, grid_offset_x, grid_offset_y, cell_width * draw_grid_width, cell_height * draw_grid_height);
+	nvgFillColor(vg, nvgRGBA(109, 120, 92, 255));
+	nvgFill(vg);
+
+	for (int i = 0; i < draw_grid_width; i += 2)
+	{
+		for (int j = 0; j < draw_grid_height; j += 2)
+		{
+			float x = grid_offset_x + (i)*cell_width;
+			float y = grid_offset_y + (j)*cell_height;
+
+			bool ul = grid_get(_grid, i, j);
+			bool ur = grid_get(_grid, i + 1, j);
+			bool bl = grid_get(_grid, i, j + 1);
+			bool br = grid_get(_grid, i + 1, j + 1);
+
+			unsigned int pos = 1 * ul + 2 * ur + 4 * bl + 8 * br;
+
+			std::string num = std::to_string(pos);
+			if (pos < 10)
+				num = "0" + num;
+
+			if (i + 2 <= draw_grid_width && j + 2 <= draw_grid_height)
+			{
+				draw_sprite(vg, x, y, cell_width * 2, cell_height * 2, "spr_cells_" + num);
+			}
+			else
+			{
+				if (i < draw_grid_width && j < draw_grid_height)
+				{
+					if (grid_get(_grid, i, j))
+						draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+					else
+						draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");
+				}
+
+				if (i + 1 < draw_grid_width && j < draw_grid_height)
+				{
+					if (grid_get(_grid, i + 1, j))
+						draw_sprite(vg, x + cell_width, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+					else
+						draw_sprite(vg, x + cell_width, y, cell_width, cell_height, "spr_cell_unselected");
+				}
+
+				if (i < draw_grid_width && j + 1 < draw_grid_height)
+				{
+					if (grid_get(_grid, i, j + 1))
+						draw_sprite(vg, x, y + cell_height, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+					else
+						draw_sprite(vg, x, y + cell_height, cell_width, cell_height, "spr_cell_unselected");
+				}
+			}
+		}
+	}
+
+	nvgRestore(vg);
+}
+
+void renderGame(NVGcontext* vg, BrickGameFramework& game)
 {
 	nvgSave(vg);
 
@@ -293,11 +378,10 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 	}
 
 	nvgTranslate(vg, 1280 / 2, 720 / 2);
-	nvgScale(vg, scale, scale);
 	nvgRotate(vg, angle);
 
-	int cell_width = 31;
-	int cell_height = 31;
+	int cell_width = 31*scale;
+	int cell_height = 31*scale;
 
 	int draw_grid_width = grid_width(game.game_grid);
 	int draw_grid_height = grid_height(game.game_grid);
@@ -365,11 +449,6 @@ void renderGame(NVGcontext* vg, BrickGameFramework& game, float mx, float my, fl
 						draw_sprite(vg, x, y + cell_height, cell_width, cell_height, "spr_cell_unselected");
 				}
 			}
-
-			//if (grid_get(game.game_grid, i, j))
-			//	draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
-			//else
-			//	draw_sprite(vg, x, y, cell_width, cell_height, "spr_cell_unselected");
 		}
 	}
 
@@ -428,7 +507,7 @@ void BrickGameFramework::render(u64 ns)
 
 	nvgBeginFrame(vg, FramebufferWidth, FramebufferHeight, 1.0f);
 	{
-		renderGame(vg, *this, 0, 0, FramebufferWidth, FramebufferHeight, time);
+		renderGame(vg, *this);
 
 		//if (show_ui)
 		//{
