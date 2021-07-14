@@ -15,13 +15,14 @@
 #include "audio.h"
 #include <settings.h>
 #include <utils/scores.h>
+#include <utils/sprites.h>
+
 #include <games/game_menu.h>
 #include <games/game_snake.h>
 #include <games/game_race.h>
 #include <games/game_pong.h>
 #include <games/game_rowfill.h>
 #include <games/game_rowsmash.h>
-#include <utils/sprites.h>
 #include <games/game_HiOrLo.h>
 #include <games/game_tetris.h>
 
@@ -723,7 +724,6 @@ bool BrickGameFramework::onFrame(u64 ns)
 
 		transition(game_grid, transition_percent);
 	}
-
 
 	if (keyboard_check_pressed & HidNpadButton_Minus)
 	{
