@@ -5,6 +5,7 @@
 #include <object_manager.h>
 
 using namespace std;
+		vector<vector<bool>> get_sprite(int index, int rotation);
 
 class subgame_tetris : public subgame
 {
@@ -12,6 +13,7 @@ public:
 	int phase = -1;
 	vector<int> highlighted_rows;
 	int ticker = 0;
+	int next_piece = 0;
 
 	class obj_tetris_rows : public game_object
 	{
@@ -39,7 +41,7 @@ public:
 
 		bool moving = true;
 
-		obj_tetromino(BrickGameFramework& game, int _x, int _y);
+		obj_tetromino(BrickGameFramework& game, int _x, int _y, int piece_type);
 		virtual void step_function() override;
 		virtual void draw_function() override;
 		virtual void destroy_function() override;
@@ -48,7 +50,6 @@ public:
 		int check_collision(vector<vector<bool>> shape, int _x, int _y);
 		int check_off_top(vector<vector<bool>> shape, int _x, int _y);
 		void lose();
-		vector<vector<bool>> get_sprite(int index, int rotation);
 		void change_rotation_by(int i);
 		void move_left();
 		void move_right();

@@ -29,7 +29,8 @@ void subgame_tetris::subgame_step()
 	else if (phase == 0)
 	{
 		// Create Object
-		objects.push_back(std::make_unique<obj_tetromino>(game, grid_width(game.game_grid) / 2 - 1, -2));
+		objects.push_back(std::make_unique<obj_tetromino>(game, grid_width(game.game_grid) / 2 - 1, -2, next_piece));
+		next_piece = rand() % tetris_shapes.size();
 		phase = 1;
 	}
 	else if (phase == 1)
@@ -123,6 +124,10 @@ void subgame_tetris::subgame_step()
 void subgame_tetris::subgame_draw()
 {
 	//printf("Drawing Tetris!!\n");
+	vector<vector<bool>> spr = get_sprite(next_piece, 0);
+	vector<vector<bool>> small_grid = grid_create(4, 4);
+	place_grid_sprite(small_grid, spr, (grid_width(spr) <= 3), (grid_height(spr) <= 3));
+	draw_grid(game.vg, small_grid, 1280 * .75, 720 / 2, 31);
 }
 
 // Clean up subgame objects here, runs once when the game is changing to a different
@@ -137,13 +142,13 @@ std::string subgame_tetris::subgame_controls_text()
 	return "D-Pad: Move\nA: Clockwise\nY: Counter-C";
 }
 
-subgame_tetris::obj_tetromino::obj_tetromino(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
+subgame_tetris::obj_tetromino::obj_tetromino(BrickGameFramework& game, int _x, int _y, int _piece_type) : game_object(game, _x, _y)
 {
 	name = "obj_tetromino";
 	angle = 0;
 	time_til_drop_move = 60;
 	pause_time_drop = 60;
-	shape_index = rand() % tetris_shapes.size();
+	shape_index = _piece_type;
 }
 
 void subgame_tetris::obj_tetromino::change_rotation_by(int amount)
@@ -407,7 +412,7 @@ int subgame_tetris::obj_tetromino::check_collision(vector<vector<bool>> shape, i
 	return 0;
 }
 
-vector<vector<bool>> subgame_tetris::obj_tetromino::get_sprite(int _index, int _rotation)
+vector<vector<bool>> get_sprite(int _index, int _rotation)
 {
 	return tetris_shapes.at(_index).at((_rotation + tetris_shapes.at(_index).size()) % tetris_shapes.at(_index).size());
 }
