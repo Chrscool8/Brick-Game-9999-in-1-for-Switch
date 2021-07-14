@@ -21,10 +21,101 @@ void subgame_tetris::subgame_init()
 // Runs every frame of the subgame unless the game is transitioning
 void subgame_tetris::subgame_step()
 {
-	//printf("Running Tetris!!\n");
-	if (keyboard_check_pressed_X(game))
+	if (phase == -1)
 	{
-		objects.push_back(std::make_unique<obj_tetromino>(game, grid_width(game.game_grid) / 2 - 2, 0));
+		// Be Prepared
+		phase = 0;
+	}
+	else if (phase == 0)
+	{
+		// Create Object
+		objects.push_back(std::make_unique<obj_tetromino>(game, grid_width(game.game_grid) / 2 - 1, -2));
+		phase = 1;
+	}
+	else if (phase == 1)
+	{
+		// Wait for no more object
+		if (!object_exists("obj_tetromino"))
+		{
+			phase = 2;
+		}
+	}
+	else if (phase == 2)
+	{
+		highlighted_rows.clear();
+		// Check Rows
+		game_object* rows = get_object_by_name("obj_tetris_rows");
+		if (rows != NULL)
+		{
+			obj_tetris_rows* row_obj = static_cast<obj_tetris_rows*>(rows);
+			int width = grid_width(row_obj->filled_blocks);
+			int height = grid_height(row_obj->filled_blocks);
+			print_debug(to_string(width) + " " + to_string(height));
+			for (int i = 0; i < height; i++)
+			{
+				bool filled = true;
+				for (int j = 0; j < width; j++)
+				{
+					if (!grid_get(row_obj->filled_blocks, j, i))
+					{
+						filled = false;
+						break;
+					}
+				}
+
+				if (filled)
+				{
+					highlighted_rows.push_back(i);
+					print_debug(to_string(i));
+				}
+			}
+		}
+
+		phase = 3;
+		ticker = 0;
+	}
+	else if (phase == 3)
+	{
+		// Animate Rows
+		ticker += 1;
+		game_object* rows = get_object_by_name("obj_tetris_rows");
+		if (rows != NULL)
+		{
+			obj_tetris_rows* row_obj = static_cast<obj_tetris_rows*>(rows);
+			for (unsigned int i = 0; i < highlighted_rows.size(); i++)
+			{
+				for (int j = 0; j < grid_width(row_obj->filled_blocks); j++)
+				{
+					grid_set(row_obj->filled_blocks, j, highlighted_rows.at(i), (ticker % 50) > 25);
+				}
+			}
+		}
+
+		if (ticker > 150 || highlighted_rows.empty())
+			phase = 4;
+	}
+	else if (phase == 4)
+	{
+		// Remove row
+		game_object* rows = get_object_by_name("obj_tetris_rows");
+		if (rows != NULL)
+		{
+			obj_tetris_rows* row_obj = static_cast<obj_tetris_rows*>(rows);
+
+			while (!highlighted_rows.empty())
+			{
+				//print_debug(to_string(highlighted_rows.size() - 1));
+				row_obj->shift_down(highlighted_rows.at(highlighted_rows.size() - 1));
+				highlighted_rows.erase(highlighted_rows.begin() + highlighted_rows.size() - 1);
+				game.incrementScore(1);
+				for (unsigned int i = 0; i < highlighted_rows.size(); i++)
+				{
+					highlighted_rows[i] += 1;
+				}
+			}
+		}
+
+		phase = 0;
 	}
 }
 
@@ -43,7 +134,7 @@ void subgame_tetris::subgame_exit()
 
 std::string subgame_tetris::subgame_controls_text()
 {
-	return "Left/Right: Move\nUp: Rotate";
+	return "D-Pad: Move\nA: Clockwise\nY: Counter-C";
 }
 
 subgame_tetris::obj_tetromino::obj_tetromino(BrickGameFramework& game, int _x, int _y) : game_object(game, _x, _y)
@@ -251,6 +342,26 @@ void subgame_tetris::obj_tetromino::destroy_function()
 
 }
 
+int subgame_tetris::obj_tetromino::check_off_top(vector<vector<bool>> shape, int _x, int _y)
+{
+	for (int i = 0; i < grid_width(shape); i++)
+	{
+		for (int j = 0; j < grid_height(shape); j++)
+		{
+			if (shape[j][i])
+			{
+				//print_debug("> "+to_string(_x + i) + " " + to_string(_y + j));
+				if (_y + j < 0)
+				{
+					return 5;
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
 // 0 - No Collision
 // 1 - Off Board Side Left
 // 2 - Off Board Side Right
@@ -317,6 +428,12 @@ void subgame_tetris::obj_tetromino::move_right()
 	}
 }
 
+void subgame_tetris::obj_tetromino::lose()
+{
+	game.running = false;
+	objects.push_back(std::make_unique<obj_explosion>(game, 5, 0));
+}
+
 void subgame_tetris::obj_tetromino::move_down()
 {
 	if (!check_collision(get_sprite(shape_index, angle), x, y + 1))
@@ -331,7 +448,10 @@ void subgame_tetris::obj_tetromino::move_down()
 			obj_tetris_rows* row_obj = static_cast<obj_tetris_rows*>(rows);
 
 			vector<vector<bool>> gtp = get_sprite(shape_index, angle);
-			place_grid_sprite(row_obj->filled_blocks, gtp, x, y, true);
+			place_grid_sprite(row_obj->filled_blocks, gtp, x, y);
+			//print_debug(to_string(x) + " " + to_string(y));
+			if (check_off_top(gtp, x, y))
+				lose();
 		}
 		instance_destroy();
 	}
@@ -366,9 +486,15 @@ void subgame_tetris::obj_tetris_rows::destroy_function()
 
 }
 
-void subgame_tetris::obj_tetris_rows::shift_down()
+void subgame_tetris::obj_tetris_rows::shift_down(int starting_at)
 {
-
+	for (int yy = starting_at; yy > 0; yy--)
+	{
+		for (int xx = 0; xx < grid_width(filled_blocks); xx++)
+		{
+			grid_set(filled_blocks, xx, yy, grid_get(filled_blocks, xx, yy - 1));
+		}
+	}
 }
 
 void subgame_tetris::obj_tetris_rows::check_rows()

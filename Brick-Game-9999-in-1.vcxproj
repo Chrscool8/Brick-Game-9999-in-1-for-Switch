@@ -14,7 +14,6 @@
     <None Include=".gitignore" />
     <None Include="Brick-Game-9999-in-1.elf" />
     <None Include="Brick-Game-9999-in-1.nacp" />
-    <None Include="Brick-Game-9999-in-1.nro" />
     <None Include="build_and_run.sh" />
     <None Include="Makefile" />
     <None Include="nanovg\.gitignore" />

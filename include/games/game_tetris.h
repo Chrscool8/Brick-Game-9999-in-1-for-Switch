@@ -9,6 +9,10 @@ using namespace std;
 class subgame_tetris : public subgame
 {
 public:
+	int phase = -1;
+	vector<int> highlighted_rows;
+	int ticker = 0;
+
 	class obj_tetris_rows : public game_object
 	{
 	public:
@@ -17,7 +21,7 @@ public:
 		virtual void draw_function() override;
 		virtual void destroy_function() override;
 		vector<vector<bool>> filled_blocks;
-		void shift_down();
+		void shift_down(int starting_at);
 		void check_rows();
 		int lowest_occupied_line(std::vector<std::vector<bool>>& grid);
 	};
@@ -42,6 +46,8 @@ public:
 
 		void check_spots(vector<vector<int>> potentials, vector<vector<bool>> sprite, int direction);
 		int check_collision(vector<vector<bool>> shape, int _x, int _y);
+		int check_off_top(vector<vector<bool>> shape, int _x, int _y);
+		void lose();
 		vector<vector<bool>> get_sprite(int index, int rotation);
 		void change_rotation_by(int i);
 		void move_left();
