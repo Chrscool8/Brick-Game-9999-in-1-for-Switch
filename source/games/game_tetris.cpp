@@ -4,7 +4,6 @@
 #include <controls.h>
 #include <game_tetris_shapes.h>
 
-
 // Let's the subgame know what main game it belongs to.
 subgame_tetris::subgame_tetris(BrickGameFramework& _parent) : subgame(_parent)
 {
@@ -23,7 +22,7 @@ void subgame_tetris::subgame_init()
 void subgame_tetris::subgame_step()
 {
 	//printf("Running Tetris!!\n");
-	if (keyboard_check_pressed_A(game))
+	if (keyboard_check_pressed_X(game))
 	{
 		objects.push_back(std::make_unique<obj_tetromino>(game, grid_width(game.game_grid) / 2 - 2, 0));
 	}
@@ -56,45 +55,138 @@ subgame_tetris::obj_tetromino::obj_tetromino(BrickGameFramework& game, int _x, i
 	shape_index = rand() % tetris_shapes.size();
 }
 
-void subgame_tetris::obj_tetromino::rotate_piece()
+void subgame_tetris::obj_tetromino::change_rotation_by(int amount)
 {
-	vector<vector<bool>> new_shape = get_sprite(shape_index, angle + 1);
-	int collision = check_collision(new_shape, x, y);
-	print_debug("Col: " + to_string(collision));
-	if (collision == 0)
+	angle = (angle + amount + tetris_shapes.at(shape_index).size()) % tetris_shapes.at(shape_index).size();
+}
+
+void subgame_tetris::obj_tetromino::check_spots(vector<vector<int>> _potentials, vector<vector<bool>> _sprite, int _direction)
+{
+	for (unsigned int i = 0; i < _potentials.size(); i++)
 	{
-		angle += 1;
-		return;
-	}
-	else if (collision == 1)
-	{
-		if (!check_collision(new_shape, x + 1, y))
+		int _x = _potentials.at(i)[0];
+		int _y = -_potentials.at(i)[1];
+
+		if (!check_collision(_sprite, x + _x, y + _y))
 		{
-			angle += 1;
-			x += 1;
-			return;
-		}
-		else if (!check_collision(new_shape, x + 2, y))
-		{
-			angle += 1;
-			x += 2;
-			return;
+			change_rotation_by(_direction);
+			x += _x;
+			y += _y;
+			break;
 		}
 	}
-	else if (collision == 2)
+}
+
+void subgame_tetris::obj_tetromino::rotate_piece(bool right)
+{
+	int iter = (((double)right) - .5) * 2;
+	vector<vector<bool>> new_shape = get_sprite(shape_index, angle + iter);
+
+	if (!check_collision(new_shape, x, y))
 	{
-		if (!check_collision(new_shape, x - 1, y))
+		change_rotation_by(iter);
+	}
+	else
+	{
+		vector<vector<int>> offset_tests;
+
+		// I piece
+		if (shape_index == 0)
 		{
-			angle += 1;
-			x -= 1;
-			return;
+			if (angle == 0)
+			{
+				if (iter == 1)
+				{
+					offset_tests = { {0, 0}, {-2, 0}, {1, 0}, {-2, -1}, {1, 2} };
+				}
+				else
+				{
+					offset_tests = { {0, 0}, {-1, 0}, {2, 0}, {-1, 2}, {2, -1} };
+				}
+			}
+			else if (angle == 1)
+			{
+				if (iter == 1)
+				{
+					offset_tests = { {0, 0}, {-1, 0}, {2, 0}, {-1, 2}, {2, -1} };
+				}
+				else
+				{
+					offset_tests = { {0, 0}, {2, 0}, {-1, 0}, {2, 1}, {-1, -2} };
+				}
+			}
+			else if (angle == 2)
+			{
+				if (iter == 1)
+				{
+					offset_tests = { {0, 0}, {2, 0}, {-1, 0}, {2, 1}, {-1, -2} };
+				}
+				else
+				{
+					offset_tests = { {0, 0}, {1, 0}, {-2, 0}, {1, -2}, {-2, 1} };
+				}
+			}
+			else if (angle == 3)
+			{
+				if (iter == 1)
+				{
+					offset_tests = { {0, 0}, {1, 0}, {-2, 0}, {1, -2}, {-2, 1} };
+				}
+				else
+				{
+					offset_tests = { {0, 0}, {-2, 0}, {1, 0}, {-2, -1}, {1, 2} };
+				}
+			}
 		}
-		else if (!check_collision(new_shape, x - 2, y))
+		// not I piece
+		else
 		{
-			angle += 1;
-			x -= 2;
-			return;
+			if (angle == 0)
+			{
+				if (iter == 1)
+				{
+					offset_tests = { {0, 0}, {-1, 0}, {-1, 1}, {0, -2}, {-1, -2} };
+				}
+				else
+				{
+					offset_tests = { {0, 0}, {1, 0}, {1, 1}, {0, -2}, {1, -2} };
+				}
+			}
+			else if (angle == 1)
+			{
+				if (iter == 1)
+				{
+					offset_tests = { {0, 0}, {1, 0}, {1, -1}, {0, 2}, {1, 2} };
+				}
+				else
+				{
+					offset_tests = { {0, 0}, {1, 0}, {1, -1}, {0, 2}, {1, 2} };
+				}
+			}
+			else if (angle == 2)
+			{
+				if (iter == 1)
+				{
+					offset_tests = { {0, 0}, {1, 0}, {1, +1}, {0, -2}, {1, -2} };
+				}
+				else
+				{
+					offset_tests = { {0, 0}, {-1, 0}, {-1, 1}, {0, -2}, {-1, -2} };
+				}
+			}
+			else if (angle == 3)
+			{
+				if (iter == 1)
+				{
+					offset_tests = { {0, 0}, {-1, 0}, {-1, -1}, {0, 2}, {-1, 2} };
+				}
+				else
+				{
+					offset_tests = { {0, 0}, {-1, 0}, {-1, -1}, {0, 2}, {-1, 2} };
+				}
+			}
 		}
+		check_spots(offset_tests, new_shape, iter);
 	}
 }
 
@@ -102,22 +194,38 @@ void subgame_tetris::obj_tetromino::step_function()
 {
 	if (moving)
 	{
-		if (keyboard_check_pressed_B(game))
-			instance_destroy();
+		if (keyboard_check_pressed_left(game) || keyboard_check_pressed_right(game) || keyboard_check_pressed_down(game))
+			time_til_move = 0;
 
-		if (keyboard_check_pressed_up(game))
-			rotate_piece();
+		if (keyboard_check_pressed_Y(game))
+			rotate_piece(false);
 
-		if (keyboard_check_pressed_left(game))
-			move_left();
+		if (keyboard_check_pressed_A(game))
+			rotate_piece(true);
 
-		if (keyboard_check_pressed_right(game))
-			move_right();
+		if (keyboard_check_left(game))
+			if (time_til_move <= 0)
+				move_left();
 
-		if (keyboard_check_pressed_down(game))
+		if (keyboard_check_right(game))
+			if (time_til_move <= 0)
+				move_right();
+
+		if (keyboard_check_down(game))
 		{
-			move_down();
-			time_til_drop_move = pause_time_drop;
+			if (time_til_move <= 0)
+			{
+				move_down();
+				time_til_drop_move = pause_time_drop;
+			}
+		}
+
+		if (keyboard_check_left(game) || keyboard_check_right(game) || keyboard_check_down(game))
+		{
+			if (time_til_move <= 0)
+				time_til_move = pause_time;
+			else
+				time_til_move -= 1;
 		}
 
 		if (time_til_drop_move > 0)
@@ -134,7 +242,8 @@ void subgame_tetris::obj_tetromino::step_function()
 
 void subgame_tetris::obj_tetromino::draw_function()
 {
-	place_grid_sprite(game.game_grid, tetris_shapes.at(shape_index).at(angle % tetris_shapes.at(shape_index).size()), x, y);
+	vector<vector<bool>> spr = get_sprite(shape_index, angle);
+	place_grid_sprite(game.game_grid, spr, x, y, true);
 }
 
 void subgame_tetris::obj_tetromino::destroy_function()
@@ -187,9 +296,9 @@ int subgame_tetris::obj_tetromino::check_collision(vector<vector<bool>> shape, i
 	return 0;
 }
 
-vector<vector<bool>> subgame_tetris::obj_tetromino::get_sprite(int index, int rotation)
+vector<vector<bool>> subgame_tetris::obj_tetromino::get_sprite(int _index, int _rotation)
 {
-	return tetris_shapes.at(index).at(rotation % tetris_shapes.at(index).size());
+	return tetris_shapes.at(_index).at((_rotation + tetris_shapes.at(_index).size()) % tetris_shapes.at(_index).size());
 }
 
 void subgame_tetris::obj_tetromino::move_left()
@@ -259,10 +368,12 @@ void subgame_tetris::obj_tetris_rows::destroy_function()
 
 void subgame_tetris::obj_tetris_rows::shift_down()
 {
+
 }
 
 void subgame_tetris::obj_tetris_rows::check_rows()
 {
+
 }
 
 int subgame_tetris::obj_tetris_rows::lowest_occupied_line(std::vector<std::vector<bool>>& grid)

@@ -28,9 +28,10 @@ public:
 		int angle = 0;
 		int shape_index = 0;
 		int color_index = 0;
-
+		int time_til_move = 0;
 		int pause_time_drop = 5;
 		int time_til_drop_move = 0;
+		int pause_time = 5;
 
 		bool moving = true;
 
@@ -39,8 +40,10 @@ public:
 		virtual void draw_function() override;
 		virtual void destroy_function() override;
 
+		void check_spots(vector<vector<int>> potentials, vector<vector<bool>> sprite, int direction);
 		int check_collision(vector<vector<bool>> shape, int _x, int _y);
 		vector<vector<bool>> get_sprite(int index, int rotation);
+		void change_rotation_by(int i);
 		void move_left();
 		void move_right();
 		void move_down();
