@@ -1,4 +1,4 @@
-# Brick Game - 9999-in-1 - for Switch
+# [Brick Game - 9999-in-1 - for Switch](https://gbatemp.net/threads/brick-game-9999-in-1-clone-project.586221/)
 
 Just for fun
 
