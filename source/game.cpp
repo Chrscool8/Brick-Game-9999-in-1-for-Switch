@@ -6,8 +6,6 @@
 #include <grid.hpp>
 #include <vector>
 #include <game.h>
-#include "nanovg.h"
-#include "nanovg_dk.h"
 #include <nanovg/framework/CMemPool.h>
 #include <nanovg/framework/CApplication.h>
 #include <switch/runtime/devices/socket.h>
@@ -28,6 +26,23 @@
 using namespace std;
 
 vector<std::unique_ptr<subgame>> game_list;
+
+static int nxlink_sock = -1;
+
+extern "C" void userAppInit(void)
+{
+	romfsInit();
+	socketInitialize(NULL);
+	nxlink_sock = nxlinkConnectToHost(true, true);
+}
+
+extern "C" void userAppExit(void)
+{
+	if (nxlink_sock != -1)
+		close(nxlink_sock);
+	socketExit();
+	romfsExit();
+}
 
 BrickGameFramework::BrickGameFramework()
 {
@@ -185,21 +200,21 @@ void renderGame(BrickGameFramework& game, float mx, float my, float t)
 	pop_graphics();
 }
 
-void draw_digital_display(NVGcontext* vg, std::string display_string, int x, int y, std::string title, int angle = 0, unsigned int length = 8)
+void draw_digital_display(std::string display_string, int x, int y, std::string title, int angle = 0, unsigned int length = 8)
 {
-	nvgSave(vg);
-	nvgTranslate(vg, x, y);
-	nvgRotate(vg, nvgDegToRad(angle));
+	push_graphics();
+	gfx_translate(x, y);
+	gfx_rotate(nvgDegToRad(angle));
 
-	nvgFontFace(vg, "kongtext");
-	nvgFontSize(vg, 24);
-	nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-	nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-	nvgText(vg, 3, 0, title.c_str(), NULL);
+	set_font("kongtext");
+	set_font_size(24);
+	set_text_align(TEXT_ALIGN_LEFT | TEXT_ALIGN_TOP);
+	draw_set_fill_color(0, 0, 0, 255);
+	draw_text(3, 0, title.c_str());
 
-	nvgFontFace(vg, "seg");
-	nvgFontSize(vg, 40);
-	nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+	set_font("seg");
+	set_font_size(40);
+	set_text_align(TEXT_ALIGN_LEFT | TEXT_ALIGN_TOP);
 
 	std::string temp_score = display_string;
 
@@ -208,14 +223,14 @@ void draw_digital_display(NVGcontext* vg, std::string display_string, int x, int
 
 	for (unsigned int i = 0; i < length; i++)
 	{
-		nvgFillColor(vg, nvgRGBA(97, 112, 91, 255));
-		nvgText(vg, (i * 30), 28, "8", NULL);
-		nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+		draw_set_fill_color(97, 112, 91, 255);
+		draw_text((i * 30), 28, "8");
+		draw_set_fill_color(0, 0, 0, 255);
 		std::string charat(1, temp_score.at(i));
-		nvgText(vg, (i * 30), 28, charat.c_str(), NULL);
+		draw_text((i * 30), 28, charat.c_str());
 	}
 
-	nvgRestore(vg);
+	pop_graphics();
 }
 
 void BrickGameFramework::render(u64 ns)
@@ -236,13 +251,13 @@ void BrickGameFramework::render(u64 ns)
 			gfx_translate(150, 80);
 			draw_set_font("vcrtext");
 			draw_set_font_size(72);
-			nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-			nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-			nvgText(vg, 3, 0, current_game_name.c_str(), NULL);
-			nvgRestore(vg);
+			draw_set_font_align(TEXT_ALIGN_LEFT | TEXT_ALIGN_TOP);
+			draw_set_fill_color(0, 0, 0, 255);
+			draw_text(3, 0, current_game_name.c_str());
+			pop_graphics();
 
-			draw_digital_display(vg, score_display, 865, 70, "Score");
-			draw_digital_display(vg, highscore_display, 865, 165, "High Score");
+			draw_digital_display(score_display, 865, 70, "Score");
+			draw_digital_display(highscore_display, 865, 165, "High Score");
 
 			if (current_game != -1)
 			{
@@ -260,21 +275,21 @@ void BrickGameFramework::render(u64 ns)
 
 				if (!controls_text.empty())
 				{
-					nvgSave(vg);
-					nvgTranslate(vg, 865, 475);
-					nvgFontFace(vg, "kongtext");
-					nvgFontSize(vg, 16);
-					nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-					nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
-					nvgTextBox(vg, 3, 0, 1000, controls_text.c_str(), NULL);
-					nvgRestore(vg);
+					push_graphics();
+					gfx_translate(865, 475);
+					set_font("kongtext");
+					set_font_size(16);
+					draw_set_font_align(TEXT_ALIGN_LEFT | TEXT_ALIGN_TOP);
+					draw_set_fill_color(0, 0, 0, 255);
+					draw_text_width(3, 0, 1000, controls_text.c_str());
+					pop_graphics();
 				}
 			}
 		}
 		else if (screen_orientation == orientation_left_down)
 		{
-			draw_digital_display(vg, score_display, 1235, 720 / 2 - wid - 30, "Score", 90);
-			draw_digital_display(vg, highscore_display, 1235, 720 / 2 + 30, "High Score", 90);
+			draw_digital_display(score_display, 1235, 720 / 2 - wid - 30, "Score", 90);
+			draw_digital_display(highscore_display, 1235, 720 / 2 + 30, "High Score", 90);
 		}
 	}
 

@@ -84,7 +84,7 @@ void subgame_menu::subgame_draw()
 	set_font("vcrtext");
 	set_font_size(48);
 	set_text_align(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-	gfx_set_fill_color(0, 0, 0, 255);
+	draw_set_fill_color(0, 0, 0, 255);
 	draw_text(3, 0, game_list.at(selected_game)->name);
 	pop_graphics();
 

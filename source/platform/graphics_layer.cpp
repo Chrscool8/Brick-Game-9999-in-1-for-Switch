@@ -1,7 +1,5 @@
-#include <string>
-#include "nanovg.h"
+#include <platform/graphics_layer.h>
 #include <platform/switch/graphics_layer_switch.h>
-#include "..\..\include\platform\graphics_layer.h"
 
 void initialize_graphics(unsigned int width, unsigned int height)
 {
@@ -13,9 +11,9 @@ void load_sprite(std::string sprite_name, std::string filename)
 	load_sprite_switch(sprite_name, filename);
 }
 
-void draw_sprite(float x, float y, float width, float height, std::string sprite_name)
+bool draw_sprite(float x, float y, float width, float height, std::string sprite_name)
 {
-	draw_sprite_switch(x, y, width, height, sprite_name);
+	return draw_sprite_switch(x, y, width, height, sprite_name);
 }
 
 void load_fonts()
@@ -68,14 +66,19 @@ void set_text_align(int alignment)
 	set_text_align_switch(alignment);
 }
 
-void gfx_set_fill_color(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+void draw_set_fill_color(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
-	gfx_set_fill_color_switch(r, g, b, a);
+	draw_set_fill_color_switch(r, g, b, a);
 }
 
 void draw_text(float x, float y, std::string text)
 {
 	draw_text_switch(x, y, text);
+}
+
+void draw_text_width(float x, float y, float line_break, std::string text)
+{
+	draw_text_width_switch(x, y, line_break, text);
 }
 
 void gfx_start_frame()
@@ -106,4 +109,9 @@ void draw_set_font(std::string fontname)
 void draw_set_font_size(float size)
 {
 	draw_set_font_size_switch(size);
+}
+
+void draw_set_font_align(int align)
+{
+	draw_set_font_align_switch(align);
 }

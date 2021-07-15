@@ -1,28 +1,43 @@
-#include <cstdint>
-#include <deko3d.hpp>
 #include <optional>
 #include <nanovg_dk.h>
 #include <string>
 #include <platform/switch/graphics_layer_switch.h>
 
+class graph_lib
+{
+public:
+	uint32_t FramebufferWidth;
+	uint32_t FramebufferHeight;
+	unsigned StaticCmdSize;
+
+	dk::UniqueDevice device;
+	dk::UniqueQueue queue;
+
+	std::optional<CMemPool> pool_images;
+	std::optional<CMemPool> pool_code;
+	std::optional<CMemPool> pool_data;
+
+	dk::UniqueCmdBuf cmdbuf;
+
+	static const int NumFramebuffers = 2;
+
+	CMemPool::Handle depthBuffer_mem;
+	CMemPool::Handle framebuffers_mem[NumFramebuffers];
+
+	dk::Image depthBuffer;
+	dk::Image framebuffers[NumFramebuffers];
+	DkCmdList framebuffer_cmdlists[NumFramebuffers];
+	dk::UniqueSwapchain swapchain;
+
+	DkCmdList render_cmdlist;
+	NVGcontext* vg;
+
+	std::optional<nvg::DkRenderer> renderer;
+
+	int slot;
+};
+
 graph_lib GL;
-
-static int nxlink_sock = -1;
-
-extern "C" void userAppInit(void)
-{
-	romfsInit();
-	socketInitialize(NULL);
-	nxlink_sock = nxlinkConnectToHost(true, true);
-}
-
-extern "C" void userAppExit(void)
-{
-	if (nxlink_sock != -1)
-		close(nxlink_sock);
-	socketExit();
-	romfsExit();
-}
 
 void OutputDkDebug(void* userData, const char* context, DkResult result, const char* message)
 {
@@ -243,7 +258,7 @@ void set_text_align_switch(int alignment)
 	nvgTextAlign(GL.vg, alignment);
 }
 
-void gfx_set_fill_color_switch(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+void draw_set_fill_color_switch(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
 	nvgFillColor(GL.vg, nvgRGBA(r, g, b, a));
 }
@@ -251,6 +266,11 @@ void gfx_set_fill_color_switch(unsigned char r, unsigned char g, unsigned char b
 void draw_text_switch(float x, float y, std::string text)
 {
 	nvgText(GL.vg, x, y, text.c_str(), NULL);
+}
+
+void draw_text_width_switch(float x, float y, float line_break, std::string text)
+{
+	nvgTextBox(GL.vg, x, y, line_break, text.c_str(), NULL);
 }
 
 std::map<std::string, int> sprite_indicies;
@@ -334,4 +354,9 @@ void draw_set_font_switch(std::string fontname)
 void draw_set_font_size_switch(float size)
 {
 	nvgFontSize(GL.vg, size);
+}
+
+void draw_set_font_align_switch(int align)
+{
+	nvgTextAlign(GL.vg, align);
 }

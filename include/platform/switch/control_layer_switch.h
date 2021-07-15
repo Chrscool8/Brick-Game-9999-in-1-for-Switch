@@ -1,12 +1,4 @@
 #pragma once
-#include <switch/runtime/pad.h>
-#include <game.h>
-
-class control_lib
-{
-public:
-	PadState pad;
-};
 
 void init_controllers_switch();
 void update_controllers_switch();
