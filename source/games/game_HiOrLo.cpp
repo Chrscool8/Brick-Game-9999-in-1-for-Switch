@@ -3,8 +3,8 @@
 #include <games/game_HiOrLo.h>
 #include <grid_sprites.h>
 #include <grid_sprites_numbers.h>
-#include <controls.h>
 #include <utils.hpp>
+#include <platform/control_layer.h>
 
 subgame_HiOrLo::subgame_HiOrLo(BrickGameFramework& _parent) : subgame(_parent)
 {
@@ -28,7 +28,7 @@ void subgame_HiOrLo::subgame_init()
 
 void subgame_HiOrLo::subgame_step()
 {
-	if (keyboard_check_pressed_up(game))
+	if (keyboard_check_pressed_up())
 	{
 		if (next_number > current_number)
 		{
@@ -42,7 +42,7 @@ void subgame_HiOrLo::subgame_step()
 		}
 	}
 
-	if (keyboard_check_pressed_down(game))
+	if (keyboard_check_pressed_down())
 	{
 		if (next_number < current_number)
 		{
@@ -56,7 +56,7 @@ void subgame_HiOrLo::subgame_step()
 		}
 	}
 
-	if (keyboard_check_pressed_A(game))
+	if (keyboard_check_pressed_A())
 	{
 		if (next_number == current_number)
 		{
@@ -72,7 +72,7 @@ void subgame_HiOrLo::subgame_step()
 		}
 	}
 
-	if (keyboard_check_pressed_up(game) || keyboard_check_pressed_down(game) || keyboard_check_pressed_A(game))
+	if (keyboard_check_pressed_up() || keyboard_check_pressed_down() || keyboard_check_pressed_A())
 	{
 		current_number = next_number;
 		next_number = get_next_num();

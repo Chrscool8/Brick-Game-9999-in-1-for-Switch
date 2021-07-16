@@ -8,9 +8,9 @@
 #include <grid_sprites.h>
 #include <grid_sprites_alphabet.h>
 #include <math.h>
-#include <controls.h>
 #include <utils/scores.h>
-#include <utils/sprites.h>
+#include <platform/control_layer.h>
+#include <platform/graphics_layer.h>
 
 subgame_menu::subgame_menu(BrickGameFramework& _parent) : subgame(_parent)
 {
@@ -35,12 +35,12 @@ void subgame_menu::subgame_init()
 
 void subgame_menu::subgame_step()
 {
-	if (keyboard_check_pressed_left(game))
+	if (keyboard_check_pressed_left())
 	{
 		selected_game -= 1;
 	}
 
-	if (keyboard_check_pressed_right(game))
+	if (keyboard_check_pressed_right())
 	{
 		selected_game += 1;
 	}
@@ -53,7 +53,7 @@ void subgame_menu::subgame_step()
 		selected_game -= game_list.size();
 	}
 
-	if (keyboard_check_pressed_left(game) || keyboard_check_pressed_right(game))
+	if (keyboard_check_pressed_left() || keyboard_check_pressed_right())
 	{
 		game.setScoreDisplay("---");
 		try {
@@ -65,7 +65,7 @@ void subgame_menu::subgame_step()
 		}
 	}
 
-	if (keyboard_check_pressed_A(game))
+	if (keyboard_check_pressed_A())
 	{
 		game.SwitchToGame(selected_game);
 	}
@@ -78,25 +78,24 @@ void subgame_menu::subgame_draw()
 {
 	game_list.at(selected_game)->subgame_demo();
 
-	nvgSave(game.vg);
-	nvgTranslate(game.vg, 150 + 15, 80 + 64);
-	//nvgRotate(vg, nvgDegToRad(angle));
+	push_graphics();
+	gfx_translate(165, 144);
 
-	nvgFontFace(game.vg, "vcrtext");
-	nvgFontSize(game.vg, 48);
-	nvgTextAlign(game.vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
-	nvgFillColor(game.vg, nvgRGBA(0, 0, 0, 255));
-	nvgText(game.vg, 3, 0, game_list.at(selected_game)->name.c_str(), NULL);
-	nvgRestore(game.vg);
+	set_font("vcrtext");
+	set_font_size(48);
+	set_text_align(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+	draw_set_fill_color(0, 0, 0, 255);
+	draw_text(3, 0, game_list.at(selected_game)->name);
+	pop_graphics();
 
-	for (unsigned int i = 0; i < game_list.size(); i++)
+	for (size_t i = 0; i < game_list.size(); i++)
 	{
 		int size = 15;
 		int xx = (1280 / 2) - (game_list.size() * (size + 15) / 2) + (i * (size + 15)) - 10;
 		if (i == selected_game)
-			draw_sprite(game.vg, xx, 720 - 30, size, size, "spr_page_blip_selected");
+			draw_sprite(xx, 720 - 30, size, size, "spr_page_blip_selected");
 		else
-			draw_sprite(game.vg, xx, 720 - 30, size, size, "spr_page_blip_unselected");
+			draw_sprite(xx, 720 - 30, size, size, "spr_page_blip_unselected");
 	}
 }
 

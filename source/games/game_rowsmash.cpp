@@ -2,8 +2,8 @@
 #include <game.h>
 #include <games/game_rowsmash.h>
 #include <grid_sprites.h>
-#include <controls.h>
 #include <algorithm>
+#include <platform/control_layer.h>
 
 subgame_rowsmash::subgame_rowsmash(BrickGameFramework& _parent) : subgame(_parent)
 {
@@ -163,10 +163,10 @@ subgame_rowsmash::obj_player::obj_player(BrickGameFramework& game, int _x, int _
 
 void subgame_rowsmash::obj_player::step_function()
 {
-	if (keyboard_check_pressed_left(game) || keyboard_check_pressed_right(game))
+	if (keyboard_check_pressed_left() || keyboard_check_pressed_right())
 		time_til_move = 0;
 
-	if (keyboard_check_left(game))
+	if (keyboard_check_left())
 	{
 		if (time_til_move <= 0)
 		{
@@ -174,7 +174,7 @@ void subgame_rowsmash::obj_player::step_function()
 		}
 	}
 
-	if (keyboard_check_right(game))
+	if (keyboard_check_right())
 	{
 		if (time_til_move <= 0)
 		{
@@ -182,7 +182,7 @@ void subgame_rowsmash::obj_player::step_function()
 		}
 	}
 
-	if (keyboard_check_left(game) || keyboard_check_right(game))
+	if (keyboard_check_left() || keyboard_check_right())
 	{
 		if (time_til_move <= 0)
 			time_til_move = pause_time;// *fast_forwarder_half();
@@ -199,7 +199,7 @@ void subgame_rowsmash::obj_player::step_function()
 		time_til_shoot -= 1;
 	}
 
-	if (keyboard_check_A(game))
+	if (keyboard_check_A())
 	{
 		if (time_til_shoot == 0)
 		{

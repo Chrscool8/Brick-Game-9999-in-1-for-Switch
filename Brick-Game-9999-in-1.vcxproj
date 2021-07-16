@@ -14,6 +14,7 @@
     <None Include=".gitignore" />
     <None Include="Brick-Game-9999-in-1.elf" />
     <None Include="Brick-Game-9999-in-1.nacp" />
+    <None Include="Brick-Game-9999-in-1.nro" />
     <None Include="build_and_run.sh" />
     <None Include="Makefile" />
     <None Include="nanovg\.gitignore" />
@@ -37,7 +38,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\audio.h" />
-    <ClInclude Include="include\controls.h" />
     <ClInclude Include="include\extern\nlohmann\json.hpp" />
     <ClInclude Include="include\game.h" />
     <ClInclude Include="include\games\game_HiOrLo.h" />
@@ -47,8 +47,11 @@
     <ClInclude Include="include\games\game_rowfill.h" />
     <ClInclude Include="include\games\game_rowsmash.h" />
     <ClInclude Include="include\games\game_snake.h" />
-    <ClInclude Include="include\games\game_tetris.h" />
-    <ClInclude Include="include\games\game_tetris_shapes.h" />
+    <ClInclude Include="include\platform\control_layer.h" />
+    <ClInclude Include="include\platform\graphics_layer.h" />
+    <ClInclude Include="include\platform\pc\graphics_layer_pc.h" />
+    <ClInclude Include="include\platform\switch\control_layer_switch.h" />
+    <ClInclude Include="include\platform\switch\graphics_layer_switch.h" />
     <ClInclude Include="include\grid.hpp" />
     <ClInclude Include="include\grid_sprites.h" />
     <ClInclude Include="include\grid_sprites_alphabet.h" />
@@ -56,12 +59,12 @@
     <ClInclude Include="include\object_manager.h" />
     <ClInclude Include="include\other.h" />
     <ClInclude Include="include\games\subgame.h" />
-    <ClInclude Include="include\settings.h" />
+    <ClInclude Include="include\utils\settings.h" />
+    <ClInclude Include="include\utils\update.h" />
     <ClInclude Include="include\utils.hpp" />
     <ClInclude Include="include\utils\base64.h" />
     <ClInclude Include="include\games\game_template.h" />
     <ClInclude Include="include\utils\scores.h" />
-    <ClInclude Include="include\utils\sprites.h" />
     <ClInclude Include="nanovg\example\source\demo.h" />
     <ClInclude Include="nanovg\example\source\perf.h" />
     <ClInclude Include="nanovg\include\nanovg.h" />
@@ -98,7 +101,6 @@
     <ClCompile Include="nanovg\source\framework\FileLoader.cpp" />
     <ClCompile Include="nanovg\source\nanovg.c" />
     <ClCompile Include="source\audio.cpp" />
-    <ClCompile Include="source\controls.cpp" />
     <ClCompile Include="source\game.cpp" />
     <ClCompile Include="source\games\game_HiOrLo.cpp" />
     <ClCompile Include="source\games\game_menu.cpp" />
@@ -107,7 +109,6 @@
     <ClCompile Include="source\games\game_rowfill.cpp" />
     <ClCompile Include="source\games\game_rowsmash.cpp" />
     <ClCompile Include="source\games\game_snake.cpp" />
-    <ClCompile Include="source\games\game_tetris.cpp" />
     <ClCompile Include="source\grid.cpp" />
     <ClCompile Include="source\grid_sprites.cpp" />
     <ClCompile Include="source\grid_sprites_alphabet.cpp" />
@@ -115,12 +116,17 @@
     <ClCompile Include="source\object_manager.cpp" />
     <ClCompile Include="source\perf.cpp" />
     <ClCompile Include="source\games\subgame.cpp" />
+    <ClCompile Include="source\platform\control_layer.cpp" />
+    <ClCompile Include="source\platform\switch\control_layer_switch.cpp" />
     <ClCompile Include="source\settings.cpp" />
     <ClCompile Include="source\utils.cpp" />
     <ClCompile Include="source\utils\base64.cpp" />
     <ClCompile Include="source\games\game_template.cpp" />
+    <ClCompile Include="source\platform\graphics_layer.cpp" />
+    <ClCompile Include="source\platform\pc\graphics_layer_pc.cpp" />
+    <ClCompile Include="source\platform\switch\graphics_layer_switch.cpp" />
     <ClCompile Include="source\utils\scores.cpp" />
-    <ClCompile Include="source\utils\sprites.cpp" />
+    <ClCompile Include="source\utils\update.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="nanovg\lib\libnanovg.a" />

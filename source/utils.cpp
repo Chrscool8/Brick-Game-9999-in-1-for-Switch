@@ -64,3 +64,15 @@ double lengthdir_y(double length, double direction_degrees)
 {
 	return length * -sin(nvgDegToRad(direction_degrees));
 }
+
+#define PI 3.14159265358979323846264338327f
+
+float DegToRad(float deg)
+{
+	return deg / 180.0f * PI;
+}
+
+float RadToDeg(float rad)
+{
+	return rad / PI * 180.0f;
+}

@@ -1,8 +1,8 @@
 #include <vector>
 #include <games/game_race.h>
 #include <grid_sprites.h>
-#include <controls.h>
 #include <algorithm>
+#include <platform/control_layer.h>
 
 using namespace std;
 
@@ -22,12 +22,12 @@ subgame_race::obj_player_car::obj_player_car(BrickGameFramework& game, int _x, i
 
 void subgame_race::obj_player_car::step_function()
 {
-	if (keyboard_check_pressed_left(game) || keyboard_check_pressed_right(game) || keyboard_check_pressed_up(game) || keyboard_check_pressed_down(game))
+	if (keyboard_check_pressed_left() || keyboard_check_pressed_right() || keyboard_check_pressed_up() || keyboard_check_pressed_down())
 		time_til_move = 0;
 
 	//
 
-	if (keyboard_check_left(game))
+	if (keyboard_check_left())
 	{
 		if (time_til_move <= 0)
 		{
@@ -35,7 +35,7 @@ void subgame_race::obj_player_car::step_function()
 		}
 	}
 
-	if (keyboard_check_right(game))
+	if (keyboard_check_right())
 	{
 		if (time_til_move <= 0)
 		{
@@ -43,7 +43,7 @@ void subgame_race::obj_player_car::step_function()
 		}
 	}
 
-	if (keyboard_check_up(game))
+	if (keyboard_check_up())
 	{
 		if (time_til_move <= 0)
 		{
@@ -51,7 +51,7 @@ void subgame_race::obj_player_car::step_function()
 		}
 	}
 
-	if (keyboard_check_down(game))
+	if (keyboard_check_down())
 	{
 		if (time_til_move <= 0)
 		{
@@ -59,7 +59,7 @@ void subgame_race::obj_player_car::step_function()
 		}
 	}
 
-	if (keyboard_check_left(game) || keyboard_check_right(game) || keyboard_check_up(game) || keyboard_check_down(game))
+	if (keyboard_check_left() || keyboard_check_right() || keyboard_check_up() || keyboard_check_down())
 	{
 		if (time_til_move <= 0)
 			time_til_move = 5 * fast_forwarder_half();
