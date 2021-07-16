@@ -19,6 +19,7 @@
 #include <games/game_rowfill.h>
 #include <games/game_rowsmash.h>
 #include <games/game_HiOrLo.h>
+#include <games/game_tetris.h>
 #include <utils/settings.h>
 #include <platform/control_layer.h>
 #include <platform/graphics_layer.h>
@@ -83,6 +84,7 @@ BrickGameFramework::BrickGameFramework()
 	game_grid = grid_create(10, 20);
 
 	game_list.push_back(std::make_unique<subgame_menu>(*this));
+	game_list.push_back(std::make_unique<subgame_tetris>(*this));
 	game_list.push_back(std::make_unique<subgame_snake>(*this));
 	game_list.push_back(std::make_unique<subgame_race>(*this));
 	game_list.push_back(std::make_unique<subgame_pong>(*this));
@@ -483,7 +485,6 @@ bool BrickGameFramework::onFrame(u64 ns)
 
 		transition(game_grid, transition_percent);
 	}
-
 
 	if (keyboard_check_pressed_select())
 	{

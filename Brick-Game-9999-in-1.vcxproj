@@ -47,6 +47,8 @@
     <ClInclude Include="include\games\game_rowfill.h" />
     <ClInclude Include="include\games\game_rowsmash.h" />
     <ClInclude Include="include\games\game_snake.h" />
+    <ClInclude Include="include\games\game_tetris.h" />
+    <ClInclude Include="include\games\game_tetris_shapes.h" />
     <ClInclude Include="include\platform\control_layer.h" />
     <ClInclude Include="include\platform\graphics_layer.h" />
     <ClInclude Include="include\platform\pc\graphics_layer_pc.h" />
@@ -109,6 +111,7 @@
     <ClCompile Include="source\games\game_rowfill.cpp" />
     <ClCompile Include="source\games\game_rowsmash.cpp" />
     <ClCompile Include="source\games\game_snake.cpp" />
+    <ClCompile Include="source\games\game_tetris.cpp" />
     <ClCompile Include="source\grid.cpp" />
     <ClCompile Include="source\grid_sprites.cpp" />
     <ClCompile Include="source\grid_sprites_alphabet.cpp" />

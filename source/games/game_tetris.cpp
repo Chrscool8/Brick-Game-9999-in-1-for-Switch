@@ -1,8 +1,8 @@
 #include <games/game_tetris.h>
 #include <games/game_race.h>
 #include <grid_sprites.h>
-#include <controls.h>
 #include <game_tetris_shapes.h>
+#include <platform/control_layer.h>
 
 // Let's the subgame know what main game it belongs to.
 subgame_tetris::subgame_tetris(BrickGameFramework& _parent) : subgame(_parent)
@@ -127,7 +127,7 @@ void subgame_tetris::subgame_draw()
 	vector<vector<bool>> spr = get_sprite(next_piece, 0);
 	vector<vector<bool>> small_grid = grid_create(4, 4);
 	place_grid_sprite(small_grid, spr, (grid_width(spr) <= 3), (grid_height(spr) <= 3));
-	draw_grid(game.vg, small_grid, 1280 * .75, 720 / 2, 31);
+	//draw_grid(game.vg, small_grid, 1280 * .75, 720 / 2, 31);
 }
 
 // Clean up subgame objects here, runs once when the game is changing to a different
@@ -290,24 +290,24 @@ void subgame_tetris::obj_tetromino::step_function()
 {
 	if (moving)
 	{
-		if (keyboard_check_pressed_left(game) || keyboard_check_pressed_right(game) || keyboard_check_pressed_down(game))
+		if (keyboard_check_pressed_left() || keyboard_check_pressed_right() || keyboard_check_pressed_down())
 			time_til_move = 0;
 
-		if (keyboard_check_pressed_Y(game))
+		if (keyboard_check_pressed_Y())
 			rotate_piece(false);
 
-		if (keyboard_check_pressed_A(game))
+		if (keyboard_check_pressed_A())
 			rotate_piece(true);
 
-		if (keyboard_check_left(game))
+		if (keyboard_check_left())
 			if (time_til_move <= 0)
 				move_left();
 
-		if (keyboard_check_right(game))
+		if (keyboard_check_right())
 			if (time_til_move <= 0)
 				move_right();
 
-		if (keyboard_check_down(game))
+		if (keyboard_check_down())
 		{
 			if (time_til_move <= 0)
 			{
@@ -316,7 +316,7 @@ void subgame_tetris::obj_tetromino::step_function()
 			}
 		}
 
-		if (keyboard_check_left(game) || keyboard_check_right(game) || keyboard_check_down(game))
+		if (keyboard_check_left() || keyboard_check_right() || keyboard_check_down())
 		{
 			if (time_til_move <= 0)
 				time_til_move = pause_time;

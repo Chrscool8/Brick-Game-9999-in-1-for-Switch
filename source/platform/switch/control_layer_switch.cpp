@@ -1,5 +1,6 @@
-#include <platform/switch/control_layer_switch.h>
 #include <switch.h>
+#include <platform/switch/control_layer_switch.h>
+#include <utils.hpp>
 
 class control_lib
 {
