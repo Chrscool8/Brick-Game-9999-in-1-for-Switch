@@ -80,6 +80,8 @@ public:
 static bool fast_forward = false;
 double fast_forwarder_half();
 
+void draw_grid(vector<vector<bool>> _grid, float _x, float _y, double cell_size);
+
 void renderGame(BrickGameFramework& game, float mx, float my, float t);
 
 #endif // !GAME_H

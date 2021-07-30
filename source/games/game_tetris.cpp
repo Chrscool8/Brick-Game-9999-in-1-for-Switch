@@ -127,7 +127,7 @@ void subgame_tetris::subgame_draw()
 	vector<vector<bool>> spr = get_sprite(next_piece, 0);
 	vector<vector<bool>> small_grid = grid_create(4, 4);
 	place_grid_sprite(small_grid, spr, (grid_width(spr) <= 3), (grid_height(spr) <= 3));
-	//draw_grid(game.vg, small_grid, 1280 * .75, 720 / 2, 31);
+	draw_grid(small_grid, 1280 * .75, 720 / 2, 31);
 }
 
 // Clean up subgame objects here, runs once when the game is changing to a different

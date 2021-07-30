@@ -98,6 +98,72 @@ BrickGameFramework::~BrickGameFramework()
 	exit_graphics();
 }
 
+void draw_grid(vector<vector<bool>> _grid, float _x, float _y, double cell_size)
+{
+	push_graphics();
+	float angle = 0;
+	float scale = 1;
+	gfx_translate(_x, _y);
+	gfx_rotate(angle);
+	int cell_width = cell_size * scale;
+	int cell_height = cell_size * scale;
+	int draw_grid_width = grid_width(_grid);
+	int draw_grid_height = grid_height(_grid);
+	int grid_offset_x = (-(draw_grid_width * cell_width)) / 2.;
+	int grid_offset_y = (-(draw_grid_height * cell_height)) / 2.;
+	int border_size = 5;
+
+	draw_rounded_rect(grid_offset_x - border_size, grid_offset_y - border_size, cell_width * draw_grid_width + border_size * 2, cell_height * draw_grid_height + border_size * 2, border_size, 0, 0, 0, 255);
+	draw_rect(grid_offset_x, grid_offset_y, cell_width * draw_grid_width, cell_height * draw_grid_height, 109, 120, 92, 255);
+
+	for (int i = 0; i < draw_grid_width; i += 2)
+	{
+		for (int j = 0; j < draw_grid_height; j += 2)
+		{
+			float x = grid_offset_x + (i)*cell_width;
+			float y = grid_offset_y + (j)*cell_height;
+			bool ul = grid_get(_grid, i, j);
+			bool ur = grid_get(_grid, i + 1, j);
+			bool bl = grid_get(_grid, i, j + 1);
+			bool br = grid_get(_grid, i + 1, j + 1);
+			unsigned int pos = 1 * ul + 2 * ur + 4 * bl + 8 * br;
+			std::string num = std::to_string(pos);
+
+			if (pos < 10)
+				num = "0" + num;
+			if (i + 2 <= draw_grid_width && j + 2 <= draw_grid_height)
+			{
+				draw_sprite(x, y, cell_width * 2, cell_height * 2, "spr_cells_" + num);
+			}
+			else
+			{
+				if (i < draw_grid_width && j < draw_grid_height)
+				{
+					if (grid_get(_grid, i, j))
+						draw_sprite(x, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+					else
+						draw_sprite(x, y, cell_width, cell_height, "spr_cell_unselected");
+				}
+				if (i + 1 < draw_grid_width && j < draw_grid_height)
+				{
+					if (grid_get(_grid, i + 1, j))
+						draw_sprite(x + cell_width, y, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+					else
+						draw_sprite(x + cell_width, y, cell_width, cell_height, "spr_cell_unselected");
+				}
+				if (i < draw_grid_width && j + 1 < draw_grid_height)
+				{
+					if (grid_get(_grid, i, j + 1))
+						draw_sprite(x, y + cell_height, cell_width, cell_height, "spr_cell_selected"); // 11% opacity
+					else
+						draw_sprite(x, y + cell_height, cell_width, cell_height, "spr_cell_unselected");
+				}
+			}
+		}
+	}
+	pop_graphics();
+}
+
 void renderGame(BrickGameFramework& game, float mx, float my, float t)
 {
 	push_graphics();
