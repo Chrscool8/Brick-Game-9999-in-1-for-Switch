@@ -21,7 +21,7 @@ void subgame_menu::subgame_init()
 {
 	if (game.debug_text)
 		printf("Initting Menu!!\n");
-	objects.push_back(std::make_unique<obj_border>(game));
+	objects.push_back(std::make_unique<obj_border>(game, this));
 	game.setScoreDisplay("---");
 
 	try {
@@ -88,7 +88,7 @@ void subgame_menu::subgame_draw()
 	draw_text(3, 0, game_list.at(selected_game)->name);
 	pop_graphics();
 
-	for (size_t i = 0; i < game_list.size(); i++)
+	for (int i = 0; i < game_list.size(); i++)
 	{
 		int size = 15;
 		int xx = (1280 / 2) - (game_list.size() * (size + 15) / 2) + (i * (size + 15)) - 10;
@@ -125,9 +125,9 @@ std::string subgame_menu::subgame_controls_text()
 
 //
 
-subgame_menu::obj_border::obj_border(BrickGameFramework& game) : game_object(game, 0, 0)
+subgame_menu::obj_border::obj_border(BrickGameFramework& game, subgame_menu* par) : game_object(game, 0, 0)
 {
-
+	parent = par;
 }
 
 void subgame_menu::obj_border::step_function()
@@ -137,41 +137,46 @@ void subgame_menu::obj_border::step_function()
 
 void subgame_menu::obj_border::draw_function()
 {
-	using namespace std::chrono;
-	milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-
-	bool on = ((ms.count() % 1000) < 500);
-
 	int w = grid_width(game.game_grid);
 	int h = grid_height(game.game_grid);
 
-	for (int i = 0; i < w; i++)
+	if (parent->selected_game == 0)
 	{
-		bool my_on = (on + (i % 2)) % 2;
-		grid_set(game.game_grid, i, 0, my_on, true);
-		grid_set(game.game_grid, i, h - 1, !my_on, true);
+		using namespace std::chrono;
+		milliseconds ms = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
+
+		bool on = ((ms.count() % 1000) < 500);
+
+		for (int i = 0; i < w; i++)
+		{
+			bool my_on = (on + (i % 2)) % 2;
+			grid_set(game.game_grid, i, 0, my_on, true);
+			grid_set(game.game_grid, i, h - 1, !my_on, true);
+		}
+
+		for (int i = 0; i < h; i++)
+		{
+			bool my_on = (on + (i % 2)) % 2;
+
+			grid_set(game.game_grid, 0, i, my_on, true);
+			if (grid_width(game.game_grid) % 2 == 0)
+				my_on = !my_on;
+			grid_set(game.game_grid, w - 1, i, my_on, true);
+		}
 	}
-
-	for (int i = 0; i < h; i++)
-	{
-		bool my_on = (on + (i % 2)) % 2;
-
-		grid_set(game.game_grid, 0, i, my_on, true);
-		if (grid_width(game.game_grid) % 2 == 0)
-			my_on = !my_on;
-		grid_set(game.game_grid, w - 1, i, my_on, true);
-	}
-
-	//for (int i = 1; i < w - 1; i++)
+	//else
 	//{
-	//	grid_set(game.game_grid, i, 1, true);
-	//	grid_set(game.game_grid, i, h - 2, true);
-	//}
+	//	for (int i = 0; i < w; i++)
+	//	{
+	//		grid_set(game.game_grid, i, 0, true, true);
+	//		grid_set(game.game_grid, i, h - 1, true, true);
+	//	}
 
-	//for (int i = 1; i < h - 1; i++)
-	//{
-	//	grid_set(game.game_grid, 1, i, true);
-	//	grid_set(game.game_grid, w - 2, i, true);
+	//	for (int i = 0; i < h; i++)
+	//	{
+	//		grid_set(game.game_grid, 0, i, true, true);
+	//		grid_set(game.game_grid, w - 1, i, true, true);
+	//	}
 	//}
 }
 

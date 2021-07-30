@@ -14,10 +14,11 @@ public:
 	class obj_border : public game_object
 	{
 	public:
-		obj_border(BrickGameFramework& game);
+		obj_border(BrickGameFramework& game, subgame_menu* par);
 		virtual void step_function() override;
 		virtual void draw_function() override;
 		virtual void destroy_function() override;
+		subgame_menu* parent;
 	};
 
 	class obj_welcome_text : public game_object
