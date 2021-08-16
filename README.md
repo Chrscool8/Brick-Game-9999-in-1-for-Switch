@@ -1,4 +1,8 @@
-# [Brick Game - 9999-in-1 - for Switch](https://gbatemp.net/threads/brick-game-9999-in-1-clone-project.586221/)
+<p align="center">
+<img src="https://github.com/Chrscool8/Brick-Game-9999-in-1-for-Switch/blob/main/resources/icon.jpg?raw=true">
+<br>
+<a href="https://gbatemp.net/threads/brick-game-9999-in-1-clone-project.586221/">Brick Game - 9999-in-1 - for Switch</a>
+</p>
 
 What is it?
 - Inspired by a request from mathew77, this native homebrew game aims to revive and remix the classic handheld game often known as "Brick Game 9999-in-1" or something similar. It's still quite early into development but it's going well!
